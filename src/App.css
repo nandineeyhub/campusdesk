@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+.body-height{
+  min-height: calc(100vh - 128px);
+}
+::-webkit-scrollbar { display: none; }

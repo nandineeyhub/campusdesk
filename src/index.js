@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -12,9 +12,16 @@ import EnquiryForm from './Layout/Compnents/Home/EnquiryForm';
 import FollowUp from './Layout/Compnents/Home/FollowUp';
 import Statistics from './Layout/Compnents/Home/Statistics';
 import Account from './Layout/Compnents/Account/Account';
-
 import Details from './Layout/Compnents/Account/Details';
 import ChangePassword from './Layout/Compnents/Account/ChangePassword';
+import Client from './Layout/Compnents/client/Client';
+import ClientList from './Layout/Compnents/client/ClientList';
+import AddClient from './Layout/Compnents/client/AddClient';
+import EditClient from './Layout/Compnents/client/EditClient';
+import User from './Layout/Compnents/User/User';
+import UserList from './Layout/Compnents/User/UserList';
+import AddUser from './Layout/Compnents/User/AddUser';
+import EditUser from './Layout/Compnents/User/EditUser';
 
 
 
@@ -51,7 +58,34 @@ const appRoute = createBrowserRouter([{
       path:"/desk/account/changepassword",
       element:<ChangePassword/>
     }]
+  },
+{
+  path:"/desk/client",
+  element:<Client/>,
+  children:[{
+    path:'/desk/client',
+    element:<ClientList/>
+  },{
+    path:"/desk/client/addclient",
+    element:<AddClient/>
+  },{
+    path:"/desk/client/editclient",
+    element:<EditClient/>
   }]
+},{
+  path:"/desk/user",
+  element:<User/>,
+  children:[{
+    path:'/desk/user',
+    element:<UserList/>
+  },{
+    path:"/desk/user/adduser",
+    element:<AddUser/>
+  },{
+    path:"/desk/user/edituser",
+    element:<EditUser/>
+  }]
+}]
   }]
 )
 

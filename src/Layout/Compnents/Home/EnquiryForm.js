@@ -2,11 +2,12 @@ import React from 'react'
 
 const EnquiryForm = () => {
   return (
-    <div className='container-lg w-50 '>
-           <div className='text-secondary py-3'>
+    
+      <div className='container-lg w-50 '>
+           <div className='text-secondary py-2'>
             <h3> Enquiry Form</h3>
         </div> 
-           <form className='img-thumbnail p-5'>
+           <form className='img-thumbnail p-4'>
             <div className="mb-3">
               <input className='form-control' name='name' type="text" placeholder='Name'></input>
             </div>
@@ -31,6 +32,7 @@ const EnquiryForm = () => {
             </div>
             </form>
     </div>
+    
   )
 }
 

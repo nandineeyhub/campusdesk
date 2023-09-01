@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 const AccountSidebar = () => {
   return (
     <div className="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-light overflow-hidden">
-            <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 ">
+            <div className="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white body-height">
                <NavLink  className=" text-decoration-none d-flex align-items-center pb-3 mb-md-0 me-md-auto text-secondary text-decoration-none">
                     <span className="">Menu</span>
                     </NavLink>
