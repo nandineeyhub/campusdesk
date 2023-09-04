@@ -22,7 +22,7 @@ const Header = () => {
            <NavLink to="/desk/account" className="text-decoration-none"> <li className='mx-3 mt-3 text-secondary'> Account </li> </NavLink> 
            <NavLink to="/desk/client"  className="text-decoration-none">  <li className='mx-3 mt-3 text-secondary'> Clients </li></NavLink>
            <NavLink to="/desk/user" className="text-decoration-none">  <li className='mx-3 mt-3 text-secondary'> Users </li></NavLink>
-           <NavLink className="text-decoration-none">   <li className='mx-3 mt-3 text-secondary'> Leads </li></NavLink>
+           <NavLink to="/desk/lead" className="text-decoration-none">   <li className='mx-3 mt-3 text-secondary'> Leads </li></NavLink>
               <button className='btn btn-info text-white mx-3 mt-2' onClick={()=>{navigate('/')}}>Logout</button> 
             </ul>
          </div>

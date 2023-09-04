@@ -22,6 +22,11 @@ import User from './Layout/Compnents/User/User';
 import UserList from './Layout/Compnents/User/UserList';
 import AddUser from './Layout/Compnents/User/AddUser';
 import EditUser from './Layout/Compnents/User/EditUser';
+import EditLead from './Layout/Compnents/Leads/EditLead';
+import Lead from './Layout/Compnents/Leads/Lead';
+import LeadView from './Layout/Compnents/Leads/LeadView';
+import UserView from './Layout/Compnents/User/UserView';
+import ClientView from './Layout/Compnents/client/ClientView';
 
 
 
@@ -71,6 +76,9 @@ const appRoute = createBrowserRouter([{
   },{
     path:"/desk/client/editclient",
     element:<EditClient/>
+  },{
+    path:"/desk/client/viewclient",
+    element:<ClientView/>
   }]
 },{
   path:"/desk/user",
@@ -84,7 +92,23 @@ const appRoute = createBrowserRouter([{
   },{
     path:"/desk/user/edituser",
     element:<EditUser/>
+  },{
+    path:"/desk/user/viewuser",
+    element:<UserView/>
   }]
+},{
+  
+    path:"/desk/lead",
+    element:<Lead/>,
+  
+  
+},{
+  path:"/desk/editlead",
+  element:<EditLead/>
+},
+{
+  path:"/desk/viewlead",
+  element:<LeadView/>
 }]
   }]
 )

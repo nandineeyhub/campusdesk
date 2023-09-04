@@ -37,6 +37,6 @@
   }
 }
 .body-height{
-  min-height: calc(100vh - 128px);
+  min-height: calc(100vh - 134px);
 }
 ::-webkit-scrollbar { display: none; }

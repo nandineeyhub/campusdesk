@@ -2,8 +2,8 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <div class="border   bg-light">
-        <div className='text-secondary pt-2'>
+    <div class="border fixed-bottom ">
+        <div className='text-secondary pt-3'>
           <p>Copyright © 2023 Campus Desk. All Rights Reserved</p>
         </div>
         

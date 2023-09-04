@@ -30,7 +30,7 @@ const ClientList = () => {
       <td><div classname='d-flex justify-content-center align-items-center '>
        <NavLink to="/desk/client/editclient" className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>
        <NavLink className="text-decoration-none">  <i className="fa fa-trash text-dark fs-5 mx-1"></i></NavLink>
-       <NavLink className="text-decoration-none"> <i className="fa fa-eye fs-4 text-dark mx-1"></i></NavLink>
+       <NavLink to="/desk/client/viewclient" className="text-decoration-none"> <i className="fa fa-eye fs-4 text-dark mx-1"></i></NavLink>
         </div></td>
     </tr>
     <tr >

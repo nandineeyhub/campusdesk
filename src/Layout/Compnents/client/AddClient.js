@@ -36,6 +36,7 @@ const AddClient = () => {
        <label for="phone" className="required">Country</label>
        <select className='form-control' name='country' type="text" placeholder=''>
           <option value="" selected>--Choose Country--</option>
+          <option value="1" selected>India</option>
        </select>
        </div>
        <div className='col-md-4 my-2'>
