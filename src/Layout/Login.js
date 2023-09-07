@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import Footer from './Footer';
 import '../App.css';
+import { callAPIWithoutAuth } from '../apiutils/apiUtils';
+import { apiUrls } from '../apiutils/apiUrls';
+import { ErrorMsg, SuccessMsg } from '../Notifications';
+
 const Login = () => {
     const texts = ["Built for", "Care for","Desk for"]
     const [head, setHead] = useState([]);
     const [value, setValue] = useState()
+    const [toggleview, setToggleView] = useState(false)
     const navigate = useNavigate()
     let point = 0
 
@@ -20,15 +24,40 @@ const Login = () => {
 
       }
 
+  const toggle = () => {
+    if (toggleview) setToggleView(false)
+    else setToggleView(true)
+  }
+
   const handleChange = (e) => {
     setValue((val)=>{return {...val,[e.target.name]:e.target.value}})
   }   
   const handleSubmit = (e) => {
     e.preventDefault()
- 
-    navigate('/desk/home')
+    login()
   }
-     useEffect(()=>{
+     
+  const login = async () => {
+    try{
+         const response = await callAPIWithoutAuth(apiUrls.clientlogin, {}, 'POST', value)
+         if(response.data.isSuccess){
+         localStorage.setItem("user", JSON.stringify(response.data.data))
+         localStorage.setItem("token", JSON.stringify(response.data.data.token))
+          navigate('/desk')
+          SuccessMsg(response.data.mesage)
+        
+         }
+        else{
+          ErrorMsg(response.data.message)
+        }
+    } catch (e){
+      ErrorMsg(e.message)
+    }
+  }
+
+ 
+  
+  useEffect(()=>{
        changeText()
        const t =  setInterval(changeText, 3000)
        return () => {clearInterval(t)}
@@ -54,10 +83,11 @@ const Login = () => {
             
             <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <input className='form-control' name='username' onChange={handleChange} type="text" placeholder='username'></input>
+              <input className='form-control' name='email' onChange={handleChange} type="text" placeholder='email'></input>
             </div>
-            <div className="mb-3">
-              <input className='form-control' name='password' onChange={handleChange} type="password" placeholder='password'></input>
+            <div className="mb-3 input-group">
+              <input className='form-control ' name='password' onChange={handleChange} type={toggleview?"text":"password"} placeholder='password'></input>
+              <span className='mx-1'  onClick={()=>{toggle()}}> {toggleview ? <i className="fa fa-eye form-control"/>:<i className="fa fa-eye-slash form-control"/> }</span>
             </div>
             <div className="mb-3 d-flex ">
                <button type='submit' className='btn btn-info text-white px-3'> Log in</button>

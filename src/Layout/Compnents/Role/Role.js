@@ -2,12 +2,12 @@ import React from 'react'
 
 import { Outlet } from 'react-router-dom'
 
-const User = () => {
+const Role = () => {
   return (
  
           <Outlet/>
-        
+       
   )
 }
 
-export default User
+export default Role

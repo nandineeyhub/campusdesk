@@ -3,7 +3,7 @@ import React from 'react'
 const ChangePassword = () => {
   return (
     <div className='container-lg w-50 '>
-    <div className='text-secondary py-3'>
+    <div className='text-secondary py-3 App'>
      <h3> Change Password</h3>
     </div> 
     <form className='img-thumbnail p-5'>

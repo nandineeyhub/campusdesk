@@ -2,7 +2,7 @@ import React from 'react'
 
 const Statistics = () => {
   return (
-    <div className='container-lg w-50'>
+    <div className='container-lg w-50 App'>
         <div className='text-secondary py-3'>
             <h3>Desk Stats</h3>
         </div>

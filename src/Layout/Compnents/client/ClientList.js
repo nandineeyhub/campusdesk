@@ -1,14 +1,37 @@
-import React from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import Modal from '../../../popups/DeletePopup'
+import React, { useState } from 'react'
+import {  NavLink, useNavigate } from 'react-router-dom'
+import ClientView from './ClientView'
 
 const ClientList = () => {
+  const [open, setOpen] = useState(false)
+  const [viewopen, setViewOpen] = useState(false);
+   const handleSelect =(type)=>{
+
+    if(type != 'view'){
+        setOpen(true)
+    }
+    else{
+      setViewOpen(true)
+  }
+   
+    }
+  
+  const navigate = useNavigate()
+
+ 
+
+
   return (
-    <div>
-          <div className='text-secondary py-2'>
+    <div className=' overflow-scroll'>
+          <div className='text-secondary py-2 App'>
+             
              <h3>Client List</h3>
           </div> 
-        <div className='container-lg bg-light border-light rounded w-100 p-5 m-auto  overflow-scroll'>
-        <table className='table table-striped'>
+         
+        <div className='container-lg bg-light border-light rounded w-100 p-3 '>
+        <div className='px-3 m-2 d-flex justify-content-end'><button className='btn btn-info text-white' onClick={()=>{navigate("/desk/client/addclient")}}>Add New Client</button></div>
+        <table className='table table-striped App'>
             <thead >
                 <th scope='col'>Id</th>
                 <th scope='col'>Campus Name</th>
@@ -19,6 +42,7 @@ const ClientList = () => {
                 <th scope='col'>Action</th>
 
             </thead>
+            
             <tbody>
    <tr>
       <th scope="row">2</th>
@@ -29,8 +53,9 @@ const ClientList = () => {
       <td><p className='bg-success text-white'>Active</p></td>
       <td><div classname='d-flex justify-content-center align-items-center '>
        <NavLink to="/desk/client/editclient" className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>
-       <NavLink className="text-decoration-none">  <i className="fa fa-trash text-dark fs-5 mx-1"></i></NavLink>
-       <NavLink to="/desk/client/viewclient" className="text-decoration-none"> <i className="fa fa-eye fs-4 text-dark mx-1"></i></NavLink>
+       <NavLink className="text-decoration-none">   <i className="fa fa-trash text-dark fs-5 mx-1"  onClick={() => handleSelect('del')}></i></NavLink>
+ <NavLink  className="text-decoration-none"  onClick={() => handleSelect('view')}> <i className="fa fa-eye fs-4 text-dark mx-1" ></i></NavLink>
+ 
         </div></td>
     </tr>
     <tr >
@@ -90,6 +115,10 @@ const ClientList = () => {
   </tbody>
         </table>
     </div>
+    <Modal show={open}
+        onHide={() => setOpen(false)}/>
+        <ClientView show={viewopen}
+        onHide={() => setViewOpen(false)}/>
     </div>
   )
 }

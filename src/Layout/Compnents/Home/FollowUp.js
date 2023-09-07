@@ -2,7 +2,7 @@ import React from 'react'
 
 const FollowUp = () => {
   return (
-    <div className='container-lg w-75'>
+    <div className='container-lg w-75 App'>
         <div className='text-secondary py-3'>
             <h3> Follow Ups</h3>
         </div>

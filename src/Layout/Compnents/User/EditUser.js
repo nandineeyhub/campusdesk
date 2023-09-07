@@ -3,8 +3,8 @@ import React from 'react'
 const EditUser = () => {
   return (
     <div className='container-lg w-100 '>
-    <div className='text-secondary py-3'>
- <h3>Add Client</h3>
+    <div className='text-secondary py-2 App'>
+ <h3>Edit User</h3>
 </div> 
 <form>
 <div className='row img-thumbnail p-3'>

@@ -3,8 +3,8 @@ import React from 'react'
 const EditLead = () => {
   return (
     <div className='container-lg w-100 '>
-    <div className='text-secondary py-3'>
- <h3>Update Lead</h3>
+    <div className='text-secondary py-3 App'>
+ <h3>Update Enquiry</h3>
 </div> 
 <form>
     <div className='row img-thumbnail p-3'> <div className=" col-md-4 mb-3">
@@ -29,9 +29,9 @@ const EditLead = () => {
     <input className='form-control' name='address' type="text" placeholder='Postal Address'></input>
   </div>
   <div className='col-md-4 my-2'>
-   <label for="phone" className="required">Status</label>
+   <label for="phone" className="required">Step</label>
    <select className='form-control' name='country' type="text" placeholder=''>
-      <option value="" selected>--Choose Status--</option>
+      <option value="" selected>--Choose Step--</option>
       <option value="1" selected>Lead</option>
       <option value="2" selected>Hot Lead</option>
       <option value="3" selected>Customer</option>
@@ -43,7 +43,7 @@ const EditLead = () => {
   </div>
   <div className=" mb-3  ">
     <div className='d-flex justify-content-center align-items-center mx-2'>
-    <button type='submit' className='btn btn-info text-white   '>Update Lead</button>
+    <button type='submit' className='btn btn-info text-white   '>Update Details</button>
     <button type='submit' className='btn btn-secondary text-white mx-2'>Cancel</button>
     </div>
        

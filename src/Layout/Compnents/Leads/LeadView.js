@@ -1,36 +1,43 @@
+import { Dialog } from '@mui/material'
 import React from 'react'
 
-const LeadView = () => {
-  return (
-    <div><div className='text-secondary py-2'>
-    <h3> Details</h3>
-   </div> 
-       <div className='container-lg bg-light border-light rounded w-75 p-3 m-auto'>
+const LeadView = (props) => {
+    const {show, onHide} = props
+    return (
+      <div >
+        <Dialog
+    open={show}
+    fullWidth={true}
+    maxWidth="sm"
+  >
+  <div  id="view_client" >
+  
+  <div class="modal-content">
+  <div className='d-flex justify-content-end'>
+  <button type="button"  className="close col-md-1 btn border-white" data-dismiss="modal" aria-label="Close" onClick={onHide}>
+    <span aria-hidden="true">  <i class="fa fa-times"></i></span>
+  </button>
+  </div>
+        <div class="modal-body user_details">
+        <div class="row">
+      <div class="col-lg-12 col-md-12 justify-content-center text-center">
+        
+          <h4 class="my-1">Enquiry View</h4>
+          
+      </div></div>
+  
+          <div className='col-lg-12 col-md-12 my-3  px-3'>
        
-       <div className=''>
-          <i className='fa fa-user fs-1'></i>
-       </div>
-       <div className='container-lg '>
-           <div className='my-2'> <h6> Mark Wheeler </h6></div>
-       </div>
-       <div className='container-lg '>
-           <div className='my-2'> <h6> Username : markwheeler234 </h6></div>
-       </div>
-       <div className='container-lg '>
-           <div className='my-2'> <h6> Designation : User 765 </h6></div>
-       </div>
-       <div className='container-lg '>
-           <div className='my-2'> <h6> Phone Number : 9654781275</h6></div>
-       </div>
-       <div className='container-lg '>
-           <div className='my-2'> <h6>Institution : Ajay Kumar Garg Engineering College</h6></div>
-       </div>
-       <div className='container-lg '>
-           <div className='my-2'> <h6> Joined on : 26/03/2023</h6></div>
-       </div>
+    
+  
+        
+         </div>
+    </div>
+  </div>
+  </div>
+  </Dialog>
      
- </div></div>
-  )
+  </div>)
 }
 
 export default LeadView

@@ -2,8 +2,8 @@ import React from 'react'
 
 const Details = () => {
   return (
-        <>
-           <div className='text-secondary py-2'>
+        <div className='App'>
+     <div className='text-secondary py-2'>
      <h3> Details</h3>
     </div> 
         <div className='container-lg bg-light border-light rounded w-75 p-3 m-auto'>
@@ -31,7 +31,7 @@ const Details = () => {
         </div>
       
   </div>
-</>
+</div>
   )
 }
 

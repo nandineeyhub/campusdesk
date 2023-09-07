@@ -1,10 +1,21 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const AddUser = () => {
+  const [toggleview, setToggleView] = useState(false)
+  const [ctoggleview, setcToggleView] = useState(false) 
+  const toggle = () => {
+    if (toggleview) setToggleView(false)
+    else setToggleView(true)
+  }
+  const ctoggle = () => {
+    if (ctoggleview) setcToggleView(false)
+    else setcToggleView(true)
+  } 
+
   return (
     <div className='container-lg w-100 '>
-        <div className='text-secondary py-3'>
-     <h3>Add Client</h3>
+        <div className='text-secondary py-2 App'>
+     <h3>Add User</h3>
     </div> 
     <form>
     <div className='row img-thumbnail p-3'>
@@ -27,12 +38,18 @@ const AddUser = () => {
        </div>
    
        <div className='col-md-4 my-3'>
-       <label for="phone" className="required">Password</label>
-       <input className='form-control' name='password' type="password" placeholder='Password'></input>
+       <div className="mb-3 input-group">
+              <input className='form-control ' name='password'  type={toggleview?"text":"password"} placeholder='password'></input>
+              <span className='mx-1'  onClick={()=>{toggle()}}> {toggleview ? <i className="fa fa-eye form-control"/>:<i className="fa fa-eye-slash form-control"/> }</span>
+            </div>
+      
        </div>
        <div className='col-md-4 my-3 '>
-       <label for="phone" className="required">Confirm Password</label>
-       <input className='form-control' name='confirmPassword' type="password" placeholder='Confirm Password'></input>
+       <div className="mb-3 input-group">
+              <input className='form-control ' name='confirmPassword' type={ctoggleview?"text":"password"} placeholder='Confirm Password'></input>
+              <span className='mx-1'  onClick={()=>{ctoggle()}}> {ctoggleview ? <i className="fa fa-eye form-control"/>:<i className="fa fa-eye-slash form-control"/> }</span>
+            </div>
+      
        </div>
        <div className="col-md-12 ">
          <div className="d-flex  mt-3">

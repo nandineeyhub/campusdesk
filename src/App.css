@@ -37,6 +37,18 @@
   }
 }
 .body-height{
-  min-height: calc(100vh - 134px);
+  min-height: calc(100vh - 120px);
+}
+.overlay{
+  position: absolute;
+  left:40%;
+  z-index: 1;
+  background-color: white;
+}
+.active{
+   font-weight: bolder;
 }
 ::-webkit-scrollbar { display: none; }
+.accordian-height{
+  height:40px !important;
+}

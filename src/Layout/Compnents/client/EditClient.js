@@ -3,7 +3,7 @@ import React from 'react'
 const EditClient = () => {
   return (
     <div className='container-lg w-100 '>
-    <div className='text-secondary py-3'>
+    <div className='text-secondary py-3 App'>
  <h3>Edit Client</h3>
 </div> 
 <form>
