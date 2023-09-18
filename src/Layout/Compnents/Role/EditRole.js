@@ -1,31 +1,166 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { callAPI } from '../../../apiutils/apiUtils'
+import { apiUrls } from '../../../apiutils/apiUrls'
+import { ErrorMsg, SuccessMsg } from '../../../Notifications'
+import { useNavigate, useParams } from 'react-router-dom'
+import PermissionCard from './PermissionCard'
+import { ApiLoader } from '../../../Helper/common'
 
 const EditRole = () => {
+  const [value, setvalue] = useState({})
+  const [modules, setModules] = useState([])
+  const [isCheck, setIsCheck] = useState([]);
+  const [loader, setloader] = useState(false)
+  const navigate = useNavigate()
+  const {id} = useParams()
+
+  const handleSelectAll = (e, mname, isCheckAll) => {
+    
+   var allPermission = []
+     modules.permissions.map((permission)=>{
+     allPermission.push(permission.slug+"_"+mname)
+   })
+
+   setIsCheck(allPermission);
+   if (isCheckAll) {
+     setIsCheck([]);
+   }
+  // setvalue((val)=>{return {...val,["permission"]:isCheck}})
+ };
+
+   const handleClick = (e, name, mname) => {
+       const { checked } = e.target;
+      
+       setIsCheck([...isCheck, name+"_"+mname]);
+     
+      
+       if (!checked) {
+         setIsCheck(isCheck.filter(item => { return item !== name+"_"+mname}));
+       
+      
+       }
+      
+     };
+
+   const isCheckone = (id) => {
+ 
+     return (isCheck.includes(id))
+   }
+
+ const handleChange = (e) => {
+      setvalue((val)=>{return({...val,[e.target.name]:e.target.value})})
+ }
+
+
+ const handleSubmit = (e) => {
+   e.preventDefault()
+   updateRole()
+ } 
+ 
+
+ useEffect(()=>{
+   setvalue((val)=>{return {...val,["permission"]:isCheck}})
+ },[isCheck])
+
+
+const updateRole = async () => {
+try{
+  const response = await callAPI(apiUrls.updaterole+`/${id}`,{}, 'PATCH', value)
+  if(response.data.isSuccess){
+    SuccessMsg(response.data.message)
+    navigate('/desk/role')
+  } else {
+    ErrorMsg(response.data.message)
+  }
+} catch(e){
+   ErrorMsg(e.message)
+}
+}
+
+
+
+
+  const getRole = async () => {
+    setloader(true)
+  try{
+   const response = await callAPI(apiUrls.getrolebyid+`/${id}`,{}, 'GET')
+   setloader(false)
+   if( response.data.isSuccess){
+      setvalue(response.data.data)
+      var newarray = []
+      response.data.data.permissions.map((p)=>(
+        newarray.push(p.permissions)
+      ))
+      setIsCheck(newarray)
+   } else{
+      ErrorMsg(response.data.message)
+   }
+   }catch(e){
+      ErrorMsg(e.message)
+      setloader(false)
+   }
+  }
+
+
+ useEffect(()=>{
+   getRole()
+ },[])
+
+ const getModule = async () => {
+   try{
+      const response = await callAPI(apiUrls.getpermission, {} ,'GET')
+      if(response.data.isSuccess){
+       setModules(response.data.data)
+      }
+   } catch(e){
+        
+   }
+ }
+
+ useEffect(()=>{
+   getModule()
+   
+ },[])
+
+console.log(value)
+
   return (
     <div className='container-lg w-100 '>
     <div className='text-secondary py-2 App'>
  <h3>Edit Role</h3>
 </div> 
-<form>
+<form onSubmit={handleSubmit}>
 <div className='row img-thumbnail p-3'>
 <div className="col-md-12 d-flex  ">
 <div className='col-md-4 m-2 '>
    <label for="phone" className="required">Role Name</label>
-   <input className='form-control' name='code' type="text" placeholder='Role name'></input>
+   <input onChange={handleChange} value={value.name}  className='form-control' name='name' type="text" placeholder='Role name'></input>
    </div>
-   <div className='col-md-4 m-2'>
-    <label for="name" className="required">Client</label>
-   <select className='form-control' name='client'  placeholder=''>
-      <option value="" selected>--Choose Client--</option>
-   </select>
-   </div>
+  
 </div>
+{loader && <ApiLoader/>}
+<label className='my-1'>Permission</label>
+  {
+      modules.modules !=undefined && modules.modules.length>0 &&  modules.modules.map((module)=>{
+      return (
+        <div className='col-md-6 my-1 '>
+        <PermissionCard id={module.id} 
+        module={module}
+        permissions={modules.permissions} 
+        handleSelectAll={handleSelectAll}
+        handleClick ={handleClick}
+        isCheckone={isCheckone}
+        />
+     </div>
+      )
+    })
+    }
 
   
    <div className="col-md-12 ">
      <div className="d-flex  mt-3">
-     <button type="submit"  className="btn btn-info text-white mx-3">Add Details</button>
-      <button type="button"  className="btn btn-secondary ">Cancel</button>
+     <button type="submit"  className="btn btn-info text-white mx-3">Update Details</button>
+      <button type="button" onClick={()=>{navigate("/desk/role")}}  className="btn btn-secondary ">Cancel</button>
        </div>
    </div>
 </div>

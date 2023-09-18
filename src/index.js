@@ -26,8 +26,8 @@ import EditRole from './Layout/Compnents/Role/EditRole';
 import Role from './Layout/Compnents/Role/Role';
 import EnquiryList from './Layout/Compnents/Leads/EnquiryList';
 import { ToastContainer } from 'react-toastify';
-
-
+import ChangePassword from './Layout/Compnents/Account/ChangePassword';
+import Details from './Layout/Compnents/Account/Details';
 
 const appRoute = createBrowserRouter([{
     path:"/",
@@ -39,6 +39,12 @@ const appRoute = createBrowserRouter([{
       path:"/desk",
       element:<Statistics/>
     },{
+      path:"/desk/changepassword",
+      element:<ChangePassword/>
+    },{
+      path:"/desk/details",
+      element:<Details/>
+    },{
       path:"/desk/client",
       element:<Client/>,
       children:[{
@@ -48,7 +54,7 @@ const appRoute = createBrowserRouter([{
         path:"/desk/client/addclient",
         element:<AddClient/>
       },{
-        path:"/desk/client/editclient",
+        path:"/desk/client/editclient/:id",
         element:<EditClient/>
       }]
     },{
@@ -61,7 +67,7 @@ const appRoute = createBrowserRouter([{
         path:"/desk/role/addrole",
         element:<AddRole/>
       },{
-        path:"/desk/role/editrole",
+        path:"/desk/role/editrole/:id",
         element:<EditRole/>
       }]
     },{
@@ -74,7 +80,7 @@ const appRoute = createBrowserRouter([{
         path:"/desk/user/adduser",
         element:<AddUser/>
       },{
-        path:"/desk/user/edituser",
+        path:"/desk/user/edituser/:id",
         element:<EditUser/>
       }]
     },{
@@ -87,7 +93,7 @@ const appRoute = createBrowserRouter([{
         path:"/desk/enquiry/addenquiry",
         element:<EnquiryForm/>
       },{
-        path:"/desk/enquiry/editenquiry",
+        path:"/desk/enquiry/editenquiry/:id",
         element:<EditLead/>
       }]
     }]

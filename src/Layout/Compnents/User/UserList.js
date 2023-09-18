@@ -1,33 +1,110 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-
 import Modal from '../../../popups/DeletePopup'
 import UserView from './UserView'
+import { callAPI } from '../../../apiutils/apiUtils'
+import { ErrorMsg, SuccessMsg } from '../../../Notifications'
+import { apiUrls } from '../../../apiutils/apiUrls'
+import { ApiLoader } from '../../../Helper/common'
+import SearchBar from '../../Filters/SearchBar'
+import StatusFilter from '../../Filters/StatusFilter'
 
 const UserList = () => {
-  const [open, setOpen] = useState(false)
-  const [viewopen, setViewOpen] = useState(false);
-   const handleSelect =(type)=>{
 
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState([])
+  const [data, setData] = useState({})
+  const [loader, setloader] = useState(false)
+  const [viewopen, setViewOpen] = useState(false);
+  const [search, setSearch] = useState("")
+  const [status, setStatus] = useState("")
+
+   const handleFilter = (e) => {
+      if(e.target.name == "search"){
+        setSearch(e.target.value)
+      } else if(e.target.name == "status"){
+        setStatus(e.target.value)
+      }
+   }
+
+
+   const handleSelect =(val, type)=>{
+    setData(val)
     if(type != 'view'){
         setOpen(true)
     }
     else{
       setViewOpen(true)
-  }
-   
     }
+   }
+
+   const deleteData = async (id) => {
+    try{
+       const response = await callAPI(apiUrls.deleteuser+`/${id}`,{},'DELETE')
+       if(response.data.isSuccess){
+         SuccessMsg(response.data.message)
+         setOpen(false)
+        const newValue = value.filter((val)=>{return val.id != id})
+        setValue(newValue)
+       } else{
+        ErrorMsg(response.data.message)
+       }
+    } catch(e){
+         ErrorMsg(e.message)
+    }
+  }
+
+  const handleStatus = async (id, status) => {
+    try {
+      const query = {status:status=="Active"?"Inactive":"Active"}
+      const response = await callAPI(apiUrls.userstatus+`/${id}`, query, 'PATCH')
+      if(response.data.isSuccess){
+         SuccessMsg(response.data.message)
+         getusers()
+      } else{
+        ErrorMsg(response.data.message)
+      }
+    } catch(e){
+       ErrorMsg(e.messsage)
+    }
+  }
+
+  const getusers = async () => {
+    setloader(true)
+    try{
+      const query = {search:search, status:status}
+      const response =  await callAPI(apiUrls.getusers, query, 'GET')
+      setloader(false)
+      if(response.data.isSuccess){
+        setValue(response.data.data.users.data)
+      }else{
+        ErrorMsg(response.data.message)
+      }
+    } catch(e){
+         ErrorMsg(e.message)
+         setloader(false)
+    }
+  } 
   
+  useEffect(()=>{
+    getusers()
+  },[status])
 
   const navigate = useNavigate()
   return (
     <div className='App'>
-    <div className='text-secondary py-2'>
+    <div className='text-secondary'>
    
        <h3>User List</h3>
     </div> 
-  <div className='container-lg bg-light border-light rounded w-100 p-3 m-auto  overflow-scroll'>
-  <div className='px-3 m-2 d-flex justify-content-end'><button className='btn btn-info text-white' onClick={()=>{navigate("/desk/user/adduser")}}>Add New User</button></div>
+    {loader && <ApiLoader/>}
+  <div className='container-lg bg-light border-light rounded w-100 p-3 m-auto  '>
+  <div className='p-3 my-3 d-flex justify-content-between'>
+  <div className='d-flex justify-content-around'>
+               <SearchBar handleFilter={handleFilter} getdata={getusers}/>
+               <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
+             </div>
+    <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/user/adduser")}}>Add New User</button></div>
   <table className='table table-striped'>
       <thead >
           <th scope='col'>Id</th>
@@ -39,74 +116,32 @@ const UserList = () => {
 
       </thead>
       <tbody>
-<tr>
-<th scope="row">2</th>
-<td>Jacob</td>
-<td>jacob@gmail.com</td>
-<td>9547863217</td>
-<td><p className='bg-success text-white'>Active</p></td>
-<td><div classname='d-flex justify-content-center align-items-center '>
- <NavLink to="/desk/user/edituser" className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>
- <NavLink className="text-decoration-none"  onClick={() => handleSelect('del')}>  <i className="fa fa-trash text-dark fs-5 mx-1" ></i></NavLink>
- <NavLink  className="text-decoration-none"  onClick={() => handleSelect('view')}> <i className="fa fa-eye fs-4 text-dark mx-1"></i></NavLink>
-  </div></td>
-</tr>
-<tr >
-<th scope="row">1</th>
-<td>Mark</td>
-<td>Mark@gmail.com</td>
-<td>9547863217</td>
-<td><p className='bg-success text-white'>Active</p></td>
-<td><div classname='d-flex justify-content-center align-items-center'>
-  <i className="fa fa-edit fs-5 mx-1"></i>
-  <i className="fa fa-trash fs-5 mx-1"></i>
-  <i className="fa fa-eye fs-4 mx-1"></i>
-  </div></td>
-</tr>
 
-<tr>
-<th scope="row">3</th>
-<td>Larry</td>
-<td>larry@gmail.com</td>
-<td>9547863217</td>
-<td><p className='bg-danger text-white '>Inactive</p></td>
-<td><div classname='d-flex justify-content-center align-items-center'>
-  <i className="fa fa-edit fs-5 mx-1"></i>
-  <i className="fa fa-trash fs-5 mx-1"></i>
-  <i className="fa fa-eye fs-4 mx-1"></i>
-  </div></td>
-</tr>
-<tr >
-<th scope="row">4</th>
-<td>Mark</td>
-<td>Mark@gmail.com</td>
-<td>9547863217</td>
-<td><p className='bg-success text-white'>Active</p></td>
-<td><div classname='d-flex justify-content-center align-items-center'>
-  <i className="fa fa-edit fs-5 mx-1"></i>
-  <i className="fa fa-trash fs-5 mx-1"></i>
-  <i className="fa fa-eye fs-4 mx-1"></i>
-  </div></td>
-</tr>
-<tr>
-<th scope="row">5</th>
-<td>Jacob</td>
-<td>jacob@gmail.com</td>
-<td>9547863217</td>
-<td><p className='bg-danger text-white'>Inactive</p></td>
-<td><div classname='d-flex justify-content-center align-items-center'>
-  <i className="fa fa-edit fs-5 mx-1"></i>
-  <i className="fa fa-trash fs-5 mx-1"></i>
-  <i className="fa fa-eye fs-4 mx-1"></i>
-  </div></td>
-</tr>
+     {
+      value.map
+     ( (val, key) => { return   <tr>
+      <th scope="row">{key+1}</th>
+      <td>{val.name}</td>
+      <td>{val.email}</td>
+      <td>{val.phoneNo}</td>
+      <td><p  role="button" onClick={()=>{handleStatus(val.id, val.status)}} className={`text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
+      <td><div classname='d-flex justify-content-center align-items-center '>
+       <NavLink to={`/desk/user/edituser/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>
+       <NavLink className="text-decoration-none"  onClick={() => handleSelect(val, 'del')}>  <i className="fa fa-trash text-dark fs-5 mx-1" ></i></NavLink>
+       <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-dark mx-1"></i></NavLink>
+        </div></td>
+      </tr> } )
+     }
 
 </tbody>
   </table>
 </div>
 
-<Modal show={open}
-        onHide={() => setOpen(false)}/>
+ {<Modal show={open}
+        onHide={() => setOpen(false)}
+        data={data}
+        deleteData={deleteData} />} 
+
         <UserView show={viewopen} onHide={()=>setViewOpen(false)}/>
 
 </div>

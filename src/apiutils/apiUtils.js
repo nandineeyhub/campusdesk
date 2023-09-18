@@ -55,30 +55,30 @@ function callAPIWithoutAuth(path, params, method, data = null, options = {}, hea
     });
 }
 
-// async function API(path, params, method, data = null, options = {}, headersObj = {}){
-//     const API_ROOT = defaultConfig.baseAPIUrl;
-//     const url = API_ROOT + path;
-//     const headers = {
-//         'Content-Type': 'multipart/form-data',
-//         Accept: 'application/json',
-//         Authorization: `Bearer ${await JSON.parse(localStorage.getItem('token'))}`,
-//         ...headersObj,
-//     };
+async function API(path, params, method, data = null, options = {}, headersObj = {}){
+    const API_ROOT = defaultConfig.baseAPIUrl;
+    const url = API_ROOT + path;
+    const headers = {
+        'Content-Type': 'multipart/form-data',
+        Accept: 'application/json',
+        Authorization: `Bearer ${await JSON.parse(localStorage.getItem('token'))}`,
+        ...headersObj,
+    };
 
-//     return axios({
-//         method,
-//         url,
-//         params,
-//         paramsSerializer: { 
-//             serialize:function(params) {
-//              return Qs.stringify(params, { arrayFormat: 'brackets' })
-//            }
-//           },
-//         data,
-//         headers,
-//         ...options,
-//     });
-// }
+    return axios({
+        method,
+        url,
+        params,
+        paramsSerializer: { 
+            serialize:function(params) {
+             return Qs.stringify(params, { arrayFormat: 'brackets' })
+           }
+          },
+        data,
+        headers,
+        ...options,
+    });
+}
 
 
-export { callAPI, callAPIWithoutAuth};
+export { callAPI, callAPIWithoutAuth, API};

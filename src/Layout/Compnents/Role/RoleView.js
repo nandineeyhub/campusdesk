@@ -2,7 +2,7 @@ import { Dialog } from '@mui/material'
 import React from 'react'
 
 const RoleView = (props) => {
-  const {show, onHide} = props
+  const {show, onHide ,data} = props
   return (
     <div >
       <Dialog
@@ -10,7 +10,7 @@ const RoleView = (props) => {
   fullWidth={true}
   maxWidth="sm"
 >
-<div  id="view_client" >
+<div  id="view_client" className='overflow-hidden'>
 
 <div class="modal-content">
 <div className='d-flex justify-content-end'>
@@ -22,7 +22,7 @@ const RoleView = (props) => {
       <div class="row">
     <div class="col-lg-12 col-md-12 justify-content-center text-center">
       
-        <h4 class="my-1">Role View</h4>
+        <h4 class="my-1">{data.name}</h4>
         
     </div></div>
 
@@ -31,20 +31,14 @@ const RoleView = (props) => {
             
            <thead>
             <th> Name </th> 
-            <th>Get</th>
+             <th>Get</th>
             <th> Add </th> 
             <th> Edit</th> 
             <th> Delete </th> 
            </thead>
 
            <tbody>
-             <tr>
-                <td>Client</td>
-                <td> <span className='bg-success rounded px-1 text-white'><i className='fa fa-check'></i></span> </td>
-                <td> <span className='bg-success rounded px-1 text-white'><i className='fa fa-check'></i></span></td>
-                <td> <span className='bg-danger rounded px-1 text-white'><i className='fa fa-times'></i></span></td>
-                <td> <span className='bg-success rounded px-1 text-white'><i className='fa fa-check'></i></span></td>
-             </tr>
+            
            </tbody>
         </table>
   

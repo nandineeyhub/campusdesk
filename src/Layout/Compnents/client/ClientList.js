@@ -1,13 +1,33 @@
 import Modal from '../../../popups/DeletePopup'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {  NavLink, useNavigate } from 'react-router-dom'
 import ClientView from './ClientView'
+import { callAPI } from '../../../apiutils/apiUtils'
+import { apiUrls } from '../../../apiutils/apiUrls'
+import { ErrorMsg, SuccessMsg } from '../../../Notifications'
+import {ApiLoader, NoRecordMsg} from '../../../Helper/common'
+import SearchBar from '../../Filters/SearchBar'
+import StatusFilter from '../../Filters/StatusFilter'
 
 const ClientList = () => {
+  const [value, setValue] = useState([])
+  const [loader,setLoader]=useState(false);
   const [open, setOpen] = useState(false)
   const [viewopen, setViewOpen] = useState(false);
-   const handleSelect =(type)=>{
+  const [data, setData] = useState({})
+  const [search, setSearch] = useState("")
+  const [status, setStatus] = useState("")
 
+   const handleFilter = (e) => {
+      if(e.target.name == "search"){
+        setSearch(e.target.value)
+      } else if(e.target.name == "status"){
+        setStatus(e.target.value)
+      }
+   }
+
+   const handleSelect =(val, type)=>{
+    setData(val)
     if(type != 'view'){
         setOpen(true)
     }
@@ -17,20 +37,84 @@ const ClientList = () => {
    
     }
   
-  const navigate = useNavigate()
+    const handleStatus = async (id, status) => {
+      try {
+        
+        const query = {status:status=="Active"?"Inactive":"Active"}
+        const response = await callAPI(apiUrls.clientstatus+`/${id}`, query, 'PATCH')
+        if(response.data.isSuccess){
+           SuccessMsg(response.data.message)
+           getdata()
+        } else{
+          ErrorMsg(response.data.message)
+        }
+      } catch(e){
+         ErrorMsg(e.messsage)
+      }
+    }
+   const navigate = useNavigate()
+    
+   const getdata =  async () => {
+    setLoader(true)
+    try{
+      const query = {search:search, status:status}
+      const response =  await callAPI( apiUrls.getclients, query, 'GET')
+      if(response.data.isSuccess){
+        if( response.data.data != null){
+          setValue(response.data.data.clients.data)
+        } else{
+          setValue([])
+        }
+        setLoader(false)
+      } else {
+        ErrorMsg(response.data.message)
+        setLoader(false)
+      }
+    } catch(e){
+       ErrorMsg(e.message)
+       setLoader(false)
+    }
 
- 
+   }
+   
+   const deleteData = async (id) => {
+    try{
+       const response = await callAPI(apiUrls.deleteclient+`/${id}`,{},'DELETE')
+       if(response.data.isSuccess){
+         SuccessMsg(response.data.message)
+         setOpen(false)
+        const newValue = value.filter((val)=>{return val.id != id})
+        setValue(newValue)
+       } else{
+        ErrorMsg(response.data.message)
+       }
+    } catch(e){
+         ErrorMsg(e.message)
+    }
+  }
 
+   useEffect(()=>{
+    getdata()
+   },[status])
+
+   console.log(value)
 
   return (
-    <div className=' overflow-scroll'>
-          <div className='text-secondary py-2 App'>
+    <div className='mb-5 '>
+        
+          <div className='text-secondary  App'>
              
              <h3>Client List</h3>
           </div> 
          
-        <div className='container-lg bg-light border-light rounded w-100 p-3 '>
-        <div className='px-3 m-2 d-flex justify-content-end'><button className='btn btn-info text-white' onClick={()=>{navigate("/desk/client/addclient")}}>Add New Client</button></div>
+        <div className='container-lg bg-light border-light rounded w-100 p-3 overflow-auto '>
+        { loader && <ApiLoader/>}
+        <div className='p-3 my-3 d-flex justify-content-between'>
+             <div className='d-flex justify-content-around'>
+               <SearchBar handleFilter={handleFilter} getdata={getdata}/>
+               <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
+             </div>
+          <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/client/addclient")}}>Add New Client</button></div>
         <table className='table table-striped App'>
             <thead >
                 <th scope='col'>Id</th>
@@ -44,79 +128,37 @@ const ClientList = () => {
             </thead>
             
             <tbody>
-   <tr>
-      <th scope="row">2</th>
-      <td>Jasmine College</td>
-      <td>Jacob</td>
-      <td>jacob@gmail.com</td>
-      <td>9547863217</td>
-      <td><p className='bg-success text-white'>Active</p></td>
+
+   {
+    value.map((val)=>{
+      return    <tr>
+      <th scope="row">{val.id}</th>
+      <td>{val.name}</td>
+      <td>{val.contactPerson}</td>
+      <td>{val.email}</td>
+      <td>{val.phoneNo}</td>
+      <td><p  onClick={()=>{handleStatus(val.id, val.status)}} role="button" className={` text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
       <td><div classname='d-flex justify-content-center align-items-center '>
-       <NavLink to="/desk/client/editclient" className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>
-       <NavLink className="text-decoration-none">   <i className="fa fa-trash text-dark fs-5 mx-1"  onClick={() => handleSelect('del')}></i></NavLink>
- <NavLink  className="text-decoration-none"  onClick={() => handleSelect('view')}> <i className="fa fa-eye fs-4 text-dark mx-1" ></i></NavLink>
+       <NavLink to={`/desk/client/editclient/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>
+       <NavLink className="text-decoration-none">   <i className="fa fa-trash text-dark fs-5 mx-1"  onClick={() => handleSelect(val,'del')}></i></NavLink>
+       <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-dark mx-1" ></i></NavLink>
  
         </div></td>
     </tr>
-    <tr >
-      <th scope="row">1</th>
-      <td>Marker College</td>
-      <td>Mark</td>
-      <td>Mark@gmail.com</td>
-      <td>9547863217</td>
-      <td><p className='bg-success text-white'>Active</p></td>
-      <td><div classname='d-flex justify-content-center align-items-center'>
-        <i className="fa fa-edit fs-5 mx-1"></i>
-        <i className="fa fa-trash fs-5 mx-1"></i>
-        <i className="fa fa-eye fs-4 mx-1"></i>
-        </div></td>
-    </tr>
-  
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry International</td>
-      <td>Mala</td>
-      <td>larry@gmail.com</td>
-      <td>9547863217</td>
-      <td><p className='bg-danger text-white '>Inactive</p></td>
-      <td><div classname='d-flex justify-content-center align-items-center'>
-        <i className="fa fa-edit fs-5 mx-1"></i>
-        <i className="fa fa-trash fs-5 mx-1"></i>
-        <i className="fa fa-eye fs-4 mx-1"></i>
-        </div></td>
-    </tr>
-    <tr >
-      <th scope="row">4</th>
-      <td>Mala Intermediate School</td>
-      <td>Mala</td>
-      <td>Mark@gmail.com</td>
-      <td>9547863217</td>
-      <td><p className='bg-success text-white'>Active</p></td>
-      <td><div classname='d-flex justify-content-center align-items-center'>
-        <i className="fa fa-edit fs-5 mx-1"></i>
-        <i className="fa fa-trash fs-5 mx-1"></i>
-        <i className="fa fa-eye fs-4 mx-1"></i>
-        </div></td>
-    </tr>
-    <tr>
-      <th scope="row">5</th>
-      <td>Jaya ben College</td>
-      <td>Mala</td>
-      <td>jacob@gmail.com</td>
-      <td>9547863217</td>
-      <td><p className='bg-danger text-white'>Inactive</p></td>
-      <td><div classname='d-flex justify-content-center align-items-center'>
-        <i className="fa fa-edit fs-5 mx-1"></i>
-        <i className="fa fa-trash fs-5 mx-1"></i>
-        <i className="fa fa-eye fs-4 mx-1"></i>
-        </div></td>
-    </tr>
+    })
+   }
     
   </tbody>
         </table>
+        {!loader && value.length == 0 &&
+                    <NoRecordMsg title={'No Record Found !!'}/>
+                    }
     </div>
-    <Modal show={open}
-        onHide={() => setOpen(false)}/>
+    { <Modal show={open}
+        onHide={() => setOpen(false)}
+          deleteData = {deleteData}
+          data= {data}/>
+        }
         <ClientView show={viewopen}
         onHide={() => setViewOpen(false)}/>
     </div>

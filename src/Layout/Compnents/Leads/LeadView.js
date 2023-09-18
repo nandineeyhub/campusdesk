@@ -10,7 +10,7 @@ const LeadView = (props) => {
     fullWidth={true}
     maxWidth="sm"
   >
-  <div  id="view_client" >
+  <div  id="view_client" className='overflow-hidden' >
   
   <div class="modal-content">
   <div className='d-flex justify-content-end'>

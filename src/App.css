@@ -48,7 +48,35 @@
 .active{
    font-weight: bolder;
 }
-::-webkit-scrollbar { display: none; }
+
 .accordian-height{
   height:40px !important;
 }
+.loader {
+  position: relative;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 70px;
+  height: 70px;
+  left:50%;
+  top:50%;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+#overlay{
+    position: absolute;
+    top:0px;
+    left:0px;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: .5;
+}
+.dropoverlay{
+  position: absolute;
+  z-index: 1;
+  
+}
+.my_profile_box {width: 100%;max-width: 177px;margin-bottom: 30px;margin-top: 11px;position: relative;}
+.files_type {width: 114px; border-radius: 50%;height: 140px;position: absolute;top: 0;z-index: 9999;opacity: 0;left: 0;}

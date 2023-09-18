@@ -14,14 +14,13 @@ function App() {
   }
   return (
     <div className="">
-     
-     
+ 
     <Header handleOpen={handleOpen}/>
   
     <div className="container-fluid">
     <div className="row flex-nowrap">
      <Sidebar show = {open}/>
-     <div class="col py-3 ">
+     <div class="col py-3 bg-light ">
            <Outlet/>
         </div>
      </div>
