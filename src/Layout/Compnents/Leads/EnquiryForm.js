@@ -3,9 +3,12 @@ import { callAPI } from '../../../apiutils/apiUtils'
 import { apiUrls } from '../../../apiutils/apiUrls'
 import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import moment from 'moment';
+import { useNavigate } from 'react-router';
 
 const EnquiryForm = () => {
   const [value, setValue] = useState({enquiryDate:moment().format('YYYY-MM-DD')})
+
+  const navigate = useNavigate()
   
   const user = JSON.parse(localStorage.getItem("user"))
 
@@ -71,7 +74,8 @@ const EnquiryForm = () => {
             </div>
             <div className=" mb-3  ">
               <div>
-              <button type='submit' className='btn btn-info text-white px-3 w-25'>Confirm details</button>
+              <button type='submit' className='btn btn-info text-white px-3 '>Confirm details</button>
+              <button type='button' onClick={navigate('/desk/enquiry')} className='btn btn-secondary text-white mx-2'>Cancel</button>
               </div> 
             </div>
             </div>

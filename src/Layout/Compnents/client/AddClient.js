@@ -129,7 +129,6 @@ const AddClient = () => {
 
           <div className="col-md-12">
 
-
             <div className="my_profile_box ">
               <img src={image ? URL.createObjectURL(image) : "../../../../public/images/upload-icon.png"} className="  img-fluid" alt="" />
  
@@ -219,7 +218,7 @@ const AddClient = () => {
           <div className="col-md-12 ">
             <div className="d-flex  mt-3">
               <button type="submit" className="btn btn-info text-white mx-3">Add Details</button>
-              <button type="button" className="btn btn-secondary ">Cancel</button>
+              <button type="button" onClick={()=>{navigate('/desk/client')}} className="btn btn-secondary ">Cancel</button>
             </div>
           </div>
         </div>

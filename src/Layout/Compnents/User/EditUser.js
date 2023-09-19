@@ -1,6 +1,6 @@
 
 import {useEffect, useState} from 'react'
-import { callAPI } from '../../../apiutils/apiUtils'
+import { callAPI, API } from '../../../apiutils/apiUtils'
 import { apiUrls } from '../../../apiutils/apiUrls'
 import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -10,6 +10,7 @@ const EditUser = () => {
 
   const [value, setValue] = useState({})
   const [loader, setLoader] = useState(false)
+  const [image, setImage] = useState('')
 
   const navigate = useNavigate()
   const {id} = useParams()
@@ -22,10 +23,26 @@ const EditUser = () => {
     e.preventDefault()
     editUser()
   }
- 
+
+  const uploadImage = (e) => {
+    let file = (e.target.files[0])
+    
+    let name = e.target.name;
+    if (file) {
+      setImage(file)
+    }
+
+    setValue((val) => ({ ...val, [name]: file }))
+  }
+  
+  let formBody = new FormData();
+  for (var i in value) {
+      formBody.append(i, value[i]);
+  }
+
   const editUser = async () => {
    try{
-    const response =  await callAPI(apiUrls.updateuser+`/${id}`, {}, 'PUT', value)
+    const response =  await API(apiUrls.updateuser+`/${id}`, {}, 'POST', formBody)
     if(response.data.isSuccess){
       SuccessMsg(response.data.message)
       navigate('/desk/user')
@@ -40,7 +57,7 @@ const EditUser = () => {
   const getuser = async () => {
     setLoader(true)
     try{
-       const response = await callAPI(apiUrls.getuser+`/${id},`, {}, 'GET')
+       const response = await callAPI(apiUrls.getuser+`/${id}`, {}, 'GET')
        setLoader(false)
        if(response.data.isSuccess){
         setValue(response.data.data)
@@ -64,6 +81,16 @@ const EditUser = () => {
 {loader && <ApiLoader/>}
 <form onSubmit={handleSubmit}> 
 <div className='row img-thumbnail p-3'>
+<div className="col-md-12">
+
+<div className="my_profile_box ">
+{ <img src={image ? URL.createObjectURL(image) : "https://onlineprojectprogress.com/Campusdesk/public/upload/"+value.image } className="  img-fluid" alt="" />}
+
+  <input type="file" className="my-1" name='image' onChange={uploadImage} />
+
+</div>
+
+</div>
    <div className='col-md-4 my-2'>
     <label for="userCode" className="required">User Code</label>
     <input onChange={handleChange} value={value.userCode} className='form-control' name='userCode' type="text" placeholder='User Code'></input>

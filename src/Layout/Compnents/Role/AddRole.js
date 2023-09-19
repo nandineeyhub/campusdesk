@@ -138,7 +138,7 @@ const AddRole = () => {
    <div className="col-md-12 ">
      <div className="d-flex  mt-3">
      <button type="submit"  className="btn btn-info text-white mx-3">Add Details</button>
-      <button type="button"  className="btn btn-secondary ">Cancel</button>
+      <button type="button" onClick={()=>{navigate("/desk/role")}} className="btn btn-secondary ">Cancel</button>
        </div>
    </div>
 </div>

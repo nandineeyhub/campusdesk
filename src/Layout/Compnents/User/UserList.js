@@ -78,6 +78,7 @@ const UserList = () => {
       if(response.data.isSuccess){
         setValue(response.data.data.users.data)
       }else{
+        setValue([])
         ErrorMsg(response.data.message)
       }
     } catch(e){
@@ -113,7 +114,6 @@ const UserList = () => {
           <th scope='col'>Phone</th>
           <th scope='col'>Status</th>
           <th scope='col'>Action</th>
-
       </thead>
       <tbody>
 
@@ -142,7 +142,7 @@ const UserList = () => {
         data={data}
         deleteData={deleteData} />} 
 
-        <UserView show={viewopen} onHide={()=>setViewOpen(false)}/>
+        <UserView show={viewopen} data={data} onHide={()=>setViewOpen(false) }/>
 
 </div>
   )

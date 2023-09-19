@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { callAPI } from '../../../apiutils/apiUtils'
+import { API } from '../../../apiutils/apiUtils'
 import { apiUrls } from '../../../apiutils/apiUrls'
 import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import { useNavigate } from 'react-router-dom'
@@ -8,6 +8,7 @@ const AddUser = () => {
 
   const [toggleview, setToggleView] = useState(false)
   const [ctoggleview, setcToggleView] = useState(false) 
+  const [image, setImage] = useState('');
   const [value, setValue] = useState({})
 
   const navigate = useNavigate()
@@ -20,6 +21,18 @@ const AddUser = () => {
     if (ctoggleview) setcToggleView(false)
     else setcToggleView(true)
   } 
+
+  const uploadImage = (e) => {
+    let file = (e.target.files[0])
+    
+    let name = e.target.name;
+    if (file) {
+      setImage(file)
+    }
+
+    setValue((val) => ({ ...val, [name]: file }))
+  }
+
   
   const handleChange = (e) => {
     setValue((val)=>{ return {...val, [e.target.name]:e.target.value}})
@@ -30,9 +43,15 @@ const AddUser = () => {
     addUser()
   }
 
+   
+  let formBody = new FormData();
+  for (var i in value) {
+      formBody.append(i, value[i]);
+  }
+
   const addUser = async () => {
    try{
-    const response =  await callAPI(apiUrls.adduser, {}, 'POST', value)
+    const response =  await API(apiUrls.adduser, {}, 'POST', formBody)
     if(response.data.isSuccess){
       SuccessMsg(response.data.message)
       navigate('/desk/user')
@@ -44,6 +63,7 @@ const AddUser = () => {
    }
   }
 
+  console.log(value)
 
   return (
     <div className='container-lg w-100 '>
@@ -52,6 +72,16 @@ const AddUser = () => {
     </div> 
     <form onSubmit={handleSubmit}>
     <div className='row img-thumbnail p-3'>
+    <div className="col-md-12">
+
+<div className="my_profile_box ">
+  <img src={image ? URL.createObjectURL(image) : "../../../../public/images/upload-icon.png"} className="  img-fluid" alt="" />
+
+  <input type="file" className="my-1" name='image' onChange={uploadImage} />
+ 
+</div>
+
+</div>
     <div className='col-md-4 my-2'>
        <label for="userCode" className="required">User Code</label>
        <input onChange={handleChange} className='form-control' name='userCode' type="text" placeholder='Code'></input>
@@ -98,7 +128,7 @@ const AddUser = () => {
        <div className="col-md-12 ">
          <div className="d-flex  mt-3">
          <button type="submit"  className="btn btn-info text-white mx-3">Add Details</button>
-          <button type="button"  className="btn btn-secondary ">Cancel</button>
+          <button type="button" onClick={()=>{navigate("/desk/user")}} className="btn btn-secondary ">Cancel</button>
            </div>
        </div>
     </div>

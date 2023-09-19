@@ -51,7 +51,7 @@ const EnquiryList = () => {
       const handleStep = async (id, value) => {
         try{
            const query = {step:value}
-           const response = await callAPI(apiUrls.updatestep+`/${id}`, query, 'PATCH')
+           const response = await callAPI(apiUrls.updatestep+`/${id}`, query, 'PATCH', value)
            if(response.data.isSuccess){
              SuccessMsg(response.data.message)
            } else {
@@ -97,8 +97,7 @@ const EnquiryList = () => {
           const response = await callAPI(apiUrls.getenquiry, query, 'GET')
           setloader(false)
           if(response.data.isSuccess){
-           
-            setValue(response.data.data.enquiries.data)
+            response.data.data != null ? setValue(response.data.data.enquiries.data) : setValue([])
           } else {
             ErrorMsg(response.data.message)
           }
@@ -165,7 +164,7 @@ const EnquiryList = () => {
   <tbody>
 
 {
-  value != undefined && value.length > 0 && value.map((val, key)=>{
+    value != undefined && value.length > 0 && value.map((val, key)=>{
     return   <tr>
     <th scope="row">{new Date(val.enquiryDate).toLocaleDateString("en-US")}</th>
     <td>{val.name}</td>

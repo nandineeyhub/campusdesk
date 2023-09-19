@@ -3,10 +3,10 @@ import React from 'react'
 import UserDropDown from './Compnents/UserDropDown'
 
 
-const Header = ({ handleOpen }) => {
+const Header = () => {
 
   
-
+  const user = JSON.parse(localStorage.getItem("user")) 
 
   return (
 
@@ -14,24 +14,26 @@ const Header = ({ handleOpen }) => {
       <div className="container-lg align-items-center justify-content-between my-1">
 
         <div className='d-flex justify-items-center align-items-center'>
-          <button className=" btn btn-muted navbar-toggler-icon border-light  " onClick={() => { handleOpen() }}></button>
+          
 
           <h4 className='text-secondary mx-3'>Campus Desk</h4>
         </div>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">
-          <div className='mx-2'>
-         
+       <div className="d-flex-sm">
+    
+        <div className="collapse d-flex justify-content-end" >
+          <div className='mx-3'>
+
               <UserDropDown/>
-     
-                
+  
           </div>
-        
+          {/* <div className='text-secondary '>
+              <p className='my-0'>{user.name}</p>
+              <p className='my-0'>{user.email}</p>
+          </div> */}
 
         </div>
 
+       </div>
 
 
       </div>

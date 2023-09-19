@@ -6,11 +6,11 @@ const Details = () => {
      <div className='text-secondary py-2'>
      <h3> Details</h3>
     </div> 
-        <div className='container-lg bg-light border-light rounded w-75 p-3 m-auto'>
+        <div className='   rounded w-75 p-3 m-auto img-thumbnail p-3'>
         
-        <div className=''>
+        {/* <div className=''>
             <img className='mx-auto rounded-circle img-fluid' style={{height:"200px", width:"200px"}} src='https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600'></img>
-        </div>
+        </div> */}
         <div className='container-lg '>
             <div className='my-2'> <h6> Mark Wheeler </h6></div>
         </div>

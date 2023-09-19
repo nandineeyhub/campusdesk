@@ -3,9 +3,11 @@ import { callAPI } from '../../../apiutils/apiUtils'
 import { apiUrls } from '../../../apiutils/apiUrls'
 import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import { useNavigate, useParams } from 'react-router-dom'
+import { ApiLoader } from '../../../Helper/common'
 
 const EditLead = () => {
   const [value, setValue] = useState({})
+  const [loader, setloader] = useState(false)
   const {id} = useParams()
   const navigate = useNavigate()
   const handleChange = (e) => {
@@ -32,8 +34,10 @@ const editenquiry = async () => {
 }
 
 const getenquiry = async () => {
+  setloader(true)
   try{
     const response = await callAPI(apiUrls.getenquirybyid+`/${id}`, {} , 'GET', value)
+    setloader(false)
     if(response.data.isSuccess){
       setValue(response.data.data)
     } else {
@@ -41,6 +45,7 @@ const getenquiry = async () => {
     }
    } catch(e){
       ErrorMsg(e.errors)
+      setloader(false)
    }
 }
 
@@ -51,6 +56,7 @@ useEffect(()=>{getenquiry()},[])
     <div className='text-secondary py-3 App'>
  <h3>Update Enquiry</h3>
 </div> 
+{loader && <ApiLoader/>}
 <form onSubmit={handleSubmit}>
 
     <div className='row img-thumbnail p-3'> <div className=" col-md-4 mb-3">
@@ -92,7 +98,7 @@ useEffect(()=>{getenquiry()},[])
   <div className=" mb-3  ">
     <div className='d-flex justify-content-center align-items-center mx-2'>
     <button type='submit' className='btn btn-info text-white   '>Update Details</button>
-    <button type='submit' className='btn btn-secondary text-white mx-2'>Cancel</button>
+    <button type='button' onClick={()=>{navigate('/desk/enquiry')}} className='btn btn-secondary text-white mx-2'>Cancel</button>
     </div>
        
   </div></div>

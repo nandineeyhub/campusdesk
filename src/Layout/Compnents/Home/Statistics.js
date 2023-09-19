@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const Statistics = () => {
+    
   return (
     <div className='container-lg  App'>
         <div className='text-secondary py-3'>

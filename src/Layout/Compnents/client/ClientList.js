@@ -8,6 +8,7 @@ import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import {ApiLoader, NoRecordMsg} from '../../../Helper/common'
 import SearchBar from '../../Filters/SearchBar'
 import StatusFilter from '../../Filters/StatusFilter'
+import Pagination from '../../../Pagination'
 
 const ClientList = () => {
   const [value, setValue] = useState([])
@@ -17,6 +18,14 @@ const ClientList = () => {
   const [data, setData] = useState({})
   const [search, setSearch] = useState("")
   const [status, setStatus] = useState("")
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const handlePageChange = () => {
+    const startIndex = currentPage * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+  }
 
    const handleFilter = (e) => {
       if(e.target.name == "search"){
@@ -62,6 +71,7 @@ const ClientList = () => {
       if(response.data.isSuccess){
         if( response.data.data != null){
           setValue(response.data.data.clients.data)
+          setTotalPages(Math.ceil(response.data.data.length / itemsPerPage));
         } else{
           setValue([])
         }
@@ -153,6 +163,9 @@ const ClientList = () => {
         {!loader && value.length == 0 &&
                     <NoRecordMsg title={'No Record Found !!'}/>
                     }
+   { value.length != 0 && <div className='d-flex justify-content-end'>
+      <Pagination/>
+    </div>}
     </div>
     { <Modal show={open}
         onHide={() => setOpen(false)}
@@ -160,7 +173,8 @@ const ClientList = () => {
           data= {data}/>
         }
         <ClientView show={viewopen}
-        onHide={() => setViewOpen(false)}/>
+        onHide={() => setViewOpen(false)}
+        data = {data}/>
     </div>
   )
 }

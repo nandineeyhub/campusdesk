@@ -7,19 +7,14 @@ import { useState } from 'react';
 
 
 function App() {
-  const [open, setOpen] = useState(true)
-  const handleOpen = () => {
-    if(open) setOpen(false)
-    else setOpen(true)
-  }
+  
   return (
     <div className="">
  
-    <Header handleOpen={handleOpen}/>
-  
+    <Header/>
     <div className="container-fluid">
     <div className="row flex-nowrap">
-     <Sidebar show = {open}/>
+     <Sidebar/>
      <div class="col py-3 bg-light ">
            <Outlet/>
         </div>
