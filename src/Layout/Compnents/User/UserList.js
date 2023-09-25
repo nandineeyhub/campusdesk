@@ -8,6 +8,7 @@ import { apiUrls } from '../../../apiutils/apiUrls'
 import { ApiLoader } from '../../../Helper/common'
 import SearchBar from '../../Filters/SearchBar'
 import StatusFilter from '../../Filters/StatusFilter'
+import Pagination from '../../../Pagination'
 
 const UserList = () => {
 
@@ -18,8 +19,22 @@ const UserList = () => {
   const [viewopen, setViewOpen] = useState(false);
   const [search, setSearch] = useState("")
   const [status, setStatus] = useState("")
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [pages, setPages] = useState([1])
+  
 
-   const handleFilter = (e) => {
+  const handleLimitChange = (e) => {
+    setItemsPerPage(e.target.value)
+    setCurrentPage(1)
+  }
+
+  const handlepageChange = (page)=>{
+    setCurrentPage(page)
+  }
+
+  const handleFilter = (e) => {
       if(e.target.name == "search"){
         setSearch(e.target.value)
       } else if(e.target.name == "status"){
@@ -72,11 +87,12 @@ const UserList = () => {
   const getusers = async () => {
     setloader(true)
     try{
-      const query = {search:search, status:status}
+      const query = {search:search, status:status, limit:itemsPerPage, page:currentPage}
       const response =  await callAPI(apiUrls.getusers, query, 'GET')
       setloader(false)
       if(response.data.isSuccess){
         setValue(response.data.data.users.data)
+        setTotalPages((response.data.data.users.total%itemsPerPage)?Math.floor(response.data.data.users.total/itemsPerPage)+1:response.data.data.users.total/itemsPerPage)
       }else{
         setValue([])
         ErrorMsg(response.data.message)
@@ -89,7 +105,24 @@ const UserList = () => {
   
   useEffect(()=>{
     getusers()
-  },[status])
+   },[ itemsPerPage, totalPages, currentPage ])
+
+  useEffect(()=>{
+    setCurrentPage(1)
+    setItemsPerPage(10)
+    getusers()
+  },[ status ] )
+    
+  useEffect(()=>{
+    var newarr = []
+    var count = 1
+    var val = totalPages
+    while(val--){
+       newarr.push(count)
+       count = count + 1 
+    }
+    setPages(newarr)
+   },[ itemsPerPage, totalPages, currentPage])
 
   const navigate = useNavigate()
   return (
@@ -102,7 +135,7 @@ const UserList = () => {
   <div className='container-lg bg-light border-light rounded w-100 p-3 m-auto  '>
   <div className='p-3 my-3 d-flex justify-content-between'>
   <div className='d-flex justify-content-around'>
-               <SearchBar handleFilter={handleFilter} getdata={getusers}/>
+               <SearchBar handleFilter={handleFilter} getdata={getusers}  setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
              </div>
     <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/user/adduser")}}>Add New User</button></div>
@@ -136,7 +169,24 @@ const UserList = () => {
 </tbody>
   </table>
 </div>
-
+{ value.length != 0 && <div className='d-flex justify-content-end'>
+      <div className='mx-2'>
+        <select onChange={handleLimitChange} className='form-control text-primary ' name='itemsPerpage'>
+        <option selected value="">select limit</option>
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        </select>
+        </div>
+      <Pagination
+      totalPages={totalPages}
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      handlepageChange={handlepageChange}
+      pages={pages}
+      />
+    </div> }
  {<Modal show={open}
         onHide={() => setOpen(false)}
         data={data}

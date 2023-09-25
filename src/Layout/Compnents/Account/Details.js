@@ -1,35 +1,62 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { callAPI } from '../../../apiutils/apiUtils'
+import { apiUrls } from '../../../apiutils/apiUrls'
 
 const Details = () => {
+
+    const [value, setValue] = useState([])
+
+    const getDetails = async () => {
+        try{
+           const response = await callAPI(apiUrls.detail, {}, 'GET')
+           if(response.value.isSuccess){
+              setValue(response.value.data)
+           }
+        } catch (e){
+           
+        }
+    } 
+    
+    useEffect(()=>{
+        getDetails()
+    })
+
+    
   return (
         <div className='App'>
      <div className='text-secondary py-2'>
-     <h3> Details</h3>
-    </div> 
+     <h3> Details </h3>
+     </div> 
         <div className='   rounded w-75 p-3 m-auto img-thumbnail p-3'>
         
-        {/* <div className=''>
-            <img className='mx-auto rounded-circle img-fluid' style={{height:"200px", width:"200px"}} src='https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600'></img>
-        </div> */}
-        <div className='container-lg '>
-            <div className='my-2'> <h6> Mark Wheeler </h6></div>
-        </div>
-        <div className='container-lg '>
-            <div className='my-2'> <h6> Username : markwheeler234 </h6></div>
-        </div>
-        <div className='container-lg '>
-            <div className='my-2'> <h6> Designation : User 765 </h6></div>
-        </div>
-        <div className='container-lg '>
-            <div className='my-2'> <h6> Phone Number : 9654781275</h6></div>
-        </div>
-        <div className='container-lg '>
-            <div className='my-2'> <h6>Institution : Ajay Kumar Garg Engineering College</h6></div>
-        </div>
-        <div className='container-lg '>
-            <div className='my-2'> <h6> Joined on : 26/03/2023</h6></div>
-        </div>
-      
+       <div className=' p-5'>
+       <div className='d-flex   '>
+             { value.image && <div className='college-logo'>
+                <img src={"https://onlineprojectprogress.com/Campusdesk/public/upload/"+value.image} className='img-fluid'/>
+              </div>}
+          </div>
+          <div className='d-flex justify-content-between  align-items-start'>
+             <div>School Code</div> <div>{value.schoolCode}</div>
+          </div>
+          <div className='d-flex justify-content-between  align-items-start'>
+             <div>Name</div> <div>{value.name}</div>
+          </div>
+          <div className='d-flex justify-content-between  align-items-start'>
+             <div>Email</div> <div>{value.email}</div>
+          </div>
+          <div className='d-flex justify-content-between  align-items-start'>
+             <div>Phone Number</div> <div>{value.phoneNo}</div>
+          </div>
+          <div className='d-flex justify-content-between  align-items-start'>
+             <div>Contact Person</div> <div>{value.contactPerson}</div>
+          </div>
+          <div className='d-flex justify-content-between  align-items-start'>
+             <div>Status</div> <div>{value.status}</div>
+          </div>
+          <div className='d-flex justify-content-between  align-items-start'>
+             <div>Address</div> <div>{value.address}</div>
+          </div>
+     </div> 
   </div>
 </div>
   )

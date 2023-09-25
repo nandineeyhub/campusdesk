@@ -11,6 +11,7 @@ import StatusFilter from '../../Filters/StatusFilter'
 import Pagination from '../../../Pagination'
 
 const ClientList = () => {
+
   const [value, setValue] = useState([])
   const [loader,setLoader]=useState(false);
   const [open, setOpen] = useState(false)
@@ -18,13 +19,19 @@ const ClientList = () => {
   const [data, setData] = useState({})
   const [search, setSearch] = useState("")
   const [status, setStatus] = useState("")
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [pages, setPages] = useState([1])
+  
 
-  const handlePageChange = () => {
-    const startIndex = currentPage * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+  const handleLimitChange = (e) => {
+    setItemsPerPage(e.target.value)
+    setCurrentPage(1)
+  }
+
+  const handlepageChange = (page)=>{
+    setCurrentPage(page)
   }
 
    const handleFilter = (e) => {
@@ -61,17 +68,18 @@ const ClientList = () => {
          ErrorMsg(e.messsage)
       }
     }
+
    const navigate = useNavigate()
     
    const getdata =  async () => {
     setLoader(true)
     try{
-      const query = {search:search, status:status}
+      const query = {search:search, status:status, limit:itemsPerPage, page:currentPage}
       const response =  await callAPI( apiUrls.getclients, query, 'GET')
       if(response.data.isSuccess){
-        if( response.data.data != null){
+        if(response.data.data != null){
           setValue(response.data.data.clients.data)
-          setTotalPages(Math.ceil(response.data.data.length / itemsPerPage));
+          setTotalPages((response.data.data.clients.total%itemsPerPage)?Math.floor(response.data.data.clients.total/itemsPerPage)+1:response.data.data.clients.total/itemsPerPage) 
         } else{
           setValue([])
         }
@@ -105,23 +113,45 @@ const ClientList = () => {
 
    useEffect(()=>{
     getdata()
+   },[ itemsPerPage, totalPages, currentPage])
+   
+   useEffect(()=>{
+    setCurrentPage(1)
+    setItemsPerPage(10)
+    getdata()
    },[status])
 
-   console.log(value)
+  
+   useEffect(()=>{
+    var newarr = []
+    var count = 1
+    var val = totalPages
+    while(val--){
+       newarr.push(count)
+       count = count + 1 
+    }
+    setPages(newarr)
+   },[ itemsPerPage, totalPages, currentPage])
+
+   console.log(totalPages)
+   
+   console.log(currentPage)
+
 
   return (
     <div className='mb-5 '>
         
-          <div className='text-secondary  App'>
+          <div className='text-secondary '>
              
-             <h3>Client List</h3>
+             <h4>Client List</h4>
+
           </div> 
          
-        <div className='container-lg bg-light border-light rounded w-100 p-3 overflow-auto '>
+        <div className='container-lg bg-light border-light rounded w-100 px-3 overflow-auto '>
         { loader && <ApiLoader/>}
-        <div className='p-3 my-3 d-flex justify-content-between'>
+        <div className='py-2 my-3 d-flex justify-content-between'>
              <div className='d-flex justify-content-around'>
-               <SearchBar handleFilter={handleFilter} getdata={getdata}/>
+               <SearchBar handleFilter={handleFilter} getdata={getdata} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
              </div>
           <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/client/addclient")}}>Add New Client</button></div>
@@ -140,9 +170,9 @@ const ClientList = () => {
             <tbody>
 
    {
-    value.map((val)=>{
+    value.map((val, key)=>{
       return    <tr>
-      <th scope="row">{val.id}</th>
+      <th scope="row">{key+1}</th>
       <td>{val.name}</td>
       <td>{val.contactPerson}</td>
       <td>{val.email}</td>
@@ -152,7 +182,6 @@ const ClientList = () => {
        <NavLink to={`/desk/client/editclient/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>
        <NavLink className="text-decoration-none">   <i className="fa fa-trash text-dark fs-5 mx-1"  onClick={() => handleSelect(val,'del')}></i></NavLink>
        <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-dark mx-1" ></i></NavLink>
- 
         </div></td>
     </tr>
     })
@@ -164,8 +193,24 @@ const ClientList = () => {
                     <NoRecordMsg title={'No Record Found !!'}/>
                     }
    { value.length != 0 && <div className='d-flex justify-content-end'>
-      <Pagination/>
-    </div>}
+      <div className='mx-2'>
+        <select onChange={handleLimitChange} className='form-control text-primary ' name='itemsPerpage'>
+        <option selected value="">select limit</option>
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        </select>
+          
+        </div>
+      <Pagination
+      totalPages={totalPages}
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      handlepageChange={handlepageChange}
+      pages={pages}
+      />
+    </div> }
     </div>
     { <Modal show={open}
         onHide={() => setOpen(false)}

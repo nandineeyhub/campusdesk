@@ -7,10 +7,16 @@ const ChangePassword = () => {
   const [value, setValue] = useState({})
   const [toggleview, setToggleView] = useState(false)
   const [ctoggleview, setcToggleView] = useState(false)
+  const [ptoggleview, setpToggleView] = useState(false)
 
   const toggle = () => {
     if (toggleview) setToggleView(false)
     else setToggleView(true)
+  }
+
+  const ptoggle = () => {
+    if (ptoggleview) setToggleView(false)
+    else setpToggleView(true)
   }
   const ctoggle = () => {
     if (ctoggleview) setcToggleView(false)
@@ -45,10 +51,14 @@ const ChangePassword = () => {
      <h3> Change Password</h3>
     </div> 
     <form onSubmit={handleSubmit} className='img-thumbnail p-5'>
-  
     <div className="mb-3 input-group">
-              <input className='form-control ' onChange={handleChange} name='password' type={toggleview ? "text" : "password"} placeholder='New password'></input>
+              <input className='form-control ' onChange={handleChange} name='currentPassword' type={toggleview ? "text" : "password"} placeholder='Current password'></input>
               <span className='mx-1' onClick={() => { toggle() }}> {toggleview ? <i className="fa fa-eye form-control" /> : <i className="fa fa-eye-slash form-control" />}</span>
+            </div>
+  
+            <div className="mb-3 input-group">
+              <input className='form-control ' onChange={handleChange} name='password' type={toggleview ? "text" : "password"} placeholder='New password'></input>
+              <span className='mx-1' onClick={() => { ptoggle() }}> {toggleview ? <i className="fa fa-eye form-control" /> : <i className="fa fa-eye-slash form-control" />}</span>
             </div>
       
 

@@ -44,7 +44,7 @@ const Login = () => {
          localStorage.setItem("user", JSON.stringify(response.data.data))
          localStorage.setItem("token", JSON.stringify(response.data.data.token))
           navigate('/desk')
-          SuccessMsg(response.data.mesage)
+          SuccessMsg(response.data.message)
         
          }
         else{

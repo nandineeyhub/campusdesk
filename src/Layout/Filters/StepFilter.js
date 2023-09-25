@@ -3,7 +3,7 @@ import React from 'react'
 const StepFilter = ({handleFilter}) => {
   return (
     <div>
-        <select onChange={(e)=>{handleFilter(e)}} name='step' className='form-control'>
+        <select onChange={(e)=>{handleFilter(e)}} name='step' className=' p-2 border border-muted'>
             <option value="">select step</option>
 
                    <option value="Lead">Lead</option>

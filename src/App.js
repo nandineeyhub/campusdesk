@@ -15,7 +15,7 @@ function App() {
     <div className="container-fluid">
     <div className="row flex-nowrap">
      <Sidebar/>
-     <div class="col py-3 bg-light ">
+     <div class="col py-3 bg-light body-height">
            <Outlet/>
         </div>
      </div>

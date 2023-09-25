@@ -8,6 +8,7 @@ import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import { ApiLoader, NoRecordMsg } from '../../../Helper/common'
 import SearchBar from '../../Filters/SearchBar'
 import StatusFilter from '../../Filters/StatusFilter'
+import Pagination from '../../../Pagination'
 
 
 const RoleList = () => {
@@ -19,6 +20,21 @@ const RoleList = () => {
   const [loader, setLoader] = useState(false)
   const [search, setSearch] = useState("")
   const [status, setStatus] = useState("")
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [pages, setPages] = useState([1])
+  
+
+  const handleLimitChange = (e) => {
+    setItemsPerPage(e.target.value)
+    setCurrentPage(1)
+  }
+
+  const handlepageChange = (page)=>{
+    setCurrentPage(page)
+   
+  }
 
     const handleSelect =(val, type)=>{
      setData(val)
@@ -54,6 +70,7 @@ const RoleList = () => {
            ErrorMsg(e.message)
       }
     }
+
     const handleStatus = async (id,status) =>{
       try{
         const query = {status:status == "Active" ? "Inactive": "Active"}
@@ -70,23 +87,43 @@ const RoleList = () => {
         ErrorMsg(Exception.message);
       }
     }
+
     const getPermission = async () => {
       setLoader(true)
       try{
-         const response = await callAPI(apiUrls.getpermission, {search:search, status:status} ,'GET')
+         const query = {search:search, status:status, limit:itemsPerPage, page:currentPage}
+         const response = await callAPI(apiUrls.getpermission, query ,'GET')
          setLoader(false)
          if(response.data.isSuccess){
           setValue(response.data.data.role)
+          setTotalPages((response.data.data.role.total%itemsPerPage)?Math.floor(response.data.data.role.total/itemsPerPage)+1:response.data.data.role.total%itemsPerPage)
          }
       } catch(e){
         setLoader(false)
         ErrorMsg(e.message)
       }
     }
+
+    useEffect(()=>{
+      var newarr = []
+      var count = 1
+      var val = totalPages
+      while(val--){
+         newarr.push(count)
+         count = count + 1 
+      }
+      setPages(newarr)
+     }, [itemsPerPage, totalPages, currentPage])
   
     useEffect(()=>{
       getPermission()
-    },[])
+    },[itemsPerPage, totalPages, currentPage])
+
+    useEffect(()=>{
+      setCurrentPage(1)
+      setItemsPerPage(10)
+      getPermission()
+     },[status])
 
  
 
@@ -101,7 +138,7 @@ const RoleList = () => {
   <div className='container-lg bg-light border-light rounded w-100 p-3 m-auto box-height '>
   <div className='p-3 my-3 d-flex justify-content-between'>
   <div className='d-flex justify-content-around'>
-               <SearchBar handleFilter={handleFilter} getdata={getPermission}/>
+               <SearchBar handleFilter={handleFilter} getdata={getPermission} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter}/></div>
              </div>
     <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/role/addrole")}}>Add New Role</button></div>
@@ -122,10 +159,10 @@ const RoleList = () => {
 
       {
         
-        value.map((val)=>{
+        value.map((val, key)=>{
           return(
             <tr>
-<th scope="row">{val.id}</th>
+<th scope="row">{key+1}</th>
 <td> {val.name} </td>
 <td>-</td>
 <td>{new Date(val.created_at).toLocaleDateString("en-US")}</td>
@@ -152,6 +189,25 @@ const RoleList = () => {
   {!loader && value.length == 0 &&
                     <NoRecordMsg title={'No Record Found !!'}/>
                     }
+                    { value.length != 0 && <div className='d-flex justify-content-end'>
+      <div className='mx-2'>
+        <select onChange={handleLimitChange} className='form-control text-primary ' name='itemsPerpage'>
+        <option selected value="">select limit</option>
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        </select>
+          
+        </div>
+      <Pagination
+      totalPages={totalPages}
+      currentPage={currentPage}
+      setCurrentPage={setCurrentPage}
+      handlepageChange={handlepageChange}
+      pages={pages}
+      />
+    </div>}
 </div>
 
 <Modal show={open}

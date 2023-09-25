@@ -1,9 +1,11 @@
 export const apiUrls = {
+      
                        //login&logout
                        adminlogin:'admin/login',
                        clientlogin:"login",
                        logout:'logout',
                        changepassword:'changepassword',
+                       detail:'loggedclient',
 
                        //role
                        addrole:'role/add',
