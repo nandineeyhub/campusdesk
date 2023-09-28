@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 
-const PermissionCard = ({id, module, permissions, handleSelectAll, handleClick,  isCheckone}) => {
+const PermissionCard = ({id, module, permissions, handleSelectAll, setIsCheck, handleClick,  isCheckone, permission}) => {
   const [isCheckAll, setIsCheckAll] = useState(false);
+ 
   return (
     <div className='accordion '>
     <div class="accordion-item">

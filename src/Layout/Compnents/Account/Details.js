@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { callAPI } from '../../../apiutils/apiUtils'
 import { apiUrls } from '../../../apiutils/apiUrls'
+import { ApiLoader } from '../../../Helper/common'
 
 const Details = () => {
 
     const [value, setValue] = useState([])
-
+    const [loader, setLoader] = useState(false)
     const getDetails = async () => {
+        setLoader(true)
         try{
            const response = await callAPI(apiUrls.detail, {}, 'GET')
-           if(response.value.isSuccess){
-              setValue(response.value.data)
+           setLoader(false)
+           if(response.data.isSuccess){
+              setValue(response.data.data)
            }
         } catch (e){
-           
+            setLoader(false)
         }
     } 
     
     useEffect(()=>{
         getDetails()
-    })
+    },[])
 
     
   return (
@@ -28,11 +31,11 @@ const Details = () => {
      <h3> Details </h3>
      </div> 
         <div className='   rounded w-75 p-3 m-auto img-thumbnail p-3'>
-        
+        {loader && <ApiLoader/>}
        <div className=' p-5'>
        <div className='d-flex   '>
              { value.image && <div className='college-logo'>
-                <img src={"https://onlineprojectprogress.com/Campusdesk/public/upload/"+value.image} className='img-fluid'/>
+                <img src={"https://onlineprojectprogress.com/Campusdesk/public/upload/client/"+value.image} className='img-fluid'/>
               </div>}
           </div>
           <div className='d-flex justify-content-between  align-items-start'>

@@ -85,3 +85,13 @@ body{
 .college-logo{max-width: 180px;margin: 0 auto 24px;border: 1px dashed #ddd;text-align: center;padding: 15px;}
 .college-logo img{max-height: 100px;}
 .files_type {width: 114px; border-radius: 50%;height: 140px;position: absolute;top: 0;z-index: 9999;opacity: 0;left: 0;}
+.requireds{
+  color: red;
+}
+label.required::after {
+    content: "*";
+    color: rgb(219, 22, 22);
+    padding: 5px;
+    font-size: 17px;
+    vertical-align: middle;
+  }

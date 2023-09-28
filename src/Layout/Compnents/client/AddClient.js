@@ -3,6 +3,8 @@ import { callAPI, API } from '../../../apiutils/apiUtils'
 import { apiUrls } from '../../../apiutils/apiUrls'
 import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import { useNavigate } from 'react-router-dom'
+import SimpleReactValidator from 'simple-react-validator'
+import { useRef } from 'react'
 
 const AddClient = () => {
 
@@ -13,6 +15,9 @@ const AddClient = () => {
   const [state, setState] = useState([])
   const [city, setCity] = useState([])
   const [image, setImage] = useState('');
+  const [isSubmitting,setIsSubmitting]=useState(false);
+  const [,forceUpdate] = useState()
+  const simpleValidator = useRef(new SimpleReactValidator());
 
   const navigate = useNavigate()
 
@@ -25,7 +30,13 @@ const AddClient = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    addClient()
+    const formValid = simpleValidator.current.allValid() 
+    if(!formValid){
+      simpleValidator.current.showMessages();
+      forceUpdate(1);
+    }
+    else { addClient() 
+    setIsSubmitting(true)}
   }
 
   const toggle = () => {
@@ -84,6 +95,7 @@ const AddClient = () => {
   const addClient = async () => {
     try {
       const response = await API(apiUrls.addclient, {}, 'POST', formBody)
+      setIsSubmitting(false)
       if (response.data.isSuccess) {
         SuccessMsg(response.data.message)
         navigate('/desk/client')
@@ -106,17 +118,12 @@ const AddClient = () => {
     setValue((val) => ({ ...val, [name]: file }))
   }
 
-
-
-
   console.log(value)
 
   useEffect(() => {
     getPermission()
     getState()
   }, [])
-
-
 
 
   return (
@@ -133,40 +140,48 @@ const AddClient = () => {
               <img src={image ? URL.createObjectURL(image) : "../../../../public/images/upload-icon.png"} className="  img-fluid" alt="" />
  
               <input type="file" className="my-1" name='image' onChange={uploadImage} />
-             
+              <span className="requireds"> {simpleValidator.current.message('image', value.image, 'required')}</span>
             </div>
 
           </div>
           <div className='col-md-4 '>
             <label for="phone" className="required">Campus Code</label>
             <input className='form-control' onChange={handleChange} name='schoolCode' type="text" placeholder='Code'></input>
+            <span className="requireds"> {simpleValidator.current.message('code', value.schoolCode, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="name" className="required">Campus Name</label>
             <input className='form-control ' onChange={handleChange} name='name' type="text" placeholder='Name'></input>
+            <span className="requireds"> {simpleValidator.current.message('name', value.name, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="name" className="required">Contact Person</label>
             <input className='form-control ' onChange={handleChange} name='contactPerson' type="text" placeholder='Name'></input>
+            <span className="requireds"> {simpleValidator.current.message('contact person', value.contactPerson, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="email" className="required">Email</label>
             <input className='form-control' onChange={handleChange} name='email' type="text" placeholder='Email'></input>
+            <span className="requireds"> {simpleValidator.current.message('email', value.email, 'required|email')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Phone</label>
             <input className='form-control' onChange={handleChange} name='phoneNo' type="text" placeholder='Phone'></input>
+            <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|min:10|max:10')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Address</label>
             <input className='form-control' onChange={handleChange} name='address' type="text" placeholder='Address'></input>
+            <span className="requireds"> {simpleValidator.current.message('address', value.address, 'required')}</span>
           </div>
+
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Country</label>
             <select className='form-control' onChange={handleChange} name='countryID' type="text" placeholder=''>
 
               <option value="1" selected>US</option>
             </select>
+            <span className="requireds"> {simpleValidator.current.message('country ID', value.countryID, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">State</label>
@@ -178,6 +193,7 @@ const AddClient = () => {
                 })
               }
             </select>
+            <span className="requireds"> {simpleValidator.current.message('state ID', value.stateID, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">City</label>
@@ -189,6 +205,7 @@ const AddClient = () => {
                 })
               }
             </select>
+            <span className="requireds"> {simpleValidator.current.message('city ID', value.cityID, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="role" className="required">Role</label>
@@ -200,24 +217,27 @@ const AddClient = () => {
                 })
               }
             </select>
+            <span className="requireds"> {simpleValidator.current.message('role ID', value.roleID, 'required')}</span>
           </div>
-          <div className='col-md-4 my-3'>
+          <div className='col-md-4 my-2'>
             <label for="phone" className="required">Password</label>
-            <div className="mb-3 input-group">
+            <div className=" input-group">
               <input className='form-control ' onChange={handleChange} name='password' type={toggleview ? "text" : "password"} placeholder='password'></input>
               <span className='mx-1' onClick={() => { toggle() }}> {toggleview ? <i className="fa fa-eye form-control" /> : <i className="fa fa-eye-slash form-control" />}</span>
             </div>
+            <span className="requireds"> {simpleValidator.current.message('password', value.password, 'required')}</span>
           </div>
-          <div className='col-md-4 my-3 '>
+          <div className='col-md-4 my-2 '>
             <label for="phone" className="required">Confirm Password</label>
-            <div className="mb-3 input-group">
+            <div className=" input-group">
               <input className='form-control ' onChange={handleChange} name='password_confirmation' type={ctoggleview ? "text" : "password"} placeholder='Confirm Password'></input>
               <span className='mx-1' onClick={() => { ctoggle() }}> {ctoggleview ? <i className="fa fa-eye form-control" /> : <i className="fa fa-eye-slash form-control" />}</span>
             </div>
+            <span className="requireds"> {simpleValidator.current.message('password', value.password_confirmation, 'required')}</span>
           </div>
           <div className="col-md-12 ">
             <div className="d-flex  mt-3">
-              <button type="submit" className="btn btn-info text-white mx-3">Add Details</button>
+              <button disabled={isSubmitting} type="submit" className="btn btn-info text-white mx-3">Add Details</button>
               <button type="button" onClick={()=>{navigate('/desk/client')}} className="btn btn-secondary ">Cancel</button>
             </div>
           </div>

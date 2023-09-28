@@ -28,10 +28,14 @@ import EnquiryList from './Layout/Compnents/Leads/EnquiryList';
 import { ToastContainer } from 'react-toastify';
 import ChangePassword from './Layout/Compnents/Account/ChangePassword';
 import Details from './Layout/Compnents/Account/Details';
+import RecoverPassword from './Layout/Compnents/Account/RecoverPassword';
 
 const appRoute = createBrowserRouter([{
     path:"/",
     element:<Guest><Login/></Guest>
+  },{
+    path:"/recoverpassword",
+    element:<Guest><RecoverPassword/></Guest>
   },{
     path:"/desk",
     element:<App/>,
@@ -105,6 +109,7 @@ root.render(
   <>
     <ToastContainer autoClose={3000}/>
     <RouterProvider router={appRoute}/>
+    
   </>
  
 );

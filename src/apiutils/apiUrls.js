@@ -6,7 +6,8 @@ export const apiUrls = {
                        logout:'logout',
                        changepassword:'changepassword',
                        detail:'loggedclient',
-
+                       recoverpassword:'reset-password',
+                       sendemail:'send-reset-password-email',
                        //role
                        addrole:'role/add',
                        deleterole:'role/delete',
@@ -43,7 +44,11 @@ export const apiUrls = {
                        userstatus:'user/status/upate',
                        adduser:'user/register',
                        updateuser:'user',
-                       getuser:'user'
+                       getuser:'user',
+
+                       //dashboard
+
+                       dashboard:'dashboard',
 
                  };
                  

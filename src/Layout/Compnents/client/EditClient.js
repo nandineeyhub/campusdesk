@@ -4,6 +4,8 @@ import { callAPI, API } from '../../../apiutils/apiUtils'
 import { apiUrls } from '../../../apiutils/apiUrls'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ApiLoader } from '../../../Helper/common'
+import SimpleReactValidator from 'simple-react-validator'
+import { useRef } from 'react'
 
 const EditClient = () => {
 
@@ -13,6 +15,10 @@ const EditClient = () => {
   const [city, setCity] = useState([])
   const [loader, setLoader] = useState(true);
   const [image, setImage] = useState('');
+  const [,forceUpdate] = useState()
+  const [isSubmitting,setIsSubmitting]=useState(false);
+  const simpleValidator = useRef(new SimpleReactValidator());
+
 
   const { id } = useParams()
 
@@ -27,7 +33,13 @@ const EditClient = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    updateClient()
+    const formValid = simpleValidator.current.allValid() 
+    if(!formValid){
+      simpleValidator.current.showMessages();
+      forceUpdate(1);
+    }
+    else { updateClient() 
+      setIsSubmitting(true) }
   }
 
   const uploadImage = (e) => {
@@ -46,7 +58,7 @@ const EditClient = () => {
 
     try {
       const response = await callAPI(apiUrls.getcity + `/${id}`, {}, 'GET')
-
+      setIsSubmitting(false)
       if (response.data.isSuccess) {
         setCity(response.data.data[0].city)
       } else {
@@ -141,36 +153,43 @@ const EditClient = () => {
           <div className="col-md-12">
 
             <div className="my_profile_box ">
-           { <img src={image ? URL.createObjectURL(image) : "https://onlineprojectprogress.com/Campusdesk/public/upload/"+value.image } className="  img-fluid" alt="" />}
+           { <img src={image ? URL.createObjectURL(image) : "https://onlineprojectprogress.com/Campusdesk/public/upload/client/"+value.image } className="  img-fluid" alt="" />}
 
               <input type="file" className="my-1" name='image' onChange={uploadImage} />
-
+    
             </div>
-
+            <span className="requireds"> {simpleValidator.current.message('image', value.image, 'required')}</span>
           </div>
           <div className='col-md-4 '>
             <label for="phone" className="required">Campus Code</label>
             <input className='form-control' value={value.schoolCode} onChange={handleChange} name='schoolCode' type="text" placeholder='Code'></input>
+            <span className="requireds"> {simpleValidator.current.message('code', value.schoolCode, 'required')}</span>
           </div>
+
           <div className='col-md-4 my-2'>
             <label for="name" className="required">Campus Name</label>
             <input className='form-control ' value={value.name} onChange={handleChange} name='name' type="text" placeholder='Name'></input>
+            <span className="requireds"> {simpleValidator.current.message('name', value.name, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="name" className="required">Contact Person</label>
             <input className='form-control ' value={value.contactPerson} onChange={handleChange} name='contactPerson' type="text" placeholder='Name'></input>
-          </div>
+            <span className="requireds"> {simpleValidator.current.message('contact person', value.contactPerson, 'required')}</span>
+         </div>
           <div className='col-md-4 my-2'>
             <label for="email" className="required">Email</label>
             <input className='form-control' value={value.email} onChange={handleChange} name='email' type="text" placeholder='Email'></input>
+            <span className="requireds"> {simpleValidator.current.message('email', value.email, 'required|email')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Phone</label>
             <input className='form-control' value={value.phoneNo} onChange={handleChange} name='phoneNo' type="text" placeholder='Phone'></input>
+            <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|min:10|max:10')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Address</label>
             <input className='form-control' value={value.address} onChange={handleChange} name='address' type="text" placeholder='Address'></input>
+            <span className="requireds"> {simpleValidator.current.message('address', value.address, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Country</label>
@@ -178,7 +197,9 @@ const EditClient = () => {
 
               <option value="1" selected>US</option>
             </select>
+            <span className="requireds"> {simpleValidator.current.message('country ID', value.countryID, 'required')}</span>
           </div>
+          
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">State</label>
             <select className='form-control' value={value.stateID} onChange={handleChange} name='stateID' type="text" placeholder=''>
@@ -189,6 +210,7 @@ const EditClient = () => {
                 })
               }
             </select>
+            <span className="requireds"> {simpleValidator.current.message('state ID', value.stateID, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">City</label>
@@ -200,6 +222,7 @@ const EditClient = () => {
                 })
               }
             </select>
+            <span className="requireds"> {simpleValidator.current.message('city ID', value.cityID, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="role" className="required">Role</label>
@@ -211,10 +234,11 @@ const EditClient = () => {
                 })
               }
             </select>
+            <span className="requireds"> {simpleValidator.current.message('role ID', value.roleID, 'required')}</span>
           </div>
           <div className="col-md-12">
             <div className="d-flex  mt-3">
-              <button type="submit" className="btn btn-info text-white mx-3">Update Details</button>
+              <button disabled={isSubmitting}  type="submit" className="btn btn-info text-white mx-3">Update Details</button>
               <button type="button" onClick={() => { navigate("/desk/client") }} className="btn btn-secondary ">Cancel</button>
             </div>
           </div>

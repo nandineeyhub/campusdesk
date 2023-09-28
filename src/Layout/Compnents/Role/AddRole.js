@@ -5,30 +5,44 @@ import { apiUrls } from '../../../apiutils/apiUrls'
 import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import { useNavigate } from 'react-router-dom'
 import { ApiLoader } from '../../../Helper/common'
+import SimpleReactValidator from 'simple-react-validator'
+import { useRef } from 'react'
 
 const AddRole = () => {
 
   const [value, setvalue] = useState({roleName:"", permission:[]})
   const [permission, setPermission] = useState([])
-  
+  const [,forceUpdate] = useState() 
   const [isCheck, setIsCheck] = useState([]);
+  const [isSubmitting,setIsSubmitting]=useState(false); 
+ 
   const [loader, setLoader] = useState(false)
+  const simpleValidator = useRef(new SimpleReactValidator());
  
   const navigate = useNavigate()
    
-    
-  const handleSelectAll = (e, mname, isCheckAll) => {
-    
-    var allPermission = []
+  const handleSelectAll = ( e, mname, isCheckAll) => {
+   
+    var allPermission = value.permission
     permission.permissions.map((permission)=>{
       allPermission.push(permission.slug+"_"+mname)
     })
-
-    setIsCheck(allPermission);
+     
+    setIsCheck( allPermission);
     if (isCheckAll) {
-      setIsCheck([]);
+      permission.permissions.map((permission)=>{
+        const index = allPermission.indexOf(permission.slug+"_"+mname)
+        console.log(index)
+        if (index > -1) {
+          allPermission.splice(index,1);
+        }
+
+      })
+      setIsCheck(allPermission);
     }
+
    // setvalue((val)=>{return {...val,["permission"]:isCheck}})
+
   };
 
     const handleClick = (e, name, mname) => {
@@ -39,8 +53,7 @@ const AddRole = () => {
        
         if (!checked) {
           setIsCheck(isCheck.filter(item => { return item !== name+"_"+mname}));
-        
-       
+
         }
        
       };
@@ -57,7 +70,15 @@ const AddRole = () => {
 
   const handleSubmit = (e) =>{
     e.preventDefault()
-    addRole()
+    const formValid = simpleValidator.current.allValid() 
+    if(!formValid){
+      simpleValidator.current.showMessages();
+      forceUpdate(1);
+    }
+    else {
+      addRole()
+      setIsSubmitting(true)
+    }
   }
   
   const addRole = async () => {
@@ -78,6 +99,7 @@ const AddRole = () => {
     setLoader(true)
     try{
        const response = await callAPI(apiUrls.getpermission, {} ,'GET')
+       setIsSubmitting(false)
        setLoader(false)
        if(response.data.isSuccess){
         setPermission(response.data.data)
@@ -95,6 +117,7 @@ const AddRole = () => {
   },[])
 
   useEffect(()=>{
+    
     setvalue((val)=>{return {...val,["permission"]:isCheck}})
   },[isCheck])
 
@@ -112,10 +135,8 @@ const AddRole = () => {
 <div className='col-md-5 mb-3'>
    <label for="name" className="required my-1">Role Name</label>
    <input onChange={handleChange} className='form-control ' name='roleName' type="text" placeholder='Role name'></input>
+   <span className="requireds"> {simpleValidator.current.message('name', value.roleName, 'required')}</span>
    </div>
- 
-  
- 
   <label className='my-1'>Permission</label>
   {
       permission?.modules !=undefined && permission?.modules.length>0 &&  permission?.modules.map((module)=>{
@@ -125,19 +146,20 @@ const AddRole = () => {
         module={module}
         permissions={permission.permissions} 
         handleSelectAll={handleSelectAll}
+        setIsCheck={setIsCheck}
         handleClick ={handleClick}
         isCheckone={isCheckone}
        
+        permission={value.permission}
         />
      </div>
       )
     })
   }
  
-   
    <div className="col-md-12 ">
      <div className="d-flex  mt-3">
-     <button type="submit"  className="btn btn-info text-white mx-3">Add Details</button>
+      <button disabled={isSubmitting}  type="submit"  className="btn btn-info text-white mx-3">Add Details</button>
       <button type="button" onClick={()=>{navigate("/desk/role")}} className="btn btn-secondary ">Cancel</button>
        </div>
    </div>

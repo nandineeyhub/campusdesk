@@ -58,7 +58,7 @@ const ChangePassword = () => {
   
             <div className="mb-3 input-group">
               <input className='form-control ' onChange={handleChange} name='password' type={toggleview ? "text" : "password"} placeholder='New password'></input>
-              <span className='mx-1' onClick={() => { ptoggle() }}> {toggleview ? <i className="fa fa-eye form-control" /> : <i className="fa fa-eye-slash form-control" />}</span>
+              <span className='mx-1' onClick={() => { ptoggle() }}> {ptoggleview ? <i className="fa fa-eye form-control" /> : <i className="fa fa-eye-slash form-control" />}</span>
             </div>
       
 

@@ -52,17 +52,16 @@ const EnquiryList = () => {
     }
   }
 
-  const handleSelect = (val, type) => {
+  const handleSelect =(val, type)=>{
     setData(val)
-    if (type != 'view') {
-      setOpen(true)
+    if(type != 'view'){
+        setOpen(true)
     }
-    else {
+    else{
       setViewOpen(true)
-    }
-
   }
-
+   
+    }
   const handleStep = async (id, value) => {
     try {
       const query = { step: value }
@@ -211,7 +210,7 @@ const EnquiryList = () => {
                     }} name='step'>
                       <option value="Lead" selected={val.step == "Lead"}>Lead</option>
                       <option value="HotLead" selected={val.step == "HotLead"}>HotLead</option>
-                      <option value="Customer" selected={val.step == "Customer"}>Customer</option>
+                      <option value="Client" selected={val.step == "Client"}>Customer</option>
                     </select></td>
                     <td><p onClick={() => { handleStatus(val.id, val.status) }} role="button" className={`text-white text-center ${val.status == "Active" ? "bg-success" : "bg-danger"}`}>{val.status}</p></td>
                     <td><div classname='d-flex justify-content-center align-items-center '>
@@ -256,7 +255,8 @@ const EnquiryList = () => {
         data={data} />
       }
       <LeadView show={viewopen}
-        onHide={() => setViewOpen(false)} />
+        onHide={() => setViewOpen(false)}
+        data = {data} />
     </div>
   )
 }

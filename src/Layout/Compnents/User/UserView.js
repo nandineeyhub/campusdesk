@@ -29,7 +29,7 @@ const UserView = (props) => {
       <div className=' p-5'>
        <div className='d-flex   '>
              { data.image && <div className='college-logo'>
-                <img src={"https://onlineprojectprogress.com/Campusdesk/public/upload/"+data.image} className='img-fluid'/>
+                <img src={"https://onlineprojectprogress.com/Campusdesk/public/upload/user/"+data.image} className='img-fluid'/>
               </div>}
           </div>
           <div className='d-flex justify-content-between  align-items-start'>

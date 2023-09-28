@@ -5,12 +5,19 @@ import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import { useNavigate, useParams } from 'react-router-dom'
 import PermissionCard from './PermissionCard'
 import { ApiLoader } from '../../../Helper/common'
+import SimpleReactValidator from 'simple-react-validator'
+import { useRef } from 'react'
 
 const EditRole = () => {
   const [value, setvalue] = useState({})
   const [modules, setModules] = useState([])
   const [isCheck, setIsCheck] = useState([]);
   const [loader, setloader] = useState(false)
+  const [isSubmitting, setIsSubmitting]= useState(false)
+  const [,forceUpdate] = useState()
+  const simpleValidator = useRef(new SimpleReactValidator());
+
+
   const navigate = useNavigate()
   const {id} = useParams()
 
@@ -42,19 +49,27 @@ const EditRole = () => {
       
      };
 
-   const isCheckone = (id) => {
+  const isCheckone = (id) => {
  
      return (isCheck.includes(id))
    }
 
- const handleChange = (e) => {
+  const handleChange = (e) => {
       setvalue((val)=>{return({...val,[e.target.name]:e.target.value})})
  }
 
 
  const handleSubmit = (e) => {
    e.preventDefault()
-   updateRole()
+   const formValid = simpleValidator.current.allValid() 
+   if(!formValid){
+    simpleValidator.current.showMessages();
+    forceUpdate(1);
+   }
+   else {
+    updateRole()
+    setIsSubmitting(true)
+  }
  } 
  
 
@@ -66,6 +81,7 @@ const EditRole = () => {
 const updateRole = async () => {
 try{
   const response = await callAPI(apiUrls.updaterole+`/${id}`,{}, 'PATCH', value)
+  setIsSubmitting(false)
   if(response.data.isSuccess){
     SuccessMsg(response.data.message)
     navigate('/desk/role')
@@ -135,6 +151,7 @@ console.log(value)
 <div className='col-md-4 m-2 '>
    <label for="phone" className="required">Role Name</label>
    <input onChange={handleChange} value={value.name}  className='form-control' name='name' type="text" placeholder='Role name'></input>
+   <span className="requireds"> {simpleValidator.current.message('name', value.name, 'required')}</span>
    </div>
   
 </div>
@@ -159,7 +176,7 @@ console.log(value)
   
    <div className="col-md-12 ">
      <div className="d-flex  mt-3">
-     <button type="submit"  className="btn btn-info text-white mx-3">Update Details</button>
+     <button disabled={isSubmitting} type="submit"  className="btn btn-info text-white mx-3">Update Details</button>
       <button type="button" onClick={()=>{navigate("/desk/role")}}  className="btn btn-secondary ">Cancel</button>
        </div>
    </div>
