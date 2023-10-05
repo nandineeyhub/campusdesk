@@ -12,6 +12,8 @@ const EditLead = () => {
   const [value, setValue] = useState({})
   const [loader, setloader] = useState(false)
   const [isSubmitting, setIsSubmitting]= useState(false)
+  const [clientlist, setClientList] = useState([])
+
   const [,forceUpdate] = useState()
   const {id} = useParams()
   const simpleValidator = useRef(new SimpleReactValidator());
@@ -66,6 +68,32 @@ const getenquiry = async () => {
 
 useEffect(()=>{getenquiry()},[])
 
+const getdata =  async () => {
+   
+  try{
+    const response =  await callAPI( apiUrls.getclients, {}, 'GET')
+    if(response.data.isSuccess){
+      if(response.data.data != null){
+        setClientList(response.data.data.clients.data)
+         
+      } else{
+        setValue([])
+      }
+     
+    } else {
+      ErrorMsg(response.data.message)
+    }
+  } catch(e){
+     ErrorMsg(e.message)
+     
+  }
+
+ }
+
+
+useEffect(()=>{getdata()
+},[])
+
   return (
     <div className='container-lg w-100 '>
     <div className='text-secondary py-3 App'>
@@ -113,6 +141,19 @@ useEffect(()=>{getenquiry()},[])
    </select>
    <span className="requireds"> {simpleValidator.current.message('step', value.step, 'required')}</span>
    </div>
+   <div className='col-md-4 mb-3'>
+            <label for="client_id" className="required">Client</label>
+            <select className='form-control' onChange={handleChange} name='client_id' type="text" placeholder=''>
+              <option value="" selected>--Choose Client--</option>
+              {
+                clientlist.map((client) => {
+                  return <option value={client.id}>{client.name}</option>
+                })
+              }
+            </select>
+            <span className="requireds"> {simpleValidator.current.message('client id', value.client_id, 'required')}</span>
+          </div>
+     
   <div className=" col-md-12 mb-3">
   <label for="name" className="required">Message</label>
    <textarea value={value.message} onChange={handleChange} name='message' className='form-control'></textarea>

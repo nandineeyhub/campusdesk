@@ -21,19 +21,32 @@ const EditRole = () => {
   const navigate = useNavigate()
   const {id} = useParams()
 
-  const handleSelectAll = (e, mname, isCheckAll) => {
-    
-   var allPermission = []
-     modules.permissions.map((permission)=>{
-     allPermission.push(permission.slug+"_"+mname)
-   })
+  const handleSelectAll = ( e, mname, isCheckAll) => {
+   
+    var allPermission = value.permission
+    modules.permissions.map((permission)=>{
+      allPermission.push(permission.slug+"_"+mname)
+    })
+     
+    setIsCheck( allPermission);
 
-   setIsCheck(allPermission);
-   if (isCheckAll) {
-     setIsCheck([]);
-   }
-  // setvalue((val)=>{return {...val,["permission"]:isCheck}})
- };
+    if (isCheckAll) {
+      modules.permissions.map((permission)=>{
+        
+        allPermission = allPermission.filter((obj)=>{
+          return obj != permission.slug+"_"+mname
+        })
+       
+        setIsCheck(allPermission);
+       
+      })
+     
+    }
+
+   // setvalue((val)=>{return {...val,["permission"]:isCheck}})
+
+  };
+
 
    const handleClick = (e, name, mname) => {
        const { checked } = e.target;
@@ -43,8 +56,6 @@ const EditRole = () => {
       
        if (!checked) {
          setIsCheck(isCheck.filter(item => { return item !== name+"_"+mname}));
-       
-      
        }
       
      };
@@ -102,9 +113,9 @@ try{
    const response = await callAPI(apiUrls.getrolebyid+`/${id}`,{}, 'GET')
    setloader(false)
    if( response.data.isSuccess){
-      setvalue(response.data.data)
+      setvalue(response.data.data.roles)
       var newarray = []
-      response.data.data.permissions.map((p)=>(
+      response.data.data.roles.permissions.map((p)=>(
         newarray.push(p.permissions)
       ))
       setIsCheck(newarray)
@@ -138,7 +149,7 @@ try{
    
  },[])
 
-console.log(value)
+
 
   return (
     <div className='container-lg w-100 '>
@@ -167,6 +178,7 @@ console.log(value)
         handleSelectAll={handleSelectAll}
         handleClick ={handleClick}
         isCheckone={isCheckone}
+        isCheck={isCheck}
         />
      </div>
       )

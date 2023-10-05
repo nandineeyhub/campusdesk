@@ -29,16 +29,23 @@ import { ToastContainer } from 'react-toastify';
 import ChangePassword from './Layout/Compnents/Account/ChangePassword';
 import Details from './Layout/Compnents/Account/Details';
 import RecoverPassword from './Layout/Compnents/Account/RecoverPassword';
+import Protected from './Auth/Protected';
+import RecoverPasswordForm from './Layout/Compnents/Account/RecoverPasswordForm';
+import AuthCheck from './Auth/AuthCheck';
 
 const appRoute = createBrowserRouter([{
     path:"/",
     element:<Guest><Login/></Guest>
   },{
     path:"/recoverpassword",
-    element:<Guest><RecoverPassword/></Guest>
-  },{
+    element:<Guest><RecoverPassword/></Guest>,
+
+  }, {
+    path:"/recoverpassword/:token",
+    element:<Guest><RecoverPasswordForm/></Guest>
+  }, {
     path:"/desk",
-    element:<App/>,
+    element:<Protected><App/></Protected>,
     children:[{
       path:"/desk",
       element:<Statistics/>
@@ -53,52 +60,52 @@ const appRoute = createBrowserRouter([{
       element:<Client/>,
       children:[{
         path:"/desk/client",
-        element:<ClientList/>
+        element:<AuthCheck access={"view_client"}><ClientList/></AuthCheck>
       },{
         path:"/desk/client/addclient",
-        element:<AddClient/>
+        element:<AuthCheck access={"add_client"}><AddClient/></AuthCheck>
       },{
         path:"/desk/client/editclient/:id",
-        element:<EditClient/>
+        element:<AuthCheck access={"edit_client"}><EditClient/></AuthCheck>
       }]
     },{
       path:"/desk/role",
       element:<Role/>,
       children:[{
         path:"/desk/role",
-        element:<RoleList/>
+        element:<AuthCheck access={"view_role"}><RoleList/></AuthCheck>
       },{
         path:"/desk/role/addrole",
-        element:<AddRole/>
+        element:<AuthCheck access={"add_role"}><AddRole/></AuthCheck>
       },{
         path:"/desk/role/editrole/:id",
-        element:<EditRole/>
+        element:<AuthCheck access={"edit_role"}><EditRole/></AuthCheck>
       }]
     },{
       path:"/desk/user",
       element:<User/>,
       children:[{
         path:"/desk/user",
-        element:<UserList/>
+        element:<AuthCheck access={"view_user"}><UserList/></AuthCheck>
       },{
         path:"/desk/user/adduser",
-        element:<AddUser/>
+        element:<AuthCheck access={"add_user"}><AddUser/></AuthCheck>
       },{
         path:"/desk/user/edituser/:id",
-        element:<EditUser/>
+        element:<AuthCheck access={"edit_user"}><EditUser/></AuthCheck>
       }]
     },{
       path:"/desk/enquiry",
       element:<Lead/>,
       children:[{
         path:"/desk/enquiry",
-        element:<EnquiryList/>
+        element:<AuthCheck access={"view_enquiry"}><EnquiryList/></AuthCheck>
       },{
         path:"/desk/enquiry/addenquiry",
-        element:<EnquiryForm/>
+        element:<AuthCheck access={"add_enquiry"}><EnquiryForm/></AuthCheck>
       },{
         path:"/desk/enquiry/editenquiry/:id",
-        element:<EditLead/>
+        element:<AuthCheck access={"edit_enquiry"}><EditLead/></AuthCheck>
       }]
     }]
   }]

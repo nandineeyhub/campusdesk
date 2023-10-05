@@ -6,11 +6,13 @@ import moment from 'moment';
 import { useNavigate } from 'react-router';
 import SimpleReactValidator from 'simple-react-validator'
 import { useRef } from 'react'
+import { useEffect } from 'react';
 
 const EnquiryForm = () => {
   const [value, setValue] = useState({enquiryDate:moment().format('YYYY-MM-DD')})
   const [isSubmitting, setIsSubmitting]= useState(false)
   const [,forceUpdate] = useState()
+  const [clientlist, setClientList] = useState([])
   const simpleValidator = useRef(new SimpleReactValidator());
 
   const navigate = useNavigate()
@@ -48,6 +50,33 @@ const EnquiryForm = () => {
         ErrorMsg(e.errors)
      }
   }
+
+  const getdata =  async () => {
+   
+    try{
+      
+      const response =  await callAPI( apiUrls.getclients, {}, 'GET')
+      if(response.data.isSuccess){
+        if(response.data.data != null){
+          setClientList(response.data.data.clients.data)
+           
+        } else{
+          setValue([])
+        }
+       
+      } else {
+        ErrorMsg(response.data.message)
+      }
+    } catch(e){
+       ErrorMsg(e.message)
+       
+    }
+
+   }
+ 
+ 
+  useEffect(()=>{getdata()
+  },[])
   console.log(value)
   return (
       <div className='container-lg w-100 '>
@@ -69,7 +98,7 @@ const EnquiryForm = () => {
             <div className=" col-md-4 mb-3">
               <label for="name" className="required">Phone</label>
               <input onChange={handleChange} className='form-control my-1' name='phone'  type="text" placeholder='Phone number'></input>
-              <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|min:10|max:10')}</span>
+              <span className="requireds"> {simpleValidator.current.message('phone number', value.phone, 'required|min:10|max:10')}</span>
             </div>
            
             <div className=" col-md-4 mb-3">
@@ -87,6 +116,19 @@ const EnquiryForm = () => {
               <input onChange={handleChange} className='form-control my-1' name='address' type="text" placeholder='Postal Address'></input>
               <span className="requireds"> {simpleValidator.current.message('address', value.address, 'required')}</span>
             </div>
+            <div className='col-md-4 mb-3'>
+            <label for="client_id" className="required">Client</label>
+            <select className='form-control' onChange={handleChange} name='client_id' type="text" placeholder=''>
+              <option value="" selected>--Choose Client--</option>
+              {
+                clientlist.map((client) => {
+                  return <option value={client.id}>{client.name}</option>
+                })
+              }
+            </select>
+            <span className="requireds"> {simpleValidator.current.message('client id', value.client_id, 'required')}</span>
+          </div>
+        
             <div className=" col-md-12 mb-3">
             <label for="name" className="required">Message</label>
              <textarea onChange={handleChange} name='message' className='form-control my-1'></textarea>

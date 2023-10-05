@@ -59,6 +59,7 @@ const Login = () => {
       if (response.data.isSuccess) {
         localStorage.setItem("user", JSON.stringify(response.data.data))
         localStorage.setItem("token", JSON.stringify(response.data.data.token))
+        localStorage.setItem("permissions", JSON.stringify(response.data.data.permissions))
         navigate('/desk')
         SuccessMsg(response.data.message)
 
@@ -107,7 +108,7 @@ const Login = () => {
                   <input className='form-control ' name='password' onChange={handleChange} type={toggleview ? "text" : "password"} placeholder='password'></input>
                   <span className='mx-1' onClick={() => { toggle() }}> {toggleview ? <i className="fa fa-eye form-control" /> : <i className="fa fa-eye-slash form-control" />}</span>
                 </div>
-                <span className="requireds"> {simpleValidator.current.message('email', value.password, 'required')}</span>
+                <span className="requireds"> {simpleValidator.current.message('password', value.password, 'required')}</span>
               </div>
               <div className="mb-3 d-flex ">
                 <button disabled={isSubmitting} type='submit' className='btn btn-info text-white px-3'> Log in</button>

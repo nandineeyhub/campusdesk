@@ -15,6 +15,8 @@ const EditUser = () => {
   const [image, setImage] = useState('')
   const [,forceUpdate] = useState()
   const [isSubmitting, setIsSubmitting]= useState(false)
+  const [clientlist, setClientList] = useState([])
+  const [role, setRole] = useState([])
   const simpleValidator = useRef(new SimpleReactValidator());
 
   const navigate = useNavigate()
@@ -86,6 +88,42 @@ const EditUser = () => {
   }
 
   useEffect(()=>{getuser()},[])
+  const getdata =  async () => {
+   
+    try{
+      
+      const response =  await callAPI( apiUrls.getclients, {}, 'GET')
+      if(response.data.isSuccess){
+        if(response.data.data != null){
+          setClientList(response.data.data.clients.data)
+           
+        } else{
+          setValue([])
+        }
+       
+      } else {
+        ErrorMsg(response.data.message)
+      }
+    } catch(e){
+       ErrorMsg(e.message)
+       
+    }
+
+   }
+   const getPermission = async () => {
+    try {
+      const response = await callAPI(apiUrls.getpermission, {}, 'GET')
+      if (response.data.isSuccess) {
+        setRole(response.data.data.role)
+      } else {
+        ErrorMsg(response.data.message)
+      }
+    } catch (e) {
+      ErrorMsg(e.message)
+    }
+  }
+  useEffect(()=>{getdata()
+  getPermission()},[])
 
   return (
     <div className='container-lg w-100 '>
@@ -98,7 +136,7 @@ const EditUser = () => {
 <div className="col-md-12">
 
 <div className="my_profile_box ">
-{ <img src={image ? URL.createObjectURL(image) : "https://onlineprojectprogress.com/Campusdesk/public/upload/user/"+value.image } className="  img-fluid" alt="" />}
+{ <img src={image ? URL.createObjectURL(image) : value.image_path+value.image } className="  img-fluid" alt="" />}
 
   <input type="file" className="my-1" name='image' onChange={uploadImage} />
   <span className="requireds"> {simpleValidator.current.message('image', value.image, 'required')}</span>
@@ -134,6 +172,31 @@ const EditUser = () => {
    <input onChange={handleChange} value={value.address} className='form-control' name='address' type="text" placeholder='address'></input>
    <span className="requireds"> {simpleValidator.current.message('address', value.address, 'required')}</span>
    </div>
+   
+   <div className='col-md-4 my-2'>
+            <label for="client_id" className="required">Client</label>
+            <select value={value.client_id} className='form-control' onChange={handleChange} name='client_id' type="text" placeholder=''>
+              <option value="" selected>--Choose Client--</option>
+              {
+                clientlist.map((client) => {
+                  return <option value={client.id}>{client.name}</option>
+                })
+              }
+            </select>
+            <span className="requireds"> {simpleValidator.current.message('client id', value.client_id, 'required')}</span>
+          </div>
+          <div className='col-md-4 my-2'>
+            <label for="role" className="required">Role</label>
+            <select value={value.role_id} className='form-control' onChange={handleChange} name='role_id' type="text" placeholder=''>
+              <option value="" selected>--Choose Role--</option>
+              {
+                role.map((role) => {
+                  return <option value={role.id}>{role.name}</option>
+                })
+              }
+            </select>
+            <span className="requireds"> {simpleValidator.current.message('role ID', value.role_id, 'required')}</span>
+          </div>
 
    <div className="col-md-12 ">
      <div className="d-flex  mt-3">

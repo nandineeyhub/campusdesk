@@ -8,7 +8,7 @@ const StepFilter = ({handleFilter}) => {
 
                    <option value="Lead">Lead</option>
                    <option value="HotLead">HotLead</option>
-                   <option value="Customer">Customer</option>
+                   <option value="Client">Customer</option>
 
         </select>
     </div>

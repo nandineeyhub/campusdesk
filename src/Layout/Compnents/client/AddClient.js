@@ -104,6 +104,7 @@ const AddClient = () => {
       }
     } catch (e) {
       ErrorMsg(e.message)
+      setIsSubmitting(false)
     }
   }
 
@@ -208,8 +209,8 @@ const AddClient = () => {
             <span className="requireds"> {simpleValidator.current.message('city ID', value.cityID, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
-            <label for="role" className="required">Role</label>
-            <select className='form-control' onChange={handleChange} name='roleID' type="text" placeholder=''>
+            <label for="role_id" className="required">Role</label>
+            <select className='form-control' onChange={handleChange} name='role_id' type="text" placeholder=''>
               <option value="" selected>--Choose Role--</option>
               {
                 role.map((role) => {
@@ -217,7 +218,7 @@ const AddClient = () => {
                 })
               }
             </select>
-            <span className="requireds"> {simpleValidator.current.message('role ID', value.roleID, 'required')}</span>
+            <span className="requireds"> {simpleValidator.current.message('role ID', value.role_id, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Password</label>

@@ -35,7 +35,7 @@ const Details = () => {
        <div className=' p-5'>
        <div className='d-flex   '>
              { value.image && <div className='college-logo'>
-                <img src={"https://onlineprojectprogress.com/Campusdesk/public/upload/client/"+value.image} className='img-fluid'/>
+                <img src={value.image_path+value.image} className='img-fluid'/>
               </div>}
           </div>
           <div className='d-flex justify-content-between  align-items-start'>

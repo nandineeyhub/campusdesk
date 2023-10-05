@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { API } from '../../../apiutils/apiUtils'
+import { API, callAPI } from '../../../apiutils/apiUtils'
 import { apiUrls } from '../../../apiutils/apiUrls'
 import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import { useNavigate } from 'react-router-dom'
 import SimpleReactValidator from 'simple-react-validator'
 import { useRef } from 'react'
+import { useEffect } from 'react'
 
 const AddUser = () => {
 
@@ -14,8 +15,9 @@ const AddUser = () => {
   const [value, setValue] = useState({})
   const [,forceUpdate] = useState()
   const [isSubmitting, setIsSubmitting]= useState(false)
+  const [clientlist, setClientList] = useState([])
+  const [role, setRole] = useState([])
   const simpleValidator = useRef(new SimpleReactValidator());
-
 
   const navigate = useNavigate()
   
@@ -78,6 +80,43 @@ const AddUser = () => {
    }
   }
 
+
+  const getdata =  async () => {
+   
+    try{
+      
+      const response =  await callAPI( apiUrls.getclients, {}, 'GET')
+      if(response.data.isSuccess){
+        if(response.data.data != null){
+          setClientList(response.data.data.clients.data)
+           
+        } else{
+          setValue([])
+        }
+       
+      } else {
+        ErrorMsg(response.data.message)
+      }
+    } catch(e){
+       ErrorMsg(e.message)
+       
+    }
+
+   }
+   const getPermission = async () => {
+    try {
+      const response = await callAPI(apiUrls.getpermission, {}, 'GET')
+      if (response.data.isSuccess) {
+        setRole(response.data.data.role)
+      } else {
+        ErrorMsg(response.data.message)
+      }
+    } catch (e) {
+      ErrorMsg(e.message)
+    }
+  }
+  useEffect(()=>{getdata()
+  getPermission()},[])
   console.log(value)
 
   return (
@@ -90,7 +129,7 @@ const AddUser = () => {
     <div className="col-md-12">
 
 <div className="my_profile_box ">
-  <img src={image ? URL.createObjectURL(image) : "../../../../public/images/upload-icon.png"} className="  img-fluid" alt="" />
+  <img src={image ? URL.createObjectURL(image) : "../../../../public/images/upload-icon.png"} className="img-fluid" alt="" />
 
   <input type="file" className="my-1" name='image' onChange={uploadImage} />
 {/* <span className="requireds"> {simpleValidator.current.message('image', value.image, 'required')}</span> */}
@@ -120,7 +159,6 @@ const AddUser = () => {
        <label for="phone" className="required">Phone</label>
        <input onChange={handleChange} className='form-control' name='phoneNo' type="text" placeholder='Phone'></input>
        <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|min:10|max:10')}</span>
-        
        </div>
        
        <div className='col-md-4 my-2'>
@@ -128,6 +166,31 @@ const AddUser = () => {
        <input onChange={handleChange} className='form-control' name='address' type="text" placeholder='Address'></input>
        <span className="requireds"> {simpleValidator.current.message('address', value.address, 'required')}</span>
        </div>
+
+       <div className='col-md-4 my-2'>
+            <label for="client_id" className="required">Client</label>
+            <select className='form-control' onChange={handleChange} name='client_id' type="text" placeholder=''>
+              <option value="" selected>--Choose Client--</option>
+              {
+                clientlist.map((client) => {
+                  return <option value={client.id}>{client.name}</option>
+                })
+              }
+            </select>
+            <span className="requireds"> {simpleValidator.current.message('client id', value.client_id, 'required')}</span>
+          </div>
+          <div className='col-md-4 my-2'>
+            <label for="role" className="required">Role</label>
+            <select className='form-control' onChange={handleChange} name='role_id' type="text" placeholder=''>
+              <option value="" selected>--Choose Role--</option>
+              {
+                role.map((role) => {
+                  return <option value={role.id}>{role.name}</option>
+                })
+              }
+            </select>
+            <span className="requireds"> {simpleValidator.current.message('role ID', value.role_id, 'required')}</span>
+          </div>
    
        <div className='col-md-4 my-2'>
        <label for="password" className="required">Password</label>

@@ -5,10 +5,11 @@ import UserView from './UserView'
 import { callAPI } from '../../../apiutils/apiUtils'
 import { ErrorMsg, SuccessMsg } from '../../../Notifications'
 import { apiUrls } from '../../../apiutils/apiUrls'
-import { ApiLoader } from '../../../Helper/common'
+import { ApiLoader, NoRecordMsg } from '../../../Helper/common'
 import SearchBar from '../../Filters/SearchBar'
 import StatusFilter from '../../Filters/StatusFilter'
 import Pagination from '../../../Pagination'
+import ValidatePermission from '../../../Auth/ValidatePermission'
 
 const UserList = () => {
 
@@ -71,8 +72,8 @@ const UserList = () => {
 
   const handleStatus = async (id, status) => {
     try {
-      const query = {status:status=="Active"?"Inactive":"Active"}
-      const response = await callAPI(apiUrls.userstatus+`/${id}`, query, 'PATCH')
+      const query = {status:status=="Active"?"Inactive":"Active", id:id}
+      const response = await callAPI(apiUrls.userstatus, query, 'PUT')
       if(response.data.isSuccess){
          SuccessMsg(response.data.message)
          getusers()
@@ -95,7 +96,7 @@ const UserList = () => {
         setTotalPages((response.data.data.users.total%itemsPerPage)?Math.floor(response.data.data.users.total/itemsPerPage)+1:response.data.data.users.total/itemsPerPage)
       }else{
         setValue([])
-        ErrorMsg(response.data.message)
+        //ErrorMsg(response.data.message)
       }
     } catch(e){
          ErrorMsg(e.message)
@@ -126,19 +127,19 @@ const UserList = () => {
 
   const navigate = useNavigate()
   return (
-    <div className='App'>
+    <div className=''>
     <div className='text-secondary'>
    
-       <h3>User List</h3>
+       <h4>User List</h4>
     </div> 
     {loader && <ApiLoader/>}
-  <div className='container-lg bg-light border-light rounded w-100 p-3 m-auto  '>
-  <div className='p-3 my-3 d-flex justify-content-between'>
+  <div className='container-lg bg-light border-light rounded w-100 px-3 m-auto  '>
+  <div className='py-2 my-3 d-flex justify-content-between'>
   <div className='d-flex justify-content-around'>
                <SearchBar handleFilter={handleFilter} getdata={getusers}  setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
              </div>
-    <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/user/adduser")}}>Add New User</button></div>
+    {ValidatePermission("add_user") && <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/user/adduser")}}>Add New User</button>}</div>
   <table className='table table-striped'>
       <thead >
           <th scope='col'>Id</th>
@@ -157,10 +158,10 @@ const UserList = () => {
       <td>{val.name}</td>
       <td>{val.email}</td>
       <td>{val.phoneNo}</td>
-      <td><p  role="button" onClick={()=>{handleStatus(val.id, val.status)}} className={`text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
+      <td><p  role="button" onClick={()=>{ ValidatePermission("update_user") && handleStatus(val.id, val.status)}} className={`App text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
       <td><div classname='d-flex justify-content-center align-items-center '>
-       <NavLink to={`/desk/user/edituser/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>
-       <NavLink className="text-decoration-none"  onClick={() => handleSelect(val, 'del')}>  <i className="fa fa-trash text-dark fs-5 mx-1" ></i></NavLink>
+     { ValidatePermission("edit_user")&&<NavLink to={`/desk/user/edituser/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>}
+     { ValidatePermission("delete_user") && <NavLink className="text-decoration-none"  onClick={() => handleSelect(val, 'del')}>  <i className="fa fa-trash text-dark fs-5 mx-1" ></i></NavLink>}
        <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-dark mx-1"></i></NavLink>
         </div></td>
       </tr> } )
@@ -168,6 +169,9 @@ const UserList = () => {
 
 </tbody>
   </table>
+  {!loader && value.length == 0 &&
+                    <NoRecordMsg title={'No Record Found !!'}/>
+                    }
 </div>
 { value.length != 0 && <div className='d-flex justify-content-end'>
       <div className='mx-2'>

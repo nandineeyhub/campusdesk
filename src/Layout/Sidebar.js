@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import ValidatePermission from '../Auth/ValidatePermission'
 
 const Sidebar = ({show}) => {
   return (
@@ -14,27 +15,27 @@ const Sidebar = ({show}) => {
                     <i className="fa fa-line-chart"></i> <span className=" mx-2  "><h6>Dashboard</h6></span>
                 </NavLink>
             </li>
-            <li>
+          { ValidatePermission("view_client") && <li>
                <NavLink to="/desk/client"  className="my-2  text-secondary text-decoration-none px-0 align-middle d-flex">
                     <i className="fa fa-address-card-o"></i> <span className="mx-2 "><h6>Client</h6></span> </NavLink>
                
-            </li>
-            <li>
+            </li>}
+           { ValidatePermission("view_role") && <li>
                <NavLink to="/desk/role"  className="my-2 text-secondary text-decoration-none px-0 align-middle d-flex">
                     <i className="fa fa-key"></i> <span className="mx-2 "><h6>Role</h6></span> </NavLink>
                
-            </li>
+            </li>}
             
-            <li >
+           { ValidatePermission("view_user") && <li >
                <NavLink to="/desk/user" className="my-2 text-secondary text-decoration-none px-0 align-middle d-flex ">
                     <i className="	fa fa-user"></i> <span className="mx-2"><h6>User</h6></span></NavLink>
                
-            </li>
+            </li>}
            
-            <li >
+         { ValidatePermission("view_enquiry") && <li >
                <NavLink to="/desk/enquiry" className="my-2 text-secondary text-decoration-none px-0 align-middle d-flex">
                     <i className="fa fa-archive"></i> <span className="mx-2"><h6>Enquiries</h6></span> </NavLink>
-            </li>
+            </li>}
         </ul>
         <hr/>
         

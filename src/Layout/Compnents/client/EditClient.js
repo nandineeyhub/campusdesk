@@ -153,7 +153,7 @@ const EditClient = () => {
           <div className="col-md-12">
 
             <div className="my_profile_box ">
-           { <img src={image ? URL.createObjectURL(image) : "https://onlineprojectprogress.com/Campusdesk/public/upload/client/"+value.image } className="  img-fluid" alt="" />}
+           { <img src={image ? URL.createObjectURL(image) :value.image_path+value.image } className="  img-fluid" alt="" />}
 
               <input type="file" className="my-1" name='image' onChange={uploadImage} />
     
@@ -226,7 +226,7 @@ const EditClient = () => {
           </div>
           <div className='col-md-4 my-2'>
             <label for="role" className="required">Role</label>
-            <select className='form-control' value={value.roleID} onChange={handleChange} name='roleID' type="text" placeholder=''>
+            <select value={value.role_id} className='form-control'  onChange={handleChange} name='roleID' type="text" placeholder=''>
               <option value="" selected>--Choose Role--</option>
               {
                 role.map((role) => {
@@ -234,7 +234,7 @@ const EditClient = () => {
                 })
               }
             </select>
-            <span className="requireds"> {simpleValidator.current.message('role ID', value.roleID, 'required')}</span>
+            <span className="requireds"> {simpleValidator.current.message('role ID', value.role_id, 'required')}</span>
           </div>
           <div className="col-md-12">
             <div className="d-flex  mt-3">

@@ -11,6 +11,7 @@ import StatusFilter from '../../Filters/StatusFilter';
 import DateFilter from '../../Filters/DateFilter';
 import StepFilter from '../../Filters/StepFilter';
 import Pagination from '../../../Pagination';
+import ValidatePermission from '../../../Auth/ValidatePermission';
 
 const EnquiryList = () => {
 
@@ -180,7 +181,7 @@ const EnquiryList = () => {
               <div className='mx-2'><StepFilter handleFilter={handleFilter} /></div>
               <div className='mx-2'><DateFilter handleFilter={handleFilter} /></div>
             </div>
-            <button className='btn btn-info text-white' onClick={() => { navigate("/desk/enquiry/addenquiry") }}>Add New Enquiry</button></div>
+         {  ValidatePermission('add_enquiry') && <button className='btn btn-info text-white' onClick={() => { navigate("/desk/enquiry/addenquiry") }}>Add New Enquiry</button>}</div>
           <table className='table table-striped'>
             <thead>
 
@@ -212,11 +213,11 @@ const EnquiryList = () => {
                       <option value="HotLead" selected={val.step == "HotLead"}>HotLead</option>
                       <option value="Client" selected={val.step == "Client"}>Customer</option>
                     </select></td>
-                    <td><p onClick={() => { handleStatus(val.id, val.status) }} role="button" className={`text-white text-center ${val.status == "Active" ? "bg-success" : "bg-danger"}`}>{val.status}</p></td>
+                    <td><p onClick={() => {ValidatePermission('update_enquiry') &&  handleStatus(val.id, val.status) }} role="button" className={`App text-white text-center ${val.status == "Active" ? "bg-success" : "bg-danger"}`}>{val.status}</p></td>
                     <td><div classname='d-flex justify-content-center align-items-center '>
-                      <NavLink to={`/desk/enquiry/editenquiry/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1"></i> </NavLink>
-                      <NavLink className="text-decoration-none" onClick={() => handleSelect(val, 'del')}>  <i className="fa fa-trash text-dark fs-5 mx-1" ></i></NavLink>
-                      <NavLink className="text-decoration-none" onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-dark mx-1"></i></NavLink>
+                    {ValidatePermission("edit_enquiry") && <NavLink to={`/desk/enquiry/editenquiry/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1"></i> </NavLink>}
+                    {ValidatePermission("delete_enquiry") && <NavLink className="text-decoration-none" onClick={() => handleSelect(val, 'del')}>  <i className="fa fa-trash text-dark fs-5 mx-1" ></i></NavLink>}
+                    { <NavLink className="text-decoration-none" onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-dark mx-1"></i></NavLink>}
                     </div></td>
                   </tr>
                 })

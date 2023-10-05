@@ -9,6 +9,7 @@ import {ApiLoader, NoRecordMsg} from '../../../Helper/common'
 import SearchBar from '../../Filters/SearchBar'
 import StatusFilter from '../../Filters/StatusFilter'
 import Pagination from '../../../Pagination'
+import ValidatePermission from '../../../Auth/ValidatePermission'
 
 const ClientList = () => {
 
@@ -154,7 +155,7 @@ const ClientList = () => {
                <SearchBar handleFilter={handleFilter} getdata={getdata} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
              </div>
-          <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/client/addclient")}}>Add New Client</button></div>
+        { ValidatePermission("add_client") && <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/client/addclient")}}>Add New Client</button>}</div>
         <table className='table table-striped App'>
             <thead >
                 <th scope='col'>Id</th>
@@ -177,10 +178,10 @@ const ClientList = () => {
       <td>{val.contactPerson}</td>
       <td>{val.email}</td>
       <td>{val.phoneNo}</td>
-      <td><p  onClick={()=>{handleStatus(val.id, val.status)}} role="button" className={` text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
+      <td><p  onClick={()=>{ValidatePermission("update_client") && handleStatus(val.id, val.status)}} role="button" className={`App text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
       <td><div classname='d-flex justify-content-center align-items-center '>
-       <NavLink to={`/desk/client/editclient/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>
-       <NavLink className="text-decoration-none">   <i className="fa fa-trash text-dark fs-5 mx-1"  onClick={() => handleSelect(val,'del')}></i></NavLink>
+    { ValidatePermission("edit_client") && <NavLink to={`/desk/client/editclient/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>}
+    { ValidatePermission("delete_client")  && <NavLink className="text-decoration-none">   <i className="fa fa-trash text-dark fs-5 mx-1"  onClick={() => handleSelect(val,'del')}></i></NavLink>}
        <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-dark mx-1" ></i></NavLink>
         </div></td>
     </tr>

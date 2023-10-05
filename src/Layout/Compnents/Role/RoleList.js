@@ -9,7 +9,7 @@ import { ApiLoader, NoRecordMsg } from '../../../Helper/common'
 import SearchBar from '../../Filters/SearchBar'
 import StatusFilter from '../../Filters/StatusFilter'
 import Pagination from '../../../Pagination'
-
+import ValidatePermission from '../../../Auth/ValidatePermission'
 
 const RoleList = () => {
 
@@ -24,7 +24,7 @@ const RoleList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [pages, setPages] = useState([1])
-  
+  const [modules, setModules] = useState([])
 
   const handleLimitChange = (e) => {
     setItemsPerPage(e.target.value)
@@ -96,7 +96,8 @@ const RoleList = () => {
          setLoader(false)
          if(response.data.isSuccess){
           setValue(response.data.data.role)
-          setTotalPages((response.data.data.role.total%itemsPerPage)?Math.floor(response.data.data.role.total/itemsPerPage)+1:response.data.data.role.total%itemsPerPage)
+          setModules(response.data.data.modules)
+          setTotalPages((response.data.data.totalRole%itemsPerPage)?Math.floor(response.data.data.totalRole/itemsPerPage)+1:response.data.data.totalRole%itemsPerPage)
          }
       } catch(e){
         setLoader(false)
@@ -125,23 +126,22 @@ const RoleList = () => {
       getPermission()
      },[status])
 
- 
 
   return ( 
-    <div className='App'>
+    <div className=''>
     <div className='text-secondary '>
 
      
-       <h3>Role List</h3>
+       <h4>Role List</h4>
     </div> 
    {loader && <ApiLoader/>}
-  <div className='container-lg bg-light border-light rounded w-100 p-3 m-auto box-height '>
-  <div className='p-3 my-3 d-flex justify-content-between'>
+  <div className='container-lg bg-light border-light rounded w-100 px-3 m-auto box-height '>
+  <div className='py-2 my-3 d-flex justify-content-between'>
   <div className='d-flex justify-content-around'>
                <SearchBar handleFilter={handleFilter} getdata={getPermission} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter}/></div>
              </div>
-    <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/role/addrole")}}>Add New Role</button></div>
+{ValidatePermission("add_role") &&   <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/role/addrole")}}>Add New Role</button>}</div>
   <table className='table table-striped'>
       <thead >
           <th scope='col'>Id</th>
@@ -170,11 +170,11 @@ const RoleList = () => {
 <td>{new Date(val.updated_at).toLocaleDateString("en-US")}</td>
 
 <td><p role="button" onClick={()=>{
-  handleStatus(val.id,val.status)
-}} className={` text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
+ ValidatePermission("update_role") && handleStatus(val.id,val.status)
+}} className={`App text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
 <td><div classname='d-flex justify-content-center align-items-center '>
- <NavLink to={`/desk/role/editrole/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>
- <NavLink className="text-decoration-none">   <i className="fa fa-trash text-dark fs-5 mx-1"  onClick={() => handleSelect(val,'del')}></i></NavLink>
+{ ValidatePermission("edit_role") &&  <NavLink to={`/desk/role/editrole/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>}
+ {ValidatePermission("delete_role") && <NavLink className="text-decoration-none">   <i className="fa fa-trash text-dark fs-5 mx-1"  onClick={() =>handleSelect(val,'del')}></i></NavLink>}
  <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val,'view')}> <i className="fa fa-eye fs-4 text-dark mx-1" ></i></NavLink>
  
   </div></td>
@@ -217,7 +217,9 @@ const RoleList = () => {
 
         <RoleView show={viewopen}
         onHide={() => setViewOpen(false)} 
+        modules={modules}
         data= {data}
+        permissions = {data.permissions}
        />
 </div>
   )

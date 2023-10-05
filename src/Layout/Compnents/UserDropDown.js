@@ -41,8 +41,8 @@ const UserDropDown = () => {
               <button onClick={handleDrop} className={`btn btn-primary rounded-circle `}> {JSON.parse(localStorage.getItem("user")).name.charAt(0).toUpperCase()} </button>
           </div>
           <div ref={catMenu} className={`${show?"":"d-none"} shadow bg-white rounded text-secondary p-4 dropoverlay m-1 `} >
-             <NavLink to="/desk/details"  onClick={handleDrop} className='my-2 text-decoration-none d-flex text-secondary align-items-center'><i className='mx-2 fa fa-user'></i> General Details</NavLink>
-             <NavLink to="/desk/changepassword"  onClick={handleDrop} className='my-2 text-decoration-none d-flex text-secondary align-items-center'><i className='mx-2 fa fa-pencil'></i> Change Password</NavLink>
+             <NavLink to="/desk/details"  onClick={()=>{setShow(false)}} className='my-2 text-decoration-none d-flex text-secondary align-items-center'><i className='mx-2 fa fa-user'></i> General Details</NavLink>
+             <NavLink to="/desk/changepassword"  onClick={()=>{setShow(false)}} className='my-2 text-decoration-none d-flex text-secondary align-items-center'><i className='mx-2 fa fa-pencil'></i> Change Password</NavLink>
              <div  onClick={()=>{
                   logout()
                   localStorage.clear()

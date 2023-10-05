@@ -5,6 +5,7 @@ export const apiUrls = {
                        clientlogin:"login",
                        logout:'logout',
                        changepassword:'changepassword',
+                       resetpassword:'reset-password',
                        detail:'loggedclient',
                        recoverpassword:'reset-password',
                        sendemail:'send-reset-password-email',

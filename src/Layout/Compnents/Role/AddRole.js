@@ -15,12 +15,11 @@ const AddRole = () => {
   const [,forceUpdate] = useState() 
   const [isCheck, setIsCheck] = useState([]);
   const [isSubmitting,setIsSubmitting]=useState(false); 
- 
   const [loader, setLoader] = useState(false)
   const simpleValidator = useRef(new SimpleReactValidator());
  
   const navigate = useNavigate()
-   
+
   const handleSelectAll = ( e, mname, isCheckAll) => {
    
     var allPermission = value.permission
@@ -28,17 +27,18 @@ const AddRole = () => {
       allPermission.push(permission.slug+"_"+mname)
     })
      
-    setIsCheck( allPermission);
+    setIsCheck(allPermission);
+
     if (isCheckAll) {
       permission.permissions.map((permission)=>{
-        const index = allPermission.indexOf(permission.slug+"_"+mname)
-        console.log(index)
-        if (index > -1) {
-          allPermission.splice(index,1);
-        }
-
+        
+        allPermission = allPermission.filter((obj)=>{
+          return obj != permission.slug+"_"+mname
+        })
+       
+        setIsCheck(allPermission);
       })
-      setIsCheck(allPermission);
+     
     }
 
    // setvalue((val)=>{return {...val,["permission"]:isCheck}})
@@ -117,11 +117,10 @@ const AddRole = () => {
   },[])
 
   useEffect(()=>{
-    
-    setvalue((val)=>{return {...val,["permission"]:isCheck}})
+    let outputArray = Array.from(new Set(isCheck))
+    setvalue((val)=>{return {...val,["permission"]:outputArray}})
   },[isCheck])
 
-  console.log(value)
 
   return (
 <div className='container-lg w-100 '>
@@ -146,15 +145,13 @@ const AddRole = () => {
         module={module}
         permissions={permission.permissions} 
         handleSelectAll={handleSelectAll}
-        setIsCheck={setIsCheck}
         handleClick ={handleClick}
         isCheckone={isCheckone}
-       
-        permission={value.permission}
+        isCheck={isCheck}
         />
      </div>
       )
-    })
+    })      
   }
  
    <div className="col-md-12 ">
