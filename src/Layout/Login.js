@@ -69,6 +69,7 @@ const Login = () => {
       }
     } catch (e) {
       ErrorMsg(e.message)
+      setIsSubmitting(false)
     }
   }
 

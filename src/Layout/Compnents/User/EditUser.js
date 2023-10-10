@@ -57,7 +57,8 @@ const EditUser = () => {
 
   const editUser = async () => {
    try{
-    const response =  await API(apiUrls.updateuser+`/${id}`, {}, 'POST', formBody)
+    const response =  await API(apiUrls.updateuser, {id:id}, 'POST', formBody)
+    setIsSubmitting(false)
     if(response.data.isSuccess){
       SuccessMsg(response.data.message)
       navigate('/desk/user')
@@ -66,24 +67,25 @@ const EditUser = () => {
     }
    }catch(e){
       ErrorMsg(e.message)
+      setIsSubmitting(false)
    }
   }
  
   const getuser = async () => {
     setLoader(true)
     try{
-       const response = await callAPI(apiUrls.getuser+`/${id}`, {}, 'GET')
-       setIsSubmitting(false)
+       const response = await callAPI(apiUrls.getuser, {id:id}, 'GET')
        setLoader(false)
        if(response.data.isSuccess){
         setValue(response.data.data)
         
       }else{
         ErrorMsg(response.data.message)
-        setLoader(false)
+       
       }
     } catch(e){
       ErrorMsg(e.message)
+      setLoader(false)
     }
   }
 
@@ -132,7 +134,7 @@ const EditUser = () => {
 </div> 
 {loader && <ApiLoader/>}
 <form onSubmit={handleSubmit}> 
-<div className='row img-thumbnail p-3'>
+<div className='row '>
 <div className="col-md-12">
 
 <div className="my_profile_box ">
@@ -165,7 +167,7 @@ const EditUser = () => {
    <div className='col-md-4 my-2'>
    <label for="phone" className="required">Phone</label>
    <input onChange={handleChange} value={value.phoneNo} className='form-control' name='phoneNo' type="text" placeholder='Phone'></input>
-   <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|min:10|max:10')}</span>
+   <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|numeric|min:10|max:10')}</span>
    </div>
    <div className='col-md-4 my-2'>
    <label for="address" className="required">Address</label>

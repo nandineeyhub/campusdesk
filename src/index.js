@@ -26,12 +26,15 @@ import EditRole from './Layout/Compnents/Role/EditRole';
 import Role from './Layout/Compnents/Role/Role';
 import EnquiryList from './Layout/Compnents/Leads/EnquiryList';
 import { ToastContainer } from 'react-toastify';
-import ChangePassword from './Layout/Compnents/Account/ChangePassword';
 import Details from './Layout/Compnents/Account/Details';
 import RecoverPassword from './Layout/Compnents/Account/RecoverPassword';
 import Protected from './Auth/Protected';
 import RecoverPasswordForm from './Layout/Compnents/Account/RecoverPasswordForm';
 import AuthCheck from './Auth/AuthCheck';
+import { lazy, Suspense } from 'react';
+import { ThemeProvider } from './theme-context';
+
+const ChangePassword = lazy(()=>import('./Layout/Compnents/Account/ChangePassword'))
 
 const appRoute = createBrowserRouter([{
     path:"/",
@@ -51,7 +54,7 @@ const appRoute = createBrowserRouter([{
       element:<Statistics/>
     },{
       path:"/desk/changepassword",
-      element:<ChangePassword/>
+      element: <Suspense fallback={<h1>loading</h1>}><ChangePassword/></Suspense>
     },{
       path:"/desk/details",
       element:<Details/>
@@ -114,9 +117,10 @@ const appRoute = createBrowserRouter([{
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <>
+    <ThemeProvider>
     <ToastContainer autoClose={3000}/>
     <RouterProvider router={appRoute}/>
-    
+    </ThemeProvider>
   </>
  
 );

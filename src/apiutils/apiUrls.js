@@ -25,10 +25,10 @@ export const apiUrls = {
                        addclient:'register',
                        getstate:'client/state',
                        getcity:'client/city',
-                       getclientbyid:'client',
-                       deleteclient:'client',
+                       getclientbyid:'client-detail',
+                       deleteclient:'client-delete',
                        clientstatus:'client/status/upate',
-                       updateclient:'client',
+                       updateclient:'client-update',
                        
                        //enquiry
                        addenquiry:'enquiry/add',
@@ -37,15 +37,15 @@ export const apiUrls = {
                        updateenquiryStatus:'enquiry/status/update',
                        updatestep:'enquiry/update/step',
                        deleteenquiry:'enquiry/delete',
-                       getenquirybyid:'enquiry',
+                       getenquirybyid:'enquiry-detail',
                        
                        //user
                        getusers:'show-all-users',
-                       deleteuser:'user',
+                       deleteuser:'user-delete',
                        userstatus:'user/status/upate',
                        adduser:'user/register',
-                       updateuser:'user',
-                       getuser:'user',
+                       updateuser:'user-update',
+                       getuser:'user-detail',
 
                        //dashboard
 

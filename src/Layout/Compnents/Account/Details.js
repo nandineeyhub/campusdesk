@@ -30,7 +30,7 @@ const Details = () => {
      <div className='text-secondary py-2'>
      <h3> Details </h3>
      </div> 
-        <div className='   rounded w-75 p-3 m-auto img-thumbnail p-3'>
+        <div className='rounded w-75 p-3 m-auto  p-3'>
         {loader && <ApiLoader/>}
        <div className=' p-5'>
        <div className='d-flex   '>

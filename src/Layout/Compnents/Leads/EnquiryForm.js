@@ -38,7 +38,7 @@ const EnquiryForm = () => {
 
   const addenquiry = async () => {
     try{
-      const response = await callAPI(apiUrls.addenquiry, {clientID:user.id}, 'POST', value)
+      const response = await callAPI(apiUrls.addenquiry, {client_id:user.id}, 'POST', value)
       setIsSubmitting(false)
       if(response.data.isSuccess){
          SuccessMsg(response.data.message)
@@ -48,6 +48,7 @@ const EnquiryForm = () => {
       }
      } catch(e){
         ErrorMsg(e.errors)
+        setIsSubmitting(false)
      }
   }
 
@@ -83,7 +84,7 @@ const EnquiryForm = () => {
           <div className='text-secondary py-2 App'>
             <h3> Enquiry Form </h3>
           </div> 
-           <form onSubmit={handleSubmit} className='img-thumbnail p-4'>
+           <form onSubmit={handleSubmit} className=''>
             <div className='row'>
               <div className=" col-md-4 mb-3">
                  <label for="enquiryDate" className="required">Enquiry Date</label>
@@ -98,7 +99,7 @@ const EnquiryForm = () => {
             <div className=" col-md-4 mb-3">
               <label for="name" className="required">Phone</label>
               <input onChange={handleChange} className='form-control my-1' name='phone'  type="text" placeholder='Phone number'></input>
-              <span className="requireds"> {simpleValidator.current.message('phone number', value.phone, 'required|min:10|max:10')}</span>
+              <span className="requireds"> {simpleValidator.current.message('phone number', value.phone, 'required|numeric|min:10|max:10')}</span>
             </div>
            
             <div className=" col-md-4 mb-3">

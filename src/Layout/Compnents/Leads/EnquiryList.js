@@ -46,10 +46,13 @@ const EnquiryList = () => {
       setSearch(e.target.value)
     } else if (e.target.name == "status") {
       setStatus(e.target.value)
+      getEnquiry(e.target.value,search,step,date,itemsPerPage,currentPage)
     } else if (e.target.name == "step") {
       setStep(e.target.value)
+      getEnquiry(status,search,e.target.value,date,itemsPerPage,currentPage)
     } else if (e.target.name == "enquiryDate") {
       setDate(e.target.value)
+      getEnquiry(status,search,step,e.target.value,itemsPerPage,currentPage)
     }
   }
 
@@ -65,8 +68,8 @@ const EnquiryList = () => {
     }
   const handleStep = async (id, value) => {
     try {
-      const query = { step: value }
-      const response = await callAPI(apiUrls.updatestep + `/${id}`, query, 'PATCH', value)
+      const query = { step: value, id:id }
+      const response = await callAPI(apiUrls.updatestep, query, 'PUT', value)
       if (response.data.isSuccess) {
         SuccessMsg(response.data.message)
       } else {
@@ -92,8 +95,8 @@ const EnquiryList = () => {
   const handleStatus = async (id, status) => {
     try {
 
-      const query = { status: status == "Active" ? "Inactive" : "Active"  }
-      const response = await callAPI(apiUrls.updateenquiryStatus + `/${id}`, query, 'PUT')
+      const query = { status: status == "Active" ? "Inactive" : "Active", id:id }
+      const response = await callAPI(apiUrls.updateenquiryStatus , query, 'PUT')
       if (response.data.isSuccess) {
         SuccessMsg(response.data.message)
         getEnquiry()
@@ -105,7 +108,12 @@ const EnquiryList = () => {
     }
   }
 
-  const getEnquiry = async () => {
+const submitData = ()=>{
+  getEnquiry(status,search,step,date,itemsPerPage,currentPage)
+}
+
+
+  const getEnquiry = async (status,search,step,date,itemsPerPage,currentPage) => {
     setloader(true)
     try {
       const query = { status: status, limit: "", search: search, step: step, enquiryDate: date , limit: itemsPerPage, page: currentPage }
@@ -130,7 +138,7 @@ const EnquiryList = () => {
 
   const deleteData = async (id) => {
     try {
-      const response = await callAPI(apiUrls.deleteenquiry + `/${id}`, {}, 'DELETE')
+      const response = await callAPI(apiUrls.deleteenquiry, {id:id}, 'DELETE')
       if (response.data.isSuccess) {
         SuccessMsg(response.data.message)
         setOpen(false)
@@ -144,14 +152,12 @@ const EnquiryList = () => {
     }
   }
 
-  useEffect(()=>{
-    getEnquiry()
-   },[ itemsPerPage, totalPages, currentPage ])
+
 
 
   useEffect(() => {
     getEnquiry()
-  }, [status, step, date])
+  }, [])
 
   useEffect(()=>{
     var newarr = []
@@ -165,7 +171,7 @@ const EnquiryList = () => {
    },[ itemsPerPage, totalPages, currentPage])
 
 
-  console.log(value)
+ 
   return (
     <div className=''>
       <div>
@@ -173,16 +179,16 @@ const EnquiryList = () => {
           <h4>Enquiry</h4>
         </div>
         {loader && <ApiLoader />}
-        <div className='container-lg bg-light border-light rounded w-100 px-3 m-auto '>
+        <div className='container-lg border-light rounded w-100 px-3 m-auto '>
           <div className='py-2 my-4 d-flex justify-content-between'>
             <div className='d-flex justify-content-around'>
-              <SearchBar handleFilter={handleFilter} getdata={getEnquiry} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage} />
+              <SearchBar handleFilter={handleFilter} getdata={submitData} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage} />
               <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
               <div className='mx-2'><StepFilter handleFilter={handleFilter} /></div>
               <div className='mx-2'><DateFilter handleFilter={handleFilter} /></div>
             </div>
          {  ValidatePermission('add_enquiry') && <button className='btn btn-info text-white' onClick={() => { navigate("/desk/enquiry/addenquiry") }}>Add New Enquiry</button>}</div>
-          <table className='table table-striped'>
+          <table className='table table-striped App'>
             <thead>
 
               <th scope='col'>Date</th>

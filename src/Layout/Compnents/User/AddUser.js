@@ -77,6 +77,7 @@ const AddUser = () => {
     }
    }catch(e){
       ErrorMsg(e.message)
+      setIsSubmitting(false)
    }
   }
 
@@ -125,7 +126,7 @@ const AddUser = () => {
      <h3>Add User</h3>
     </div> 
     <form onSubmit={handleSubmit}>
-    <div className='row img-thumbnail p-3'>
+    <div className='row '>
     <div className="col-md-12">
 
 <div className="my_profile_box ">
@@ -158,7 +159,7 @@ const AddUser = () => {
        <div className='col-md-4 my-2'>
        <label for="phone" className="required">Phone</label>
        <input onChange={handleChange} className='form-control' name='phoneNo' type="text" placeholder='Phone'></input>
-       <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|min:10|max:10')}</span>
+       <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|numeric|min:10|max:10')}</span>
        </div>
        
        <div className='col-md-4 my-2'>

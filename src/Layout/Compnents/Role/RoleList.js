@@ -57,7 +57,7 @@ const RoleList = () => {
 
     const deleteData = async (id) => {
       try{
-         const response = await callAPI(apiUrls.deleterole+`/${id}`,{},'DELETE')
+         const response = await callAPI(apiUrls.deleterole,{id:id},'DELETE')
          if(response.data.isSuccess){
            SuccessMsg(response.data.message)
            setOpen(false)
@@ -73,8 +73,8 @@ const RoleList = () => {
 
     const handleStatus = async (id,status) =>{
       try{
-        const query = {status:status == "Active" ? "Inactive": "Active"}
-        const response = await callAPI(apiUrls.rolestatus+`/${id}`,query,'PATCH');
+        const query = {status:status == "Active" ? "Inactive": "Active", id:id}
+        const response = await callAPI(apiUrls.rolestatus,query,'PUT');
         if(response.data.isSuccess){
           SuccessMsg(response.data.message);
           getPermission();
@@ -135,20 +135,18 @@ const RoleList = () => {
        <h4>Role List</h4>
     </div> 
    {loader && <ApiLoader/>}
-  <div className='container-lg bg-light border-light rounded w-100 px-3 m-auto box-height '>
+  <div className='container-lg  border-light rounded w-100 px-3 m-auto box-height '>
   <div className='py-2 my-3 d-flex justify-content-between'>
   <div className='d-flex justify-content-around'>
                <SearchBar handleFilter={handleFilter} getdata={getPermission} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter}/></div>
              </div>
 {ValidatePermission("add_role") &&   <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/role/addrole")}}>Add New Role</button>}</div>
-  <table className='table table-striped'>
+  <table className='table table-striped App'>
       <thead >
           <th scope='col'>Id</th>
           <th scope='col'>Name</th>
-          <th scope='col'>Created By</th>
           <th scope='col'>Created Date</th>
-          <th scope='col'>Modified By</th>
           <th scope='col'>Modified Date</th>
           <th scope='col'>Status</th>
           <th scope='col'>Action</th>
@@ -164,9 +162,9 @@ const RoleList = () => {
             <tr>
 <th scope="row">{key+1}</th>
 <td> {val.name} </td>
-<td>-</td>
+
 <td>{new Date(val.created_at).toLocaleDateString("en-US")}</td>
-<td>-</td>
+
 <td>{new Date(val.updated_at).toLocaleDateString("en-US")}</td>
 
 <td><p role="button" onClick={()=>{

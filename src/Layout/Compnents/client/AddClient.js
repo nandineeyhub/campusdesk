@@ -50,7 +50,7 @@ const AddClient = () => {
 
   const getcity = async (id) => {
     try {
-      const response = await callAPI(apiUrls.getcity + `/${id}`, {}, 'GET')
+      const response = await callAPI(apiUrls.getcity , {stateID:id}, 'GET')
       if (response.data.isSuccess) {
         setCity(response.data.data[0].city)
       } else {
@@ -133,7 +133,7 @@ const AddClient = () => {
         <h3>Add Client</h3>
       </div>
       <form onSubmit={handleSubmit}>
-        <div className='row img-thumbnail p-3'>
+        <div className='row '>
 
           <div className="col-md-12">
 
@@ -168,7 +168,7 @@ const AddClient = () => {
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Phone</label>
             <input className='form-control' onChange={handleChange} name='phoneNo' type="text" placeholder='Phone'></input>
-            <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|min:10|max:10')}</span>
+            <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|numeric|min:10|max:10')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Address</label>

@@ -50,7 +50,8 @@ const ChangePassword = () => {
     <div className='text-secondary py-3 App'>
      <h3> Change Password</h3>
     </div> 
-    <form onSubmit={handleSubmit} className='img-thumbnail p-5'>
+   
+    <form onSubmit={handleSubmit} className=''>
     <div className="mb-3 input-group">
               <input className='form-control ' onChange={handleChange} name='currentPassword' type={toggleview ? "text" : "password"} placeholder='Current password'></input>
               <span className='mx-1' onClick={() => { toggle() }}> {toggleview ? <i className="fa fa-eye form-control" /> : <i className="fa fa-eye-slash form-control" />}</span>

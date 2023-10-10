@@ -91,7 +91,7 @@ const EditRole = () => {
 
 const updateRole = async () => {
 try{
-  const response = await callAPI(apiUrls.updaterole+`/${id}`,{}, 'PATCH', value)
+  const response = await callAPI(apiUrls.updaterole, {id:id}, 'PUT', value)
   setIsSubmitting(false)
   if(response.data.isSuccess){
     SuccessMsg(response.data.message)
@@ -101,6 +101,7 @@ try{
   }
 } catch(e){
    ErrorMsg(e.message)
+   setIsSubmitting(false)
 }
 }
 
@@ -110,7 +111,7 @@ try{
   const getRole = async () => {
     setloader(true)
   try{
-   const response = await callAPI(apiUrls.getrolebyid+`/${id}`,{}, 'GET')
+   const response = await callAPI(apiUrls.getrolebyid,{id:id}, 'GET')
    setloader(false)
    if( response.data.isSuccess){
       setvalue(response.data.data.roles)
@@ -154,10 +155,10 @@ try{
   return (
     <div className='container-lg w-100 '>
     <div className='text-secondary py-2 App'>
- <h3>Edit Role</h3>
-</div> 
+      <h3>Edit Role</h3>
+    </div> 
 <form onSubmit={handleSubmit}>
-<div className='row img-thumbnail p-3'>
+<div className='row'>
 <div className="col-md-12 d-flex  ">
 <div className='col-md-4 m-2 '>
    <label for="phone" className="required">Role Name</label>

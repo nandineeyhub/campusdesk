@@ -57,8 +57,8 @@ const ClientList = () => {
     const handleStatus = async (id, status) => {
       try {
         
-        const query = {status:status=="Active"?"Inactive":"Active"}
-        const response = await callAPI(apiUrls.clientstatus+`/${id}`, query, 'PATCH')
+        const query = {status:status=="Active"?"Inactive":"Active", id:id}
+        const response = await callAPI(apiUrls.clientstatus, query, 'PUT')
         if(response.data.isSuccess){
            SuccessMsg(response.data.message)
            getdata()
@@ -98,7 +98,7 @@ const ClientList = () => {
    
    const deleteData = async (id) => {
     try{
-       const response = await callAPI(apiUrls.deleteclient+`/${id}`,{},'DELETE')
+       const response = await callAPI(apiUrls.deleteclient,{id:id},'DELETE')
        if(response.data.isSuccess){
          SuccessMsg(response.data.message)
          setOpen(false)
@@ -148,7 +148,7 @@ const ClientList = () => {
 
           </div> 
          
-        <div className='container-lg bg-light border-light rounded w-100 px-3 overflow-auto '>
+        <div className='container-lg border-light rounded w-100 px-3 overflow-auto '>
         { loader && <ApiLoader/>}
         <div className='py-2 my-3 d-flex justify-content-between'>
              <div className='d-flex justify-content-around'>

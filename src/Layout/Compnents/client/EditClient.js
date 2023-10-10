@@ -57,8 +57,8 @@ const EditClient = () => {
   const getcity = async (id) => {
 
     try {
-      const response = await callAPI(apiUrls.getcity + `/${id}`, {}, 'GET')
-      setIsSubmitting(false)
+      const response = await callAPI(apiUrls.getcity, {stateID:id}, 'GET')
+     
       if (response.data.isSuccess) {
         setCity(response.data.data[0].city)
       } else {
@@ -103,7 +103,8 @@ const EditClient = () => {
 
   const updateClient = async () => {
     try {
-      const response = await API(apiUrls.updateclient + `/${id}`, {}, 'POST', formBody)
+      const response = await API(apiUrls.updateclient, {id:id}, 'POST', formBody)
+      setIsSubmitting(false)
       if (response.data.isSuccess) {
         SuccessMsg(response.data.message)
         navigate('/desk/client')
@@ -112,6 +113,7 @@ const EditClient = () => {
       }
     } catch (e) {
       ErrorMsg(e.message)
+      setIsSubmitting(false)
     }
   }
 
@@ -120,7 +122,7 @@ const EditClient = () => {
   const getclient = async () => {
     setLoader(true)
     try {
-      const response = await callAPI(apiUrls.getclientbyid + `/${id}`, {}, 'GET')
+      const response = await callAPI(apiUrls.getclientbyid, {id:id}, 'GET')
       setLoader(false)
       if (response.data.isSuccess) {
         
@@ -149,7 +151,7 @@ const EditClient = () => {
       </div>
       {loader && <ApiLoader />}
       <form onSubmit={handleSubmit}>
-        <div className='row img-thumbnail p-3'>
+        <div className='row '>
           <div className="col-md-12">
 
             <div className="my_profile_box ">
@@ -184,7 +186,7 @@ const EditClient = () => {
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Phone</label>
             <input className='form-control' value={value.phoneNo} onChange={handleChange} name='phoneNo' type="text" placeholder='Phone'></input>
-            <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|min:10|max:10')}</span>
+            <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|numeric|min:10|max:10')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Address</label>

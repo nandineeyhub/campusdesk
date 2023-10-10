@@ -80,10 +80,11 @@ const AddRole = () => {
       setIsSubmitting(true)
     }
   }
-  
+  const user = JSON.parse(localStorage.getItem("user"))
   const addRole = async () => {
      try{
-      const response = await callAPI(apiUrls.addrole, {}, 'POST', value)
+      const response = await callAPI(apiUrls.addrole, {client_id:user.id}, 'POST', value)
+      setIsSubmitting(false)
       if(response.data.isSuccess){
         SuccessMsg(response.data.message)
         navigate("/desk/role")
@@ -92,6 +93,7 @@ const AddRole = () => {
       }
      } catch(e){
         ErrorMsg(e.message)
+        setIsSubmitting(false)
      }
   }
 
@@ -99,7 +101,6 @@ const AddRole = () => {
     setLoader(true)
     try{
        const response = await callAPI(apiUrls.getpermission, {} ,'GET')
-       setIsSubmitting(false)
        setLoader(false)
        if(response.data.isSuccess){
         setPermission(response.data.data)
@@ -129,7 +130,7 @@ const AddRole = () => {
 </div> 
 {loader && <ApiLoader/>}
 <form onSubmit={handleSubmit}>
-<div className='row img-thumbnail p-3'>
+<div className='row '>
 
 <div className='col-md-5 mb-3'>
    <label for="name" className="required my-1">Role Name</label>

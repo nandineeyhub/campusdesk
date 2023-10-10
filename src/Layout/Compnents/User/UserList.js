@@ -40,6 +40,9 @@ const UserList = () => {
         setSearch(e.target.value)
       } else if(e.target.name == "status"){
         setStatus(e.target.value)
+        setCurrentPage(1)
+        setItemsPerPage(10)
+        getusers(e.target.value,search,itemsPerPage,currentPage)
       }
    }
 
@@ -56,7 +59,7 @@ const UserList = () => {
 
    const deleteData = async (id) => {
     try{
-       const response = await callAPI(apiUrls.deleteuser+`/${id}`,{},'DELETE')
+       const response = await callAPI(apiUrls.deleteuser,{id:id},'DELETE')
        if(response.data.isSuccess){
          SuccessMsg(response.data.message)
          setOpen(false)
@@ -85,7 +88,7 @@ const UserList = () => {
     }
   }
 
-  const getusers = async () => {
+  const getusers = async (status,search,itemsPerPage,currentPage) => {
     setloader(true)
     try{
       const query = {search:search, status:status, limit:itemsPerPage, page:currentPage}
@@ -126,6 +129,7 @@ const UserList = () => {
    },[ itemsPerPage, totalPages, currentPage])
 
   const navigate = useNavigate()
+  
   return (
     <div className=''>
     <div className='text-secondary'>
@@ -133,14 +137,14 @@ const UserList = () => {
        <h4>User List</h4>
     </div> 
     {loader && <ApiLoader/>}
-  <div className='container-lg bg-light border-light rounded w-100 px-3 m-auto  '>
+  <div className='container-lg border-light rounded w-100 px-3 m-auto  '>
   <div className='py-2 my-3 d-flex justify-content-between'>
   <div className='d-flex justify-content-around'>
                <SearchBar handleFilter={handleFilter} getdata={getusers}  setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
              </div>
     {ValidatePermission("add_user") && <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/user/adduser")}}>Add New User</button>}</div>
-  <table className='table table-striped'>
+  <table className='table table-striped App'>
       <thead >
           <th scope='col'>Id</th>
           <th scope='col'>Name</th>
@@ -197,7 +201,6 @@ const UserList = () => {
         deleteData={deleteData} />} 
 
         <UserView show={viewopen} data={data} onHide={()=>setViewOpen(false) }/>
-
 </div>
   )
 }
