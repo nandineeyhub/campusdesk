@@ -51,8 +51,14 @@ const UserView = (props) => {
           <div className='d-flex justify-content-between  align-items-start'>
              <div>Address</div> <div>{data.address}</div>
           </div>
+          <div className='d-flex justify-content-between  align-items-between'>
+             <div>Username</div> <div>{data.username}</div>
+          </div>
+          <div className='d-flex justify-content-between  align-items-between'>
+             <div>Client</div> <div>{data.client_id}</div>
+          </div>
           {/* <div className='d-flex justify-content-between  align-items-between'>
-             <div>State</div> <div>{data.state.stateName}</div>
+             <div>Client</div> <div>{data.client_id}</div>
           </div>
           <div className='d-flex justify-content-between  align-items-between'>
              <div>City</div> <div>{data.city.cityName}</div>

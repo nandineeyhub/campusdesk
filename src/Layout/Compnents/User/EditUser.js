@@ -124,6 +124,30 @@ const EditUser = () => {
       ErrorMsg(e.message)
     }
   }
+
+  const handleKeyDown = event => {
+    const regex =  /^[.a-zA-Z0-9_-]*$/;
+    const isValid = regex.test(event.key)
+    if(event.key != "Backspace"){
+      if(isValid == false){
+        event.preventDefault()
+      } 
+    }
+  }
+
+  const PhonehandlekeyDown = e => {
+    if(value.phoneNo){
+      if(value.phoneNo.length > 9){
+        if(e.key != "Backspace"){
+          e.preventDefault()
+        }
+      } 
+    } else if(Number(e.key) == 0) {
+      e.preventDefault()
+    }
+    
+  }
+
   useEffect(()=>{getdata()
   getPermission()},[])
 
@@ -155,7 +179,7 @@ const EditUser = () => {
    </div> */}
    <div className='col-md-4 my-2'>
     <label for="name" className="required"> Name </label>
-    <input onChange={handleChange} value={value.name} className='form-control' name='name' type="text" placeholder='Name'></input>
+    <input onChange={handleChange} maxLength={20}  onKeyDown={handleKeyDown} value={value.name} className='form-control' name='name' type="text" placeholder='Name'></input>
     <span className="requireds"> {simpleValidator.current.message('name', value.name, 'required')}</span>
    </div>
   
@@ -166,12 +190,12 @@ const EditUser = () => {
    </div>
    <div className='col-md-4 my-2'>
    <label for="phone" className="required">Phone</label>
-   <input onChange={handleChange} value={value.phoneNo} className='form-control' name='phoneNo' type="text" placeholder='Phone'></input>
+   <input onChange={handleChange}  onKeyDown={PhonehandlekeyDown} value={value.phoneNo} className='form-control' name='phoneNo' type="text" placeholder='Phone'></input>
    <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|numeric|min:10|max:10')}</span>
    </div>
    <div className='col-md-4 my-2'>
    <label for="address" className="required">Address</label>
-   <input onChange={handleChange} value={value.address} className='form-control' name='address' type="text" placeholder='address'></input>
+   <input onChange={handleChange} maxLength={100} onKeyDown={handleKeyDown} value={value.address} className='form-control' name='address' type="text" placeholder='address'></input>
    <span className="requireds"> {simpleValidator.current.message('address', value.address, 'required')}</span>
    </div>
    
@@ -203,7 +227,7 @@ const EditUser = () => {
    <div className="col-md-12 ">
      <div className="d-flex  mt-3">
      <button type="submit" disabled={isSubmitting}  className="btn btn-info text-white mx-3">Update Details</button>
-      <button type="button"  className="btn btn-secondary ">Cancel</button>
+      <button type="button" onClick={()=>{navigate("/desk/user")}} className="btn btn-secondary ">Cancel</button>
        </div>
    </div>
 </div>

@@ -3,7 +3,7 @@ import React from 'react'
 
 const LeadView = (props) => {
     const {show, onHide, data} = props
-    console.log(data)
+  
     return (
       <div >
         <Dialog
@@ -53,6 +53,9 @@ const LeadView = (props) => {
           </div>
           <div className='d-flex justify-content-between  align-items-start'>
              <div>Message</div> <div>{data.message}</div>
+          </div>
+          <div className='d-flex justify-content-between  align-items-start'>
+             <div>Created By</div> <div>{data.created_by_type + " " + data.created_by}</div>
           </div>
           
        </div>

@@ -6,6 +6,7 @@ import { apiUrls } from '../apiutils/apiUrls';
 import { ErrorMsg, SuccessMsg } from '../Notifications';
 import SimpleReactValidator from 'simple-react-validator'
 import { useRef } from 'react'
+import axios from 'axios';
 
 const Login = () => {
   const texts = ["Built for", "Care for", "Desk for"]
@@ -47,18 +48,21 @@ const Login = () => {
       forceUpdate(1);
     }
     else {
-      login()
+       login()
+  
       setIsSubmitting(true)
     }
   }
 
+
+
   const login = async () => {
     try {
-      const response = await callAPIWithoutAuth(apiUrls.clientlogin, {}, 'POST', value)
+      const response = await callAPIWithoutAuth(apiUrls.login, {}, 'POST', value)
       setIsSubmitting(false)
       if (response.data.isSuccess) {
-        localStorage.setItem("user", JSON.stringify(response.data.data))
-        localStorage.setItem("token", JSON.stringify(response.data.data.token))
+        localStorage.setItem("user", JSON.stringify(response.data.data.loggedindata))
+        localStorage.setItem("token", JSON.stringify(response.data.data.loggedindata.token))
         localStorage.setItem("permissions", JSON.stringify(response.data.data.permissions))
         navigate('/desk')
         SuccessMsg(response.data.message)
@@ -101,8 +105,8 @@ const Login = () => {
 
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <input className='form-control' name='email' onChange={handleChange} type="text" placeholder='email'></input>
-                <span className="requireds"> {simpleValidator.current.message('email', value.email, 'required|email')}</span>
+                <input className='form-control' name='username' onChange={handleChange} type="text" placeholder='username'></input>
+                <span className="requireds"> {simpleValidator.current.message('username', value.username, 'required')}</span>
               </div>
               <div className="mb-3">
                 <div className="input-group">

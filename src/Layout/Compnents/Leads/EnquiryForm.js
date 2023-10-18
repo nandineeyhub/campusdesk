@@ -42,7 +42,7 @@ const EnquiryForm = () => {
       setIsSubmitting(false)
       if(response.data.isSuccess){
          SuccessMsg(response.data.message)
-         navigate('/desk/enquiry') 
+         navigate('/desk/enquiry/list') 
       } else {
         ErrorMsg(response.data.message)
       }
@@ -75,7 +75,29 @@ const EnquiryForm = () => {
 
    }
  
- 
+   const handleKeyDown = event => {
+    const regex =  /^[.a-zA-Z0-9_-]*$/;
+    const isValid = regex.test(event.key)
+    if(event.key != "Backspace"){
+      if(isValid == false){
+        event.preventDefault()
+      } 
+    }
+  }
+
+  const PhonehandlekeyDown = e => {
+    if(value.phoneNo){
+      if(value.phoneNo.length > 9){
+        if(e.key != "Backspace"){
+          e.preventDefault()
+        }
+      } 
+    } else if(Number(e.key) == 0) {
+      e.preventDefault()
+    }
+    
+  }
+
   useEffect(()=>{getdata()
   },[])
   console.log(value)
@@ -88,18 +110,18 @@ const EnquiryForm = () => {
             <div className='row'>
               <div className=" col-md-4 mb-3">
                  <label for="enquiryDate" className="required">Enquiry Date</label>
-                 <input onChange={handleChange} value={moment().format('YYYY-MM-DD')} placeholder="walkIn Date"  type="date"  className="form-control my-1"  name="enquiryDate" />
+                 <input readOnly value={moment().format('YYYY-MM-DD')} placeholder="walkIn Date"  type="text"  className="form-control my-1"  name="enquiryDate" />
                  <span className="requireds"> {simpleValidator.current.message('date', value.enquiryDate, 'required')}</span>
               </div>
             <div className=" col-md-4 mb-3">
               <label for="name" className="required">Name</label>
-              <input onChange={handleChange}  className='form-control my-1' name='name' type="text" placeholder='Name'></input>
+              <input onKeyDown={handleKeyDown} maxLength={20} onChange={handleChange}  className='form-control my-1' name='name' type="text" placeholder='Name'></input>
               <span className="requireds"> {simpleValidator.current.message('name', value.name, 'required')}</span>
             </div>
             <div className=" col-md-4 mb-3">
-              <label for="name" className="required">Phone</label>
-              <input onChange={handleChange} className='form-control my-1' name='phone'  type="text" placeholder='Phone number'></input>
-              <span className="requireds"> {simpleValidator.current.message('phone number', value.phone, 'required|numeric|min:10|max:10')}</span>
+              <label for="phoneNo" className="required">Phone</label>
+              <input  onKeyDown={PhonehandlekeyDown} onChange={handleChange} className='form-control my-1' name='phoneNo'  type="text" placeholder='Phone number'></input>
+              <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|numeric|min:10|max:10')}</span>
             </div>
            
             <div className=" col-md-4 mb-3">
@@ -109,12 +131,12 @@ const EnquiryForm = () => {
             </div>
             <div className=" col-md-4 mb-3">
             <label for="name" className="required">Area of Interest</label>
-              <input onChange={handleChange} className='form-control my-1' name='course' type="text" placeholder='Area of interest'></input>
+              <input onKeyDown={handleKeyDown} maxLength={30} onChange={handleChange} className='form-control my-1' name='course' type="text" placeholder='Area of interest'></input>
               <span className="requireds"> {simpleValidator.current.message('course', value.course, 'required')}</span>
             </div>
             <div className=" col-md-4 mb-3">
              <label for="name" className="required">Address</label>
-              <input onChange={handleChange} className='form-control my-1' name='address' type="text" placeholder='Postal Address'></input>
+              <input onKeyDown={handleKeyDown} maxLength={100} onChange={handleChange} className='form-control my-1' name='address' type="text" placeholder='Postal Address'></input>
               <span className="requireds"> {simpleValidator.current.message('address', value.address, 'required')}</span>
             </div>
             <div className='col-md-4 mb-3'>
@@ -138,7 +160,7 @@ const EnquiryForm = () => {
             <div className=" mb-3  ">
               <div>
               <button type='submit' disabled={isSubmitting}  className='btn btn-info text-white px-3 '>Confirm details</button>
-              <button type='button'  onClick={()=>{navigate('/desk/enquiry') }} className='btn btn-secondary text-white mx-2'>Cancel</button>
+              <button type='button'  onClick={()=>{navigate('/desk/enquiry/list') }} className='btn btn-secondary text-white mx-2'>Cancel</button>
               </div> 
             </div>
             </div>

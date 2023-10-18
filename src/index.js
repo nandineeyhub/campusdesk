@@ -101,7 +101,7 @@ const appRoute = createBrowserRouter([{
       path:"/desk/enquiry",
       element:<Lead/>,
       children:[{
-        path:"/desk/enquiry",
+        path:"/desk/enquiry/:step",
         element:<AuthCheck access={"view_enquiry"}><EnquiryList/></AuthCheck>
       },{
         path:"/desk/enquiry/addenquiry",

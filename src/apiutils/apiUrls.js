@@ -1,14 +1,14 @@
 export const apiUrls = {
       
                        //login&logout
-                       adminlogin:'admin/login',
-                       clientlogin:"login",
+                       login:'login',
                        logout:'logout',
                        changepassword:'changepassword',
                        resetpassword:'reset-password',
-                       detail:'loggedclient',
+                       detail:'loggedin-data',
                        recoverpassword:'reset-password',
                        sendemail:'send-reset-password-email',
+                       
                        //role
                        addrole:'role/add',
                        deleterole:'role/delete',
@@ -22,7 +22,7 @@ export const apiUrls = {
                        
                        //client
                        getclients:'show-all-clients',
-                       addclient:'register',
+                       addclient:'add-client',
                        getstate:'client/state',
                        getcity:'client/city',
                        getclientbyid:'client-detail',
@@ -43,7 +43,7 @@ export const apiUrls = {
                        getusers:'show-all-users',
                        deleteuser:'user-delete',
                        userstatus:'user/status/upate',
-                       adduser:'user/register',
+                       adduser:'add-user',
                        updateuser:'user-update',
                        getuser:'user-detail',
 

@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react'
 
 const Pagination = ({ handlepageChange, pages, currentPage, setCurrentPage, totalPages }) => {
 
-
-
-
-  console.log( totalPages == currentPage)
+  // console.log( totalPages == currentPage)
+  // console.log( totalPages)
 
   return (
     <nav aria-label="Page navigation example d-flex">

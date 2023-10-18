@@ -11,7 +11,7 @@ const AddClient = () => {
   const [toggleview, setToggleView] = useState(false)
   const [ctoggleview, setcToggleView] = useState(false)
   const [value, setValue] = useState({ countryID: 1 , image:{}})
-  const [role, setRole] = useState([])
+  // const [role, setRole] = useState([])
   const [state, setState] = useState([])
   const [city, setCity] = useState([])
   const [image, setImage] = useState('');
@@ -24,6 +24,7 @@ const AddClient = () => {
   const handleChange = (e) => {
     if (e.target.name == 'stateID') {
       getcity(e.target.value)
+      setCity([])
     }
     setValue((val) => { return { ...val, [e.target.name]: e.target.value } })
   }
@@ -74,18 +75,18 @@ const AddClient = () => {
     }
   }
 
-  const getPermission = async () => {
-    try {
-      const response = await callAPI(apiUrls.getpermission, {}, 'GET')
-      if (response.data.isSuccess) {
-        setRole(response.data.data.role)
-      } else {
-        ErrorMsg(response.data.message)
-      }
-    } catch (e) {
-      ErrorMsg(e.message)
-    }
-  }
+  // const getPermission = async () => {
+  //   try {
+  //     const response = await callAPI(apiUrls.getpermission, {}, 'GET')
+  //     if (response.data.isSuccess) {
+  //       setRole(response.data.data.role)
+  //     } else {
+  //       ErrorMsg(response.data.message)
+  //     }
+  //   } catch (e) {
+  //     ErrorMsg(e.message)
+  //   }
+  // }
   
   let formBody = new FormData();
   for (var i in value) {
@@ -110,7 +111,6 @@ const AddClient = () => {
 
   const uploadImage = (e) => {
     let file = (e.target.files[0])
-    
     let name = e.target.name;
     if (file) {
       setImage(file)
@@ -119,13 +119,36 @@ const AddClient = () => {
     setValue((val) => ({ ...val, [name]: file }))
   }
 
-  console.log(value)
-
   useEffect(() => {
-    getPermission()
+    // getPermission()
     getState()
   }, [])
 
+  const handleKeyDown = event => {
+    const regex =  /^[.a-zA-Z0-9_-]*$/;
+    const isValid = regex.test(event.key)
+    if(event.key != "Backspace"){
+      if(event.key.match(regex)){
+        return true
+      } else event.preventDefault()
+        
+    }
+  }
+
+
+
+  const PhonehandlekeyDown = e => {
+    if(value.phoneNo){
+      if(value.phoneNo.length > 9){
+        if(e.key != "Backspace"){
+          e.preventDefault()
+        }
+      } 
+    } else if(Number(e.key) == 0) {
+      e.preventDefault()
+    }
+    
+  }
 
   return (
     <div className='container-lg w-100 '>
@@ -147,17 +170,17 @@ const AddClient = () => {
           </div>
           <div className='col-md-4 '>
             <label for="phone" className="required">Campus Code</label>
-            <input className='form-control' onChange={handleChange} name='schoolCode' type="text" placeholder='Code'></input>
+            <input className='form-control' onKeyDown={handleKeyDown} maxLength={5}  onChange={handleChange} name='schoolCode'  placeholder='Code'></input>
             <span className="requireds"> {simpleValidator.current.message('code', value.schoolCode, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="name" className="required">Campus Name</label>
-            <input className='form-control ' onChange={handleChange} name='name' type="text" placeholder='Name'></input>
+            <input className='form-control '  onKeyDown={handleKeyDown} maxLength={20} onChange={handleChange} name='name' type="text" placeholder='Name'></input>
             <span className="requireds"> {simpleValidator.current.message('name', value.name, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="name" className="required">Contact Person</label>
-            <input className='form-control ' onChange={handleChange} name='contactPerson' type="text" placeholder='Name'></input>
+            <input className='form-control ' onKeyDown={handleKeyDown}  maxLength={20} onChange={handleChange} name='contactPerson' type="text" placeholder='Contact person'></input>
             <span className="requireds"> {simpleValidator.current.message('contact person', value.contactPerson, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
@@ -166,19 +189,24 @@ const AddClient = () => {
             <span className="requireds"> {simpleValidator.current.message('email', value.email, 'required|email')}</span>
           </div>
           <div className='col-md-4 my-2'>
+            <label for="username" className="required">Username</label>
+            <input className='form-control'  maxLength={20}  onKeyDown={handleKeyDown} onChange={handleChange} name='username' type="text" placeholder='Username'></input>
+            <span className="requireds"> {simpleValidator.current.message('username', value.username, 'required')}</span>
+          </div>
+          <div className='col-md-4 my-2'>
             <label for="phone" className="required">Phone</label>
-            <input className='form-control' onChange={handleChange} name='phoneNo' type="text" placeholder='Phone'></input>
+            <input className='form-control'  onChange={handleChange} onKeyDown={PhonehandlekeyDown} name='phoneNo' type="text" placeholder='Phone'></input>
             <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|numeric|min:10|max:10')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Address</label>
-            <input className='form-control' onChange={handleChange} name='address' type="text" placeholder='Address'></input>
+            <input className='form-control'  maxLength={100} onKeyDown={handleKeyDown} onChange={handleChange} name='address' type="text" placeholder='Address'></input>
             <span className="requireds"> {simpleValidator.current.message('address', value.address, 'required')}</span>
           </div>
 
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Country</label>
-            <select className='form-control' onChange={handleChange} name='countryID' type="text" placeholder=''>
+            <select className='form-control'  onChange={handleChange} name='countryID' type="text" placeholder=''>
 
               <option value="1" selected>US</option>
             </select>
@@ -208,7 +236,7 @@ const AddClient = () => {
             </select>
             <span className="requireds"> {simpleValidator.current.message('city ID', value.cityID, 'required')}</span>
           </div>
-          <div className='col-md-4 my-2'>
+          {/* <div className='col-md-4 my-2'>
             <label for="role_id" className="required">Role</label>
             <select className='form-control' onChange={handleChange} name='role_id' type="text" placeholder=''>
               <option value="" selected>--Choose Role--</option>
@@ -219,7 +247,7 @@ const AddClient = () => {
               }
             </select>
             <span className="requireds"> {simpleValidator.current.message('role ID', value.role_id, 'required')}</span>
-          </div>
+          </div> */}
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Password</label>
             <div className=" input-group">

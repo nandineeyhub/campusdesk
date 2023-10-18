@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import Modal from '../../../popups/DeletePopup';
 import LeadView from './LeadView';
 import { callAPI } from '../../../apiutils/apiUtils';
@@ -12,6 +12,7 @@ import DateFilter from '../../Filters/DateFilter';
 import StepFilter from '../../Filters/StepFilter';
 import Pagination from '../../../Pagination';
 import ValidatePermission from '../../../Auth/ValidatePermission';
+import { ThemeContext } from '../../../theme-context';
 
 const EnquiryList = () => {
 
@@ -29,14 +30,20 @@ const EnquiryList = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [pages, setPages] = useState([1])
 
+  const params = useParams()
+  // console.log(params.step)
+
+  const { theme, toggle } = React.useContext(ThemeContext)
 
   const handleLimitChange = (e) => {
     setItemsPerPage(e.target.value)
     setCurrentPage(1)
+    getEnquiry(status,search,step,date,e.target.value,1)
   }
 
   const handlepageChange = (page) => {
     setCurrentPage(page)
+    getEnquiry(status,search,step,date,itemsPerPage,page)
   }
 
   const navigate = useNavigate()
@@ -75,7 +82,6 @@ const EnquiryList = () => {
       } else {
         ErrorMsg(response.data.message)
       }
-
     } catch (e) {
       ErrorMsg(e.message)
     }
@@ -113,16 +119,17 @@ const submitData = ()=>{
 }
 
 
-  const getEnquiry = async (status,search,step,date,itemsPerPage,currentPage) => {
+  const getEnquiry = async (status,search,step,date,itemPerPage,currentPage) => {
     setloader(true)
     try {
-      const query = { status: status, limit: "", search: search, step: step, enquiryDate: date , limit: itemsPerPage, page: currentPage }
+      const query = { status: status, limit: "", search: search, step: step, enquiryDate: date , limit: itemPerPage, page: currentPage }
       const response = await callAPI(apiUrls.getenquiry, query, 'GET')
       setloader(false)
       if (response.data.isSuccess) {
        if( response.data.data != null) {
          setValue(response.data.data.enquiries.data)
-         setTotalPages((response.data.data.enquiries.total%itemsPerPage)?Math.floor(response.data.data.enquiries.total/itemsPerPage)+1:response.data.data.enquiries.total%itemsPerPage)
+         console.log(itemsPerPage)
+         setTotalPages((response.data.data.enquiries.total%itemPerPage?itemPerPage:itemsPerPage)?Math.floor(response.data.data.enquiries.total/(itemPerPage?itemPerPage:itemsPerPage))+1:response.data.data.enquiries.total%itemPerPage?itemPerPage:itemsPerPage)
          }
        else setValue([])
         
@@ -152,12 +159,14 @@ const submitData = ()=>{
     }
   }
 
-
-
-
   useEffect(() => {
-    getEnquiry()
+    if(params.step =="Lead" || params.step == "HotLead" || params.step == "Client"){
+      getEnquiry(status,search,params.step,date,itemsPerPage,currentPage)
+      setStep(params.step)
+      console.log(params.step)
+     } else getEnquiry()
   }, [])
+
 
   useEffect(()=>{
     var newarr = []
@@ -169,7 +178,6 @@ const submitData = ()=>{
     }
     setPages(newarr)
    },[ itemsPerPage, totalPages, currentPage])
-
 
  
   return (
@@ -184,11 +192,11 @@ const submitData = ()=>{
             <div className='d-flex justify-content-around'>
               <SearchBar handleFilter={handleFilter} getdata={submitData} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage} />
               <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
-              <div className='mx-2'><StepFilter handleFilter={handleFilter} /></div>
+              <div className='mx-2'><StepFilter handleFilter={handleFilter}  step={step} /></div>
               <div className='mx-2'><DateFilter handleFilter={handleFilter} /></div>
             </div>
          {  ValidatePermission('add_enquiry') && <button className='btn btn-info text-white' onClick={() => { navigate("/desk/enquiry/addenquiry") }}>Add New Enquiry</button>}</div>
-          <table className='table table-striped App'>
+          <table className={`table ${theme.backgroundColor == 'black' ? "table-dark":"table-striped" } App`}>
             <thead>
 
               <th scope='col'>Date</th>
@@ -209,7 +217,7 @@ const submitData = ()=>{
                     <th scope="row">{new Date(val.enquiryDate).toLocaleDateString("en-US")}</th>
                     <td>{val.name}</td>
                     <td>{val.email}</td>
-                    <td>{val.phone}</td>
+                    <td>{val.phoneNo}</td>
                     <td>{val.course}</td>
                     <td><select onChange={(e) => {
                       handleChange(e, val.id, key)
@@ -221,9 +229,9 @@ const submitData = ()=>{
                     </select></td>
                     <td><p onClick={() => {ValidatePermission('update_enquiry') &&  handleStatus(val.id, val.status) }} role="button" className={`App text-white text-center ${val.status == "Active" ? "bg-success" : "bg-danger"}`}>{val.status}</p></td>
                     <td><div classname='d-flex justify-content-center align-items-center '>
-                    {ValidatePermission("edit_enquiry") && <NavLink to={`/desk/enquiry/editenquiry/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1"></i> </NavLink>}
-                    {ValidatePermission("delete_enquiry") && <NavLink className="text-decoration-none" onClick={() => handleSelect(val, 'del')}>  <i className="fa fa-trash text-dark fs-5 mx-1" ></i></NavLink>}
-                    { <NavLink className="text-decoration-none" onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-dark mx-1"></i></NavLink>}
+                    {ValidatePermission("edit_enquiry") && <NavLink to={`/desk/enquiry/editenquiry/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-secondary fs-5 mx-1"></i> </NavLink>}
+                    {ValidatePermission("delete_enquiry") && <NavLink className="text-decoration-none" onClick={() => handleSelect(val, 'del')}>  <i className="fa fa-trash text-secondary fs-5 mx-1" ></i></NavLink>}
+                    { <NavLink className="text-decoration-none" onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-secondary mx-1"></i></NavLink>}
                     </div></td>
                   </tr>
                 })
@@ -233,7 +241,7 @@ const submitData = ()=>{
           </table>
           {!loader && value.length == 0 &&
             <NoRecordMsg title={'No Record Found !!'} />
-          }   { value.length != 0 && <div className='d-flex justify-content-end'>
+          }   { value.length != 0  && <div className='d-flex justify-content-end'>
 
           <div className='mx-2'>
 

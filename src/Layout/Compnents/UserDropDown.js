@@ -38,7 +38,7 @@ const UserDropDown = () => {
 
       <div className='mx-5'>
           <div>
-              <button onClick={handleDrop} className={`btn btn-primary rounded-circle `}> {JSON.parse(localStorage.getItem("user")).name.charAt(0).toUpperCase()} </button>
+            <button onClick={handleDrop} className={`btn btn-primary rounded-circle `}> {JSON.parse(localStorage.getItem("user")).name.charAt(0).toUpperCase()} </button>
           </div>
           <div ref={catMenu} className={`${show?"":"d-none"} shadow bg-white rounded text-secondary p-4 dropoverlay m-1 `} >
              <NavLink to="/desk/details"  onClick={()=>{setShow(false)}} className='my-2 text-decoration-none d-flex text-secondary align-items-center'><i className='mx-2 fa fa-user'></i> General Details</NavLink>

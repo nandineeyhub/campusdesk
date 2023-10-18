@@ -10,6 +10,7 @@ import SearchBar from '../../Filters/SearchBar'
 import StatusFilter from '../../Filters/StatusFilter'
 import Pagination from '../../../Pagination'
 import ValidatePermission from '../../../Auth/ValidatePermission'
+import { ThemeContext } from '../../../theme-context';
 
 const ClientList = () => {
 
@@ -24,22 +25,29 @@ const ClientList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [pages, setPages] = useState([1])
-  
+  const [columns, setColumns] = useState([
+  'Id',	'Campus Name', "Contact Person"	,'Email',	'Phone','Status',	'Action'])
+  const { theme, toggle } = React.useContext(ThemeContext)
 
   const handleLimitChange = (e) => {
     setItemsPerPage(e.target.value)
     setCurrentPage(1)
+    getdata(status,search,e.target.value,1)
   }
 
-  const handlepageChange = (page)=>{
+  const handlepageChange = (page) => {
     setCurrentPage(page)
+    getdata(status,search,itemsPerPage,page)
   }
 
    const handleFilter = (e) => {
       if(e.target.name == "search"){
         setSearch(e.target.value)
       } else if(e.target.name == "status"){
+        setCurrentPage(1)
+        setItemsPerPage(10)
         setStatus(e.target.value)
+        getdata(e.target.value,search,itemsPerPage,currentPage)
       }
    }
 
@@ -71,8 +79,12 @@ const ClientList = () => {
     }
 
    const navigate = useNavigate()
+
+   const submitData = () => {
+     getdata(status,search,itemsPerPage,currentPage)
+   }
     
-   const getdata =  async () => {
+   const getdata =  async (status,search,itemPerPage,currentPage) => {
     setLoader(true)
     try{
       const query = {search:search, status:status, limit:itemsPerPage, page:currentPage}
@@ -80,7 +92,7 @@ const ClientList = () => {
       if(response.data.isSuccess){
         if(response.data.data != null){
           setValue(response.data.data.clients.data)
-          setTotalPages((response.data.data.clients.total%itemsPerPage)?Math.floor(response.data.data.clients.total/itemsPerPage)+1:response.data.data.clients.total/itemsPerPage) 
+          setTotalPages((response.data.data.totalRecord%itemPerPage?itemPerPage:itemsPerPage)?Math.floor(response.data.data.totalRecord/(itemPerPage?itemPerPage:itemsPerPage))+1:response.data.data.totalRecord%itemPerPage?itemPerPage:itemsPerPage)
         } else{
           setValue([])
         }
@@ -114,14 +126,22 @@ const ClientList = () => {
 
    useEffect(()=>{
     getdata()
-   },[ itemsPerPage, totalPages, currentPage])
-   
-   useEffect(()=>{
-    setCurrentPage(1)
-    setItemsPerPage(10)
-    getdata()
-   },[status])
 
+   },[ ])
+   
+
+  const manageColumn  = (e) => {
+    var newarr = columns
+    var check =  columns.filter((column)=>{ return column == e.target.name})
+    
+     if(check.length == 0 ) {
+       newarr.push(e.target.name)
+     }else {
+       newarr = columns.filter((column)=>{ return column != e.target.name})
+
+     } 
+     setColumns(newarr)
+  }
   
    useEffect(()=>{
     var newarr = []
@@ -134,11 +154,7 @@ const ClientList = () => {
     setPages(newarr)
    },[ itemsPerPage, totalPages, currentPage])
 
-   console.log(totalPages)
-   
-   console.log(currentPage)
-
-
+ console.log(columns)
   return (
     <div className='mb-5 '>
         
@@ -147,32 +163,38 @@ const ClientList = () => {
              <h4>Client List</h4>
 
           </div> 
-         
+        
+        <input onClick={manageColumn} name='Id' type='checkbox'></input>
         <div className='container-lg border-light rounded w-100 px-3 overflow-auto '>
         { loader && <ApiLoader/>}
         <div className='py-2 my-3 d-flex justify-content-between'>
              <div className='d-flex justify-content-around'>
-               <SearchBar handleFilter={handleFilter} getdata={getdata} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
+               <SearchBar handleFilter={handleFilter} getdata={submitData} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
              </div>
         { ValidatePermission("add_client") && <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/client/addclient")}}>Add New Client</button>}</div>
-        <table className='table table-striped App'>
+        <table className={`table ${theme.backgroundColor == 'black' ? "table-dark":"" } App`}>
             <thead >
-                <th scope='col'>Id</th>
+                { <th scope='col'>Id</th>}
                 <th scope='col'>Campus Name</th>
                 <th scope='col'>ContactPerson</th>
                 <th scope='col'>Email</th>
                 <th scope='col'>Phone</th>
                 <th scope='col'>Status</th>
                 <th scope='col'>Action</th>
+                {/* {
+                  columns.map((column)=>{
+                   return <th scope='col'>{column}</th>
+                  })
+                } */}
 
             </thead>
             
-            <tbody>
+            <tbody >
 
    {
     value.map((val, key)=>{
-      return    <tr>
+      return    <tr className='bg-dark text-white'>
       <th scope="row">{key+1}</th>
       <td>{val.name}</td>
       <td>{val.contactPerson}</td>
@@ -180,9 +202,9 @@ const ClientList = () => {
       <td>{val.phoneNo}</td>
       <td><p  onClick={()=>{ValidatePermission("update_client") && handleStatus(val.id, val.status)}} role="button" className={`App text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
       <td><div classname='d-flex justify-content-center align-items-center '>
-    { ValidatePermission("edit_client") && <NavLink to={`/desk/client/editclient/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>}
-    { ValidatePermission("delete_client")  && <NavLink className="text-decoration-none">   <i className="fa fa-trash text-dark fs-5 mx-1"  onClick={() => handleSelect(val,'del')}></i></NavLink>}
-       <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-dark mx-1" ></i></NavLink>
+    { ValidatePermission("edit_client") && <NavLink to={`/desk/client/editclient/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-secondary fs-5 mx-1 "></i> </NavLink>}
+    { ValidatePermission("delete_client")  && <NavLink className="text-decoration-none">   <i className="fa fa-trash text-secondary fs-5 mx-1"  onClick={() => handleSelect(val,'del')}></i></NavLink>}
+       <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-secondary mx-1" ></i></NavLink>
         </div></td>
     </tr>
     })

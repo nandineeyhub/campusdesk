@@ -41,7 +41,7 @@ const editenquiry = async () => {
     setIsSubmitting(false)
     if(response.data.isSuccess){
        SuccessMsg(response.data.message)
-       navigate('/desk/enquiry')
+       navigate('/desk/enquiry/list')
     } else {
       ErrorMsg(response.data.message)
     }
@@ -112,8 +112,8 @@ console.log(value.phon)
 
   <div className=" col-md-4 mb-3">
     <label for="name" className="required">Phone</label>
-    <input value={value.phone} onChange={handleChange} className='form-control' name='phone'  type="text" placeholder='Phone number'></input>
-    <span className="requireds"> {simpleValidator.current.message('phone number', value.phone, 'required|numeric|min:10|max:10')}</span>
+    <input value={value.phoneNo} onChange={handleChange} className='form-control' name='phoneNo'  type="text" placeholder='Phone number'></input>
+    <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|numeric|min:10|max:10')}</span>
   </div>
  
   <div className=" col-md-4 mb-3">
@@ -142,7 +142,7 @@ console.log(value.phon)
    </select>
    <span className="requireds"> {simpleValidator.current.message('step', value.step, 'required')}</span>
    </div>
-   <div className='col-md-4 mb-3'>
+   {/* <div className='col-md-4 mb-3'>
             <label for="client_id" className="required">Client</label>
             <select className='form-control' onChange={handleChange} name='client_id' type="text" placeholder=''>
               <option value="" selected>--Choose Client--</option>
@@ -154,7 +154,7 @@ console.log(value.phon)
             </select>
             <span className="requireds"> {simpleValidator.current.message('client id', value.client_id, 'required')}</span>
           </div>
-     
+      */}
   <div className=" col-md-12 mb-3">
   <label for="name" className="required">Message</label>
    <textarea value={value.message} onChange={handleChange} name='message' className='form-control'></textarea>
@@ -163,7 +163,7 @@ console.log(value.phon)
   <div className=" mb-3  ">
     <div className='d-flex justify-content-center align-items-center mx-2'>
     <button type='submit' disabled={isSubmitting} className='btn btn-info text-white   '>Update Details</button>
-    <button type='button' onClick={()=>{navigate('/desk/enquiry')}} className='btn btn-secondary text-white mx-2'>Cancel</button>
+    <button type='button' onClick={()=>{navigate('/desk/enquiry/list')}} className='btn btn-secondary text-white mx-2'>Cancel</button>
     </div>
        
   </div></div>

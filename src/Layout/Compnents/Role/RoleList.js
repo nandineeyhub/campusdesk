@@ -10,6 +10,7 @@ import SearchBar from '../../Filters/SearchBar'
 import StatusFilter from '../../Filters/StatusFilter'
 import Pagination from '../../../Pagination'
 import ValidatePermission from '../../../Auth/ValidatePermission'
+import { ThemeContext } from '../../../theme-context';
 
 const RoleList = () => {
 
@@ -25,6 +26,8 @@ const RoleList = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [pages, setPages] = useState([1])
   const [modules, setModules] = useState([])
+
+  const { theme, toggle } = React.useContext(ThemeContext)
 
   const handleLimitChange = (e) => {
     setItemsPerPage(e.target.value)
@@ -50,7 +53,10 @@ const RoleList = () => {
       if(e.target.name == "search"){
         setSearch(e.target.value)
       } else if(e.target.name == "status"){
+        setCurrentPage(1)
+        setItemsPerPage(10)
         setStatus(e.target.value)
+        getPermission(search,e.target.value, itemsPerPage, currentPage)
       }
    }
     const navigate = useNavigate()
@@ -87,17 +93,21 @@ const RoleList = () => {
         ErrorMsg(Exception.message);
       }
     }
+    
+    const submitData = () => {
+      getPermission(search, status, itemsPerPage, currentPage)
+    }
 
-    const getPermission = async () => {
+    const getPermission = async (search, status, itemPerPage, currentPage) => {
       setLoader(true)
       try{
-         const query = {search:search, status:status, limit:itemsPerPage, page:currentPage}
+         const query = {search:search, status:status, limit:itemPerPage, page:currentPage}
          const response = await callAPI(apiUrls.getpermission, query ,'GET')
          setLoader(false)
          if(response.data.isSuccess){
           setValue(response.data.data.role)
           setModules(response.data.data.modules)
-          setTotalPages((response.data.data.totalRole%itemsPerPage)?Math.floor(response.data.data.totalRole/itemsPerPage)+1:response.data.data.totalRole%itemsPerPage)
+          setTotalPages((response.data.data.totalRole%itemPerPage?itemPerPage:itemsPerPage)?Math.floor(response.data.data.totalRole/(itemPerPage?itemPerPage:itemsPerPage))+1:response.data.data.totalRole%itemPerPage?itemPerPage:itemsPerPage)
          }
       } catch(e){
         setLoader(false)
@@ -116,15 +126,12 @@ const RoleList = () => {
       setPages(newarr)
      }, [itemsPerPage, totalPages, currentPage])
   
-    useEffect(()=>{
-      getPermission()
-    },[itemsPerPage, totalPages, currentPage])
+
 
     useEffect(()=>{
-      setCurrentPage(1)
-      setItemsPerPage(10)
+    
       getPermission()
-     },[status])
+     },[])
 
 
   return ( 
@@ -138,21 +145,21 @@ const RoleList = () => {
   <div className='container-lg  border-light rounded w-100 px-3 m-auto box-height '>
   <div className='py-2 my-3 d-flex justify-content-between'>
   <div className='d-flex justify-content-around'>
-               <SearchBar handleFilter={handleFilter} getdata={getPermission} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
+               <SearchBar handleFilter={handleFilter} getdata={submitData} setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter}/></div>
              </div>
 {ValidatePermission("add_role") &&   <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/role/addrole")}}>Add New Role</button>}</div>
-  <table className='table table-striped App'>
-      <thead >
+  <table className={`table ${theme.backgroundColor == 'black' ? "table-dark":"table-striped" } App`}>
+      <thead>
           <th scope='col'>Id</th>
           <th scope='col'>Name</th>
+          <th scope='col'>Created By</th>
+          <th scope='col'>Account Type</th>
           <th scope='col'>Created Date</th>
           <th scope='col'>Modified Date</th>
           <th scope='col'>Status</th>
           <th scope='col'>Action</th>
-
       </thead>
-      
       <tbody>
 
       {
@@ -162,7 +169,8 @@ const RoleList = () => {
             <tr>
 <th scope="row">{key+1}</th>
 <td> {val.name} </td>
-
+<td> {val.created_by} </td>
+<td> {val.created_by_type} </td>
 <td>{new Date(val.created_at).toLocaleDateString("en-US")}</td>
 
 <td>{new Date(val.updated_at).toLocaleDateString("en-US")}</td>
@@ -171,9 +179,9 @@ const RoleList = () => {
  ValidatePermission("update_role") && handleStatus(val.id,val.status)
 }} className={`App text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
 <td><div classname='d-flex justify-content-center align-items-center '>
-{ ValidatePermission("edit_role") &&  <NavLink to={`/desk/role/editrole/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>}
- {ValidatePermission("delete_role") && <NavLink className="text-decoration-none">   <i className="fa fa-trash text-dark fs-5 mx-1"  onClick={() =>handleSelect(val,'del')}></i></NavLink>}
- <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val,'view')}> <i className="fa fa-eye fs-4 text-dark mx-1" ></i></NavLink>
+ {ValidatePermission("edit_role") &&  <NavLink to={`/desk/role/editrole/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-secondary fs-5 mx-1 "></i> </NavLink>}
+ {ValidatePermission("delete_role") && <NavLink className="text-decoration-none">   <i className="fa fa-trash text-secondary fs-5 mx-1"  onClick={() =>handleSelect(val,'del')}></i></NavLink>}
+ <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val,'view')}> <i className="fa fa-eye fs-4 text-secondary mx-1" ></i></NavLink>
  
   </div></td>
 </tr>

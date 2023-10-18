@@ -10,6 +10,7 @@ import SearchBar from '../../Filters/SearchBar'
 import StatusFilter from '../../Filters/StatusFilter'
 import Pagination from '../../../Pagination'
 import ValidatePermission from '../../../Auth/ValidatePermission'
+import { ThemeContext } from '../../../theme-context';
 
 const UserList = () => {
 
@@ -24,15 +25,19 @@ const UserList = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [pages, setPages] = useState([1])
+
+  const { theme, toggle } = React.useContext(ThemeContext)
   
 
   const handleLimitChange = (e) => {
     setItemsPerPage(e.target.value)
     setCurrentPage(1)
+    getusers(status,search,e.target.value,1)
   }
 
-  const handlepageChange = (page)=>{
+  const handlepageChange = (page) => {
     setCurrentPage(page)
+    getusers(status,search,itemsPerPage,page)
   }
 
   const handleFilter = (e) => {
@@ -87,16 +92,19 @@ const UserList = () => {
        ErrorMsg(e.messsage)
     }
   }
+  const submitData = () => {
+    getusers(status,search,itemsPerPage,currentPage)
+  }
 
-  const getusers = async (status,search,itemsPerPage,currentPage) => {
+  const getusers = async (status,search,itemPerPage,currentPage) => {
     setloader(true)
     try{
-      const query = {search:search, status:status, limit:itemsPerPage, page:currentPage}
+      const query = {search:search, status:status, limit:itemPerPage, page:currentPage}
       const response =  await callAPI(apiUrls.getusers, query, 'GET')
       setloader(false)
       if(response.data.isSuccess){
         setValue(response.data.data.users.data)
-        setTotalPages((response.data.data.users.total%itemsPerPage)?Math.floor(response.data.data.users.total/itemsPerPage)+1:response.data.data.users.total/itemsPerPage)
+        setTotalPages((response.data.data.users.total%itemPerPage?itemPerPage:itemsPerPage)?Math.floor(response.data.data.users.total/(itemPerPage?itemPerPage:itemsPerPage))+1:response.data.data.users.total/itemPerPage?itemPerPage:itemsPerPage)
       }else{
         setValue([])
         //ErrorMsg(response.data.message)
@@ -109,13 +117,9 @@ const UserList = () => {
   
   useEffect(()=>{
     getusers()
-   },[ itemsPerPage, totalPages, currentPage ])
+   },[ ])
 
-  useEffect(()=>{
-    setCurrentPage(1)
-    setItemsPerPage(10)
-    getusers()
-  },[ status ] )
+
     
   useEffect(()=>{
     var newarr = []
@@ -140,11 +144,11 @@ const UserList = () => {
   <div className='container-lg border-light rounded w-100 px-3 m-auto  '>
   <div className='py-2 my-3 d-flex justify-content-between'>
   <div className='d-flex justify-content-around'>
-               <SearchBar handleFilter={handleFilter} getdata={getusers}  setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
+               <SearchBar handleFilter={handleFilter} getdata={submitData}  setCurrentPage={setCurrentPage} setItemsPerPage={setItemsPerPage}/>
                <div className='mx-2'><StatusFilter handleFilter={handleFilter} /></div>
              </div>
     {ValidatePermission("add_user") && <button className='btn btn-info text-white' onClick={()=>{navigate("/desk/user/adduser")}}>Add New User</button>}</div>
-  <table className='table table-striped App'>
+  <table className={`table ${theme.backgroundColor == 'black' ? "table-dark":"table-striped" } App`}>
       <thead >
           <th scope='col'>Id</th>
           <th scope='col'>Name</th>
@@ -164,9 +168,9 @@ const UserList = () => {
       <td>{val.phoneNo}</td>
       <td><p  role="button" onClick={()=>{ ValidatePermission("update_user") && handleStatus(val.id, val.status)}} className={`App text-white ${val.status=="Active"?"bg-success":"bg-danger"}`}>{val.status}</p></td>
       <td><div classname='d-flex justify-content-center align-items-center '>
-     { ValidatePermission("edit_user")&&<NavLink to={`/desk/user/edituser/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-dark fs-5 mx-1 "></i> </NavLink>}
-     { ValidatePermission("delete_user") && <NavLink className="text-decoration-none"  onClick={() => handleSelect(val, 'del')}>  <i className="fa fa-trash text-dark fs-5 mx-1" ></i></NavLink>}
-       <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-dark mx-1"></i></NavLink>
+     { ValidatePermission("edit_user")&&<NavLink to={`/desk/user/edituser/${val.id}`} className="text-decoration-none"> <i className="fa fa-edit text-secondary fs-5 mx-1 "></i> </NavLink>}
+     { ValidatePermission("delete_user") && <NavLink className="text-decoration-none"  onClick={() => handleSelect(val, 'del')}>  <i className="fa fa-trash text-secondary fs-5 mx-1" ></i></NavLink>}
+       <NavLink  className="text-decoration-none"  onClick={() => handleSelect(val, 'view')}> <i className="fa fa-eye fs-4 text-secondary mx-1"></i></NavLink>
         </div></td>
       </tr> } )
      }

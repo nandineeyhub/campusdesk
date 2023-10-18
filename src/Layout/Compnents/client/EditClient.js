@@ -27,6 +27,7 @@ const EditClient = () => {
   const handleChange = (e) => {
     if (e.target.name == 'stateID') {
       getcity(e.target.value)
+      setCity([])
     }
     setValue((val) => { return { ...val, [e.target.name]: e.target.value } })
   }
@@ -135,6 +136,32 @@ const EditClient = () => {
     }
   }
 
+  const handleKeyDown = event => {
+    const regex =  /^[.a-zA-Z0-9_-]*$/;
+    const isValid = regex.test(event.key)
+    if(event.key != "Backspace"){
+      if(isValid == false){
+        event.preventDefault()
+      } 
+    }
+  }
+
+
+
+  const PhonehandlekeyDown = e => {
+    if(value.phoneNo){
+      if(value.phoneNo.length > 9){
+        if(e.key != "Backspace"){
+          e.preventDefault()
+        }
+      } 
+    } else if(Number(e.key) == 0) {
+      e.preventDefault()
+    }
+    
+  }
+  
+
   useEffect(() => {
     getPermission()
     getState()
@@ -160,22 +187,22 @@ const EditClient = () => {
               <input type="file" className="my-1" name='image' onChange={uploadImage} />
     
             </div>
-            <span className="requireds"> {simpleValidator.current.message('image', value.image, 'required')}</span>
+         
           </div>
           <div className='col-md-4 '>
             <label for="phone" className="required">Campus Code</label>
-            <input className='form-control' value={value.schoolCode} onChange={handleChange} name='schoolCode' type="text" placeholder='Code'></input>
+            <input className='form-control' maxLength={5}  onKeyDown={handleKeyDown} value={value.schoolCode} onChange={handleChange} name='schoolCode' type="text" placeholder='Code'></input>
             <span className="requireds"> {simpleValidator.current.message('code', value.schoolCode, 'required')}</span>
           </div>
 
           <div className='col-md-4 my-2'>
             <label for="name" className="required">Campus Name</label>
-            <input className='form-control ' value={value.name} onChange={handleChange} name='name' type="text" placeholder='Name'></input>
+            <input className='form-control '  maxLength={20}  onKeyDown={handleKeyDown} value={value.name} onChange={handleChange} name='name' type="text" placeholder='Name'></input>
             <span className="requireds"> {simpleValidator.current.message('name', value.name, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="name" className="required">Contact Person</label>
-            <input className='form-control ' value={value.contactPerson} onChange={handleChange} name='contactPerson' type="text" placeholder='Name'></input>
+            <input className='form-control '  maxLength={20} onKeyDown={handleKeyDown} value={value.contactPerson} onChange={handleChange} name='contactPerson' type="text" placeholder='Name'></input>
             <span className="requireds"> {simpleValidator.current.message('contact person', value.contactPerson, 'required')}</span>
          </div>
           <div className='col-md-4 my-2'>
@@ -185,17 +212,17 @@ const EditClient = () => {
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Phone</label>
-            <input className='form-control' value={value.phoneNo} onChange={handleChange} name='phoneNo' type="text" placeholder='Phone'></input>
+            <input className='form-control'  onKeyDown={PhonehandlekeyDown} value={value.phoneNo} onChange={handleChange} name='phoneNo' type="text" placeholder='Phone'></input>
             <span className="requireds"> {simpleValidator.current.message('phone number', value.phoneNo, 'required|numeric|min:10|max:10')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Address</label>
-            <input className='form-control' value={value.address} onChange={handleChange} name='address' type="text" placeholder='Address'></input>
+            <input className='form-control'  maxLength={100} onKeyDown={handleKeyDown} value={value.address} onChange={handleChange} name='address' type="text" placeholder='Address'></input>
             <span className="requireds"> {simpleValidator.current.message('address', value.address, 'required')}</span>
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Country</label>
-            <select className='form-control' onChange={handleChange} name='countryID' type="text" placeholder=''>
+            <select className='form-control'  onChange={handleChange} name='countryID' type="text" placeholder=''>
 
               <option value="1" selected>US</option>
             </select>
@@ -226,7 +253,7 @@ const EditClient = () => {
             </select>
             <span className="requireds"> {simpleValidator.current.message('city ID', value.cityID, 'required')}</span>
           </div>
-          <div className='col-md-4 my-2'>
+          {/* <div className='col-md-4 my-2'>
             <label for="role" className="required">Role</label>
             <select value={value.role_id} className='form-control'  onChange={handleChange} name='roleID' type="text" placeholder=''>
               <option value="" selected>--Choose Role--</option>
@@ -237,7 +264,7 @@ const EditClient = () => {
               }
             </select>
             <span className="requireds"> {simpleValidator.current.message('role ID', value.role_id, 'required')}</span>
-          </div>
+          </div> */}
           <div className="col-md-12">
             <div className="d-flex  mt-3">
               <button disabled={isSubmitting}  type="submit" className="btn btn-info text-white mx-3">Update Details</button>

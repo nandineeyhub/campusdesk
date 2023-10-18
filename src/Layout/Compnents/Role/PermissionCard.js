@@ -79,7 +79,7 @@ const checkOnEdit = () => {
           <div class="accordion-body d-flex justify-content-around ">
             {
               permissions != undefined && permissions.length > 0 && permissions?.map((permission) => {
-                return (<div>
+                 return (<div>
 
                   <input onChange={(e) => {
                     handleClick(e, permission.slug, module.slug)

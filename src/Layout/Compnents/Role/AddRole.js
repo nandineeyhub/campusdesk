@@ -20,6 +20,8 @@ const AddRole = () => {
  
   const navigate = useNavigate()
 
+   const user = JSON.parse(localStorage.getItem("user"))
+
   const handleSelectAll = ( e, mname, isCheckAll) => {
    
     var allPermission = value.permission
@@ -80,7 +82,7 @@ const AddRole = () => {
       setIsSubmitting(true)
     }
   }
-  const user = JSON.parse(localStorage.getItem("user"))
+ 
   const addRole = async () => {
      try{
       const response = await callAPI(apiUrls.addrole, {client_id:user.id}, 'POST', value)
@@ -140,8 +142,8 @@ const AddRole = () => {
   <label className='my-1'>Permission</label>
   {
       permission?.modules !=undefined && permission?.modules.length>0 &&  permission?.modules.map((module)=>{
-      return (
-        <div className='col-md-6 my-1 '>
+        return (
+        user.type == "admin" ? <div className='col-md-6 my-1 '>
         <PermissionCard id={module.id} 
         module={module}
         permissions={permission.permissions} 
@@ -150,7 +152,16 @@ const AddRole = () => {
         isCheckone={isCheckone}
         isCheck={isCheck}
         />
-     </div>
+       </div>  :  user.type == "client" && module.name != "Client"  && <div className='col-md-6 my-1 '>
+        <PermissionCard id={module.id} 
+        module={module}
+        permissions={permission.permissions} 
+        handleSelectAll={handleSelectAll}
+        handleClick ={handleClick}
+        isCheckone={isCheckone}
+        isCheck={isCheck}
+        />
+       </div> 
       )
     })      
   }

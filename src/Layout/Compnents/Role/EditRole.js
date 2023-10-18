@@ -17,6 +17,7 @@ const EditRole = () => {
   const [,forceUpdate] = useState()
   const simpleValidator = useRef(new SimpleReactValidator());
 
+  const user = JSON.parse(localStorage.getItem("user"))
 
   const navigate = useNavigate()
   const {id} = useParams()
@@ -172,8 +173,8 @@ try{
   {
       modules.modules !=undefined && modules.modules.length>0 &&  modules.modules.map((module)=>{
       return (
-        <div className='col-md-6 my-1 '>
-        <PermissionCard id={module.id} 
+        user.type == "admin" ? <div className='col-md-6 my-1 '>
+         <PermissionCard id={module.id} 
         module={module}
         permissions={modules.permissions} 
         handleSelectAll={handleSelectAll}
@@ -181,7 +182,16 @@ try{
         isCheckone={isCheckone}
         isCheck={isCheck}
         />
-     </div>
+       </div>  :  user.type == "client" && module.name != "Client"  && <div className='col-md-6 my-1 '>
+       <PermissionCard id={module.id} 
+        module={module}
+        permissions={modules.permissions} 
+        handleSelectAll={handleSelectAll}
+        handleClick ={handleClick}
+        isCheckone={isCheckone}
+        isCheck={isCheck}
+        />
+       </div> 
       )
     })
     }
