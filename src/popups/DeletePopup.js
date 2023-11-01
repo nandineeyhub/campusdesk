@@ -8,8 +8,8 @@ function Modal(props) {
 open={props.show}
 
 >
-<div className="delete-popup" >
-<div class="modal-content">
+<div className="delete-popup " >
+<div class="modal-content overflow-hidden">
 <div className='d-flex justify-content-end'>
 <button type="button" className="close col-md-1 btn border-white" data-dismiss="modal" aria-label="Close" onClick={props.onHide}>
   <span aria-hidden="true">  <i class="fa fa-times"></i></span>

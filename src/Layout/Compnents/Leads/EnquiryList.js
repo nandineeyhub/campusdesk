@@ -51,6 +51,9 @@ const EnquiryList = () => {
   const handleFilter = (e) => {
     if (e.target.name == "search") {
       setSearch(e.target.value)
+      if(e.target.value == ""){
+        getEnquiry(status,e.target.value,step,date,itemsPerPage,currentPage)
+      }
     } else if (e.target.name == "status") {
       setStatus(e.target.value)
       getEnquiry(e.target.value,search,step,date,itemsPerPage,currentPage)
@@ -98,14 +101,14 @@ const EnquiryList = () => {
 
 
 
-  const handleStatus = async (id, status) => {
+  const handleStatus = async (id, newstatus) => {
     try {
 
-      const query = { status: status == "Active" ? "Inactive" : "Active", id:id }
+      const query = { status:  newstatus == "Active" ? "Inactive" : "Active", id:id }
       const response = await callAPI(apiUrls.updateenquiryStatus , query, 'PUT')
       if (response.data.isSuccess) {
         SuccessMsg(response.data.message)
-        getEnquiry()
+        getEnquiry(status,search,step,date,itemsPerPage,currentPage)    
       } else {
         ErrorMsg(response.data.message)
       }
@@ -116,6 +119,12 @@ const EnquiryList = () => {
 
 const submitData = ()=>{
   getEnquiry(status,search,step,date,itemsPerPage,currentPage)
+}
+const forwardData = ()=>{
+  getEnquiry(status,search,step,date,itemsPerPage,currentPage+1)
+}
+const previousData = ()=>{
+  getEnquiry(status,search,step,date,itemsPerPage,currentPage-1)
 }
 
 
@@ -129,7 +138,7 @@ const submitData = ()=>{
        if( response.data.data != null) {
          setValue(response.data.data.enquiries.data)
          console.log(itemsPerPage)
-         setTotalPages((response.data.data.enquiries.total%itemPerPage?itemPerPage:itemsPerPage)?Math.floor(response.data.data.enquiries.total/(itemPerPage?itemPerPage:itemsPerPage))+1:response.data.data.enquiries.total%itemPerPage?itemPerPage:itemsPerPage)
+         setTotalPages((response.data.data.enquiries.total%(itemPerPage?itemPerPage:itemsPerPage))?Math.floor(response.data.data.enquiries.total/(itemPerPage?itemPerPage:itemsPerPage))+1:response.data.data.enquiries.total/(itemPerPage?itemPerPage:itemsPerPage))
          }
        else setValue([])
         
@@ -161,7 +170,7 @@ const submitData = ()=>{
 
   useEffect(() => {
     if(params.step =="Lead" || params.step == "HotLead" || params.step == "Client"){
-      getEnquiry(status,search,params.step,date,itemsPerPage,currentPage)
+      getEnquiry("active",search,params.step,date,itemsPerPage,currentPage)
       setStep(params.step)
       console.log(params.step)
      } else getEnquiry()
@@ -260,6 +269,8 @@ const submitData = ()=>{
           setCurrentPage={setCurrentPage}
           handlepageChange={handlepageChange}
           pages={pages}
+          forwardData={forwardData}
+          previousData={previousData}
           />
         </div> }
         </div>

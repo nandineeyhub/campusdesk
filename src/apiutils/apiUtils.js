@@ -9,6 +9,7 @@ async function callAPI(path, params, method, data = null, options = {}, headersO
     const API_ROOT = defaultConfig.baseAPIUrl;
   
     const url = API_ROOT + path;
+    
     const headers = {
         'Content-Type': 'application/json',
         Accept: 'application/json',

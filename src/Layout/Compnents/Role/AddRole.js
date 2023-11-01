@@ -127,8 +127,8 @@ const AddRole = () => {
 
   return (
 <div className='container-lg w-100 '>
-<div className='text-secondary py-2 App'>
- <h3>Add Role</h3>
+<div className='text-secondary py-2 '>
+ <h4>Add Role</h4>
 </div> 
 {loader && <ApiLoader/>}
 <form onSubmit={handleSubmit}>
@@ -143,7 +143,7 @@ const AddRole = () => {
   {
       permission?.modules !=undefined && permission?.modules.length>0 &&  permission?.modules.map((module)=>{
         return (
-        user.type == "admin" ? <div className='col-md-6 my-1 '>
+        user.role_id == 1 ? <div className='col-md-6 my-1 '>
         <PermissionCard id={module.id} 
         module={module}
         permissions={permission.permissions} 
@@ -152,7 +152,7 @@ const AddRole = () => {
         isCheckone={isCheckone}
         isCheck={isCheck}
         />
-       </div>  :  user.type == "client" && module.name != "Client"  && <div className='col-md-6 my-1 '>
+       </div>  :  module.name != "Client"  && <div className='col-md-6 my-1 '>
         <PermissionCard id={module.id} 
         module={module}
         permissions={permission.permissions} 

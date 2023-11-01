@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
-const Pagination = ({ handlepageChange, pages, currentPage, setCurrentPage, totalPages }) => {
+const Pagination = ({ handlepageChange, pages, currentPage, setCurrentPage, totalPages, forwardData, previousData}) => {
 
-  // console.log( totalPages == currentPage)
-  // console.log( totalPages)
+  
+//  console.log( currentPage)
+//  console.log( totalPages)
 
   return (
     <nav aria-label="Page navigation example d-flex">
@@ -12,6 +13,7 @@ const Pagination = ({ handlepageChange, pages, currentPage, setCurrentPage, tota
         <li class="page-item">
           <button disabled={ currentPage == 1 }  onClick={()=>{
            currentPage != 1 && setCurrentPage(currentPage-1)
+           previousData()
           }} class="page-link" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
             <span class="sr-only">Previous</span>
@@ -27,6 +29,7 @@ const Pagination = ({ handlepageChange, pages, currentPage, setCurrentPage, tota
         <li class="page-item">
           <button disabled={ totalPages == currentPage } onClick={()=>{
            totalPages > currentPage && setCurrentPage(currentPage+1)
+           forwardData()
           }} class="page-link" href="#" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
             <span class="sr-only">Next</span>

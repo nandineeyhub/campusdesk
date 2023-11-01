@@ -155,8 +155,8 @@ try{
 
   return (
     <div className='container-lg w-100 '>
-    <div className='text-secondary py-2 App'>
-      <h3>Edit Role</h3>
+    <div className='text-secondary py-2 '>
+      <h4>Edit Role</h4>
     </div> 
 <form onSubmit={handleSubmit}>
 <div className='row'>
@@ -173,7 +173,7 @@ try{
   {
       modules.modules !=undefined && modules.modules.length>0 &&  modules.modules.map((module)=>{
       return (
-        user.type == "admin" ? <div className='col-md-6 my-1 '>
+        user.role_id == 1 ? <div className='col-md-6 my-1 '>
          <PermissionCard id={module.id} 
         module={module}
         permissions={modules.permissions} 
@@ -182,7 +182,7 @@ try{
         isCheckone={isCheckone}
         isCheck={isCheck}
         />
-       </div>  :  user.type == "client" && module.name != "Client"  && <div className='col-md-6 my-1 '>
+       </div>  : module.name != "Client"  && <div className='col-md-6 my-1 '>
        <PermissionCard id={module.id} 
         module={module}
         permissions={modules.permissions} 

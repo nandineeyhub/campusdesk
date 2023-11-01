@@ -55,7 +55,7 @@ const RecoverPasswordForm = () => {
          setIsSubmitting(false)
          if(response.data.isSuccess){
            SuccessMsg(response.data.message)
-           navigate('/login')
+           navigate('/')
          }else{
            ErrorMsg(response.data.message)
          }

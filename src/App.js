@@ -16,7 +16,7 @@ function App() {
     <div className="container-fluid">
     <div className="row flex-nowrap">
      <Sidebar/>
-     <div class={`col py-3 body-height ${theme.backgroundColor=='black'?"":"bg-light"} `}>
+     <div class={`col py-3 body-height ${theme.backgroundColor=='black'?" dark ":"bg-light"} `}>
            <Outlet/>
         </div>
      </div>

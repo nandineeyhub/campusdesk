@@ -103,8 +103,8 @@ const EnquiryForm = () => {
   console.log(value)
   return (
       <div className='container-lg w-100 '>
-          <div className='text-secondary py-2 App'>
-            <h3> Enquiry Form </h3>
+          <div className='text-secondary py-2'>
+            <h4> Enquiry Form </h4>
           </div> 
            <form onSubmit={handleSubmit} className=''>
             <div className='row'>
@@ -141,7 +141,7 @@ const EnquiryForm = () => {
             </div>
             <div className='col-md-4 mb-3'>
             <label for="client_id" className="required">Client</label>
-            <select className='form-control' onChange={handleChange} name='client_id' type="text" placeholder=''>
+            <select  className='p-2 w-100 border border-muted' onChange={handleChange} name='client_id' type="text" placeholder=''>
               <option value="" selected>--Choose Client--</option>
               {
                 clientlist.map((client) => {

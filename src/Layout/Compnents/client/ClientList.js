@@ -43,6 +43,9 @@ const ClientList = () => {
    const handleFilter = (e) => {
       if(e.target.name == "search"){
         setSearch(e.target.value)
+        if(e.target.value ==""){
+          getdata(status,e.target.value,itemsPerPage,currentPage)
+        }
       } else if(e.target.name == "status"){
         setCurrentPage(1)
         setItemsPerPage(10)
@@ -62,14 +65,14 @@ const ClientList = () => {
    
     }
   
-    const handleStatus = async (id, status) => {
+    const handleStatus = async (id, newstatus) => {
       try {
         
-        const query = {status:status=="Active"?"Inactive":"Active", id:id}
+        const query = {status:newstatus=="Active"?"Inactive":"Active", id:id}
         const response = await callAPI(apiUrls.clientstatus, query, 'PUT')
         if(response.data.isSuccess){
            SuccessMsg(response.data.message)
-           getdata()
+           getdata(status,search,itemsPerPage,currentPage)
         } else{
           ErrorMsg(response.data.message)
         }
@@ -83,6 +86,13 @@ const ClientList = () => {
    const submitData = () => {
      getdata(status,search,itemsPerPage,currentPage)
    }
+
+  const forwardData = ()=>{
+    getdata(status,search,itemsPerPage,currentPage+1)
+  }
+  const previousData = ()=>{
+    getdata(status,search,itemsPerPage,currentPage-1)
+  }
     
    const getdata =  async (status,search,itemPerPage,currentPage) => {
     setLoader(true)
@@ -92,7 +102,7 @@ const ClientList = () => {
       if(response.data.isSuccess){
         if(response.data.data != null){
           setValue(response.data.data.clients.data)
-          setTotalPages((response.data.data.totalRecord%itemPerPage?itemPerPage:itemsPerPage)?Math.floor(response.data.data.totalRecord/(itemPerPage?itemPerPage:itemsPerPage))+1:response.data.data.totalRecord%itemPerPage?itemPerPage:itemsPerPage)
+          setTotalPages((response.data.data.totalRecord%itemPerPage?itemPerPage:itemsPerPage)?Math.floor(response.data.data.totalRecord/(itemPerPage?itemPerPage:itemsPerPage))+1:response.data.data.totalRecord/itemPerPage?itemPerPage:itemsPerPage)
         } else{
           setValue([])
         }
@@ -164,7 +174,7 @@ const ClientList = () => {
 
           </div> 
         
-        <input onClick={manageColumn} name='Id' type='checkbox'></input>
+       {/* { <input onClick={manageColumn} name='Id' type='checkbox'></input>} */}
         <div className='container-lg border-light rounded w-100 px-3 overflow-auto '>
         { loader && <ApiLoader/>}
         <div className='py-2 my-3 d-flex justify-content-between'>
@@ -232,6 +242,7 @@ const ClientList = () => {
       setCurrentPage={setCurrentPage}
       handlepageChange={handlepageChange}
       pages={pages}
+      submitData={submitData}
       />
     </div> }
     </div>

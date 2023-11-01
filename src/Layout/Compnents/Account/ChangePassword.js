@@ -48,7 +48,7 @@ const ChangePassword = () => {
   return (
     <div className='container-lg w-50 '>
     <div className='text-secondary py-3 App'>
-     <h3> Change Password</h3>
+     <h3> Change Password </h3>
     </div> 
    
     <form onSubmit={handleSubmit} className=''>

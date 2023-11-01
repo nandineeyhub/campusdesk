@@ -43,6 +43,9 @@ const UserList = () => {
   const handleFilter = (e) => {
       if(e.target.name == "search"){
         setSearch(e.target.value)
+        if(e.target.value == ""){
+          getusers(status,e.target.value,itemsPerPage,currentPage)
+        }
       } else if(e.target.name == "status"){
         setStatus(e.target.value)
         setCurrentPage(1)
@@ -78,13 +81,13 @@ const UserList = () => {
     }
   }
 
-  const handleStatus = async (id, status) => {
+  const handleStatus = async (id, newstatus) => {
     try {
-      const query = {status:status=="Active"?"Inactive":"Active", id:id}
+      const query = {status:newstatus=="Active"?"Inactive":"Active", id:id}
       const response = await callAPI(apiUrls.userstatus, query, 'PUT')
       if(response.data.isSuccess){
          SuccessMsg(response.data.message)
-         getusers()
+         getusers(status,search,itemsPerPage,currentPage)
       } else{
         ErrorMsg(response.data.message)
       }
@@ -94,6 +97,12 @@ const UserList = () => {
   }
   const submitData = () => {
     getusers(status,search,itemsPerPage,currentPage)
+  }
+  const forwardData = ()=>{
+    getusers(status,search,itemsPerPage,currentPage+1)
+  }
+  const previousData = ()=>{
+    getusers(status,search,itemsPerPage,currentPage-1)
   }
 
   const getusers = async (status,search,itemPerPage,currentPage) => {
@@ -197,6 +206,8 @@ const UserList = () => {
       setCurrentPage={setCurrentPage}
       handlepageChange={handlepageChange}
       pages={pages}
+      forwardData={forwardData}
+      previousData={previousData}
       />
     </div> }
  {<Modal show={open}

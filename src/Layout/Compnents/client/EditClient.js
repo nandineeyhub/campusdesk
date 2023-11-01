@@ -173,8 +173,8 @@ const EditClient = () => {
 
   return (
     <div className='container-lg w-100 '>
-      <div className='text-secondary py-3 App'>
-        <h3>Edit Client</h3>
+      <div className='text-secondary py-3 '>
+        <h4>Edit Client</h4>
       </div>
       {loader && <ApiLoader />}
       <form onSubmit={handleSubmit}>
@@ -184,9 +184,21 @@ const EditClient = () => {
             <div className="my_profile_box ">
            { <img src={image ? URL.createObjectURL(image) :value.image_path+value.image } className="  img-fluid" alt="" />}
 
-              <input type="file" className="my-1" name='image' onChange={uploadImage} />
+              
     
             </div>
+
+            <div className='d-flex  align-items-center my-2'>
+              <div>
+              <input type="file" className="my-1 d-none" id='image' name='image' onChange={uploadImage} />
+              <label role='button' className='btn btn-success' htmlFor='image'>Select Image</label>
+              </div>
+              {value.image!="null" && value.image != null && <button onClick={()=>{
+                setImage("")
+                setValue((val)=>{return {...val,["image"]:null}})
+              }} type='button' className='btn btn-danger mx-2'>Remove</button>}
+              </div>
+           
          
           </div>
           <div className='col-md-4 '>
@@ -222,7 +234,7 @@ const EditClient = () => {
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">Country</label>
-            <select className='form-control'  onChange={handleChange} name='countryID' type="text" placeholder=''>
+            <select  className='p-2 w-100 border border-muted'  onChange={handleChange} name='countryID' type="text" placeholder=''>
 
               <option value="1" selected>US</option>
             </select>
@@ -231,7 +243,7 @@ const EditClient = () => {
           
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">State</label>
-            <select className='form-control' value={value.stateID} onChange={handleChange} name='stateID' type="text" placeholder=''>
+            <select  className='p-2 w-100 border border-muted' value={value.stateID} onChange={handleChange} name='stateID' type="text" placeholder=''>
               <option value="" selected>--Choose State--</option>
               {
                 state != undefined && state.length > 0 && state.map((state) => {
@@ -243,7 +255,7 @@ const EditClient = () => {
           </div>
           <div className='col-md-4 my-2'>
             <label for="phone" className="required">City</label>
-            <select className='form-control' value={value.cityID} onChange={handleChange} name='cityID' type="text" placeholder=''>
+            <select  className='p-2 w-100 border border-muted' value={value.cityID} onChange={handleChange} name='cityID' type="text" placeholder=''>
               <option value="" selected>--Choose City--</option>
               {
                 city.map((city) => {
@@ -267,8 +279,8 @@ const EditClient = () => {
           </div> */}
           <div className="col-md-12">
             <div className="d-flex  mt-3">
-              <button disabled={isSubmitting}  type="submit" className="btn btn-info text-white mx-3">Update Details</button>
-              <button type="button" onClick={() => { navigate("/desk/client") }} className="btn btn-secondary ">Cancel</button>
+              <button disabled={isSubmitting}  type="submit" className="btn btn-info text-white ">Update Details</button>
+              <button type="button" onClick={() => { navigate("/desk/client") }} className="btn btn-secondary mx-3">Cancel</button>
             </div>
           </div>
         </div>

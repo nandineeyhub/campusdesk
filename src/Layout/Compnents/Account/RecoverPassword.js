@@ -20,6 +20,7 @@ const RecoverPassword = () => {
         console.log(response)
         if(response.data.isSuccess){
           SuccessMsg(response.data.message)
+          navigate('/')
         } else ErrorMsg(response.data.message)
       } catch(e){
         ErrorMsg(e.message)

@@ -36,7 +36,7 @@ const LeadView = (props) => {
              <div>Email</div> <div>{data.email}</div>
           </div>
           <div className='d-flex justify-content-between  align-items-start'>
-             <div>Phone Number</div> <div>{data.phone}</div>
+             <div>Phone Number</div> <div>{data.phoneNo}</div>
           </div>
         
           <div className='d-flex justify-content-between  align-items-start'>
@@ -55,7 +55,7 @@ const LeadView = (props) => {
              <div>Message</div> <div>{data.message}</div>
           </div>
           <div className='d-flex justify-content-between  align-items-start'>
-             <div>Created By</div> <div>{data.created_by_type + " " + data.created_by}</div>
+             <div>Created By</div> <div>{data.created_by}</div>
           </div>
           
        </div>

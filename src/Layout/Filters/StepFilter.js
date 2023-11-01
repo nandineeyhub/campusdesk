@@ -4,7 +4,7 @@ const StepFilter = ({handleFilter, step}) => {
 
   return (
     <div>
-        <select onChange={(e)=>{handleFilter(e)}} name='step' className=' p-2 border border-muted'>
+        <select onChange={(e)=>{handleFilter(e)}} name='step'  className=' p-2 border border-muted'>
             <option  value="">select step</option>
 
                    <option selected={step == "Lead"?true:false} value="Lead">Lead</option>

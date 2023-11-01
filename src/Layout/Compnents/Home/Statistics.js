@@ -7,6 +7,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { ErrorMsg } from '../../../Notifications'
 import { BarChart, LineChart } from './Charts'
 import { green, yellow } from '@mui/material/colors'
+import ProgressBar from '../../../ProgressBar'
 
 
 
@@ -59,20 +60,21 @@ const Statistics = () => {
         <div className='text-secondary '>
             <h4>Desk Stats</h4>
         </div>
-        
+         {/* <ProgressBar/> */}
+
          <div className='d-flex justify-content-center align-items-center App'>
-         <div  onClick={()=>{
-         navigate("/desk/enquiry/Lead")}} className=" text-decoration-none w-50">
-          <div className='bg-success text-white px-5 py-3 m-3 border rounded '>
+         <div className=" text-decoration-none w-50">
+          <div onClick={()=>{
+         navigate("/desk/enquiry/Lead")}} style={{cursor:'pointer'}} className='bg-success text-white px-5 py-3 m-3 border rounded '>
               <h5> Leads {value.totalLead} </h5>
          </div></div>
-         <div  onClick={()=>{
-         navigate("/desk/enquiry/HotLead")}} className=" text-decoration-none w-50 ">
-          <div className='bg-warning text-white px-5 py-3 m-3 border rounded '>
+         <div  className=" text-decoration-none w-50 ">
+          <div onClick={()=>{
+         navigate("/desk/enquiry/HotLead")}} style={{cursor:'pointer'}} className='bg-warning text-white px-5 py-3 m-3 border rounded '>
            <h5> Hot Leads {value.totalHotLead} </h5>
          </div></div>
-         <div   onClick={()=>{
-         navigate("/desk/enquiry/Client")}} className=" text-decoration-none  w-50 "> <div className='bg-danger text-white px-5  py-3 m-3 border rounded '>
+         <div className=" text-decoration-none  w-50 "> <div  onClick={()=>{
+         navigate("/desk/enquiry/Client")}} style={{cursor:'pointer'}} className='bg-danger text-white px-5  py-3 m-3 border rounded '>
            <h5> Customers {value.totalClient} </h5>
          </div></div>
          </div>

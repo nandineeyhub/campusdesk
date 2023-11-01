@@ -129,7 +129,7 @@ const AddUser = () => {
     try {
       const response = await callAPI(apiUrls.getpermission, {}, 'GET')
       if (response.data.isSuccess) {
-        setRole(response.data.data.role)
+        setRole(response.data.data.roles.data)
       } else {
         ErrorMsg(response.data.message)
       }
@@ -143,8 +143,8 @@ const AddUser = () => {
 
   return (
     <div className='container-lg w-100 '>
-        <div className='text-secondary py-2 App'>
-     <h3>Add User</h3>
+        <div className='text-secondary py-2 '>
+     <h4>Add User</h4>
     </div> 
     <form onSubmit={handleSubmit}>
     <div className='row '>
@@ -172,16 +172,7 @@ const AddUser = () => {
         <span className="requireds"> {simpleValidator.current.message('name', value.name, 'required')}</span>
        </div>
       
-       <div className='col-md-4 my-2'>
-       <label for="email" className="required">Email</label>
-       <input onChange={handleChange} className='form-control' name='email' type="text" placeholder='Email'></input>
-       <span className="requireds"> {simpleValidator.current.message('email', value.email, 'required|email')}</span>
-       </div>
-       <div className='col-md-4 my-2'>
-            <label for="username" className="required">Username</label>
-            <input className='form-control'  maxLength={20}  onKeyDown={handleKeyDown} onChange={handleChange} name='username' type="text" placeholder='Username'></input>
-            <span className="requireds"> {simpleValidator.current.message('username', value.username, 'required')}</span>
-          </div>
+
        <div className='col-md-4 my-2'>
        <label for="phone" className="required">Phone</label>
        <input onChange={handleChange} onKeyDown={PhonehandlekeyDown} className='form-control' name='phoneNo' type="text" placeholder='Phone'></input>
@@ -196,7 +187,7 @@ const AddUser = () => {
 
        <div className='col-md-4 my-2'>
             <label for="client_id" className="required">Client</label>
-            <select className='form-control' onChange={handleChange} name='client_id' type="text" placeholder=''>
+            <select  className='p-2 w-100 border border-muted' onChange={handleChange} name='client_id' type="text" placeholder=''>
               <option value="" selected>--Choose Client--</option>
               {
                 clientlist.map((client) => {
@@ -208,7 +199,7 @@ const AddUser = () => {
           </div>
           <div className='col-md-4 my-2'>
             <label for="role" className="">Role</label>
-            <select className='form-control' onChange={handleChange} name='role_id' type="text" placeholder=''>
+            <select  className='p-2 w-100 border border-muted' onChange={handleChange} name='role_id' type="text" placeholder=''>
               <option value="" selected>--Choose Role--</option>
               {
                 role.map((role) => {
@@ -217,6 +208,16 @@ const AddUser = () => {
               }
             </select>
            
+          </div>
+          <div className='col-md-4 my-2'>
+       <label for="email" className="required">Email</label>
+       <input onChange={handleChange} className='form-control' name='email' type="text" placeholder='Email'></input>
+       <span className="requireds"> {simpleValidator.current.message('email', value.email, 'required|email')}</span>
+       </div>
+       <div className='col-md-4 my-2'>
+            <label for="username" className="required">Username</label>
+            <input className='form-control'  maxLength={20}  onKeyDown={handleKeyDown} onChange={handleChange} name='username' type="text" placeholder='Username'></input>
+            <span className="requireds"> {simpleValidator.current.message('username', value.username, 'required')}</span>
           </div>
    
        <div className='col-md-4 my-2'>

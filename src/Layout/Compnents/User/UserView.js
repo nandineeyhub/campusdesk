@@ -27,14 +27,14 @@ const UserView = (props) => {
       </div></div>
   
       <div className=' p-5'>
-       <div className='d-flex   '>
+       {/* <div className='d-flex   '>
              { data.image && <div className='college-logo'>
                 <img src={"https://onlineprojectprogress.com/Campusdeskayush/public/upload/user/"+data.image} className='img-fluid'/>
               </div>}
-          </div>
-          <div className='d-flex justify-content-between  align-items-start'>
-             <div>School Code</div> <div>{data.schoolCode}</div>
-          </div>
+          </div> */}
+         {/* <div className='d-flex justify-content-between  align-items-start'>
+            <div>School Code</div> <div>{data.schoolCode}</div>
+         </div> */}
           <div className='d-flex justify-content-between  align-items-start'>
              <div>Name</div> <div>{data.name}</div>
           </div>

@@ -3,6 +3,7 @@
 }
 body{
   font-size: 15px;
+ 
 }
 .App-logo {
   height: 40vmin;
@@ -81,7 +82,8 @@ body{
   z-index: 1;
   
 }
-.my_profile_box {width: 100%;max-width: 177px;margin-bottom: 30px;margin-top: 11px;position: relative;}
+.my_profile_box {width: 100%;max-width: 177px;margin-top: 11px; position: relative;}
+
 .college-logo{max-width: 180px;margin: 0 auto 24px;border: 1px dashed #ddd;text-align: center;padding: 15px;}
 .college-logo img{max-height: 100px;}
 .files_type {width: 114px; border-radius: 50%;height: 140px;position: absolute;top: 0;z-index: 9999;opacity: 0;left: 0;}
@@ -100,3 +102,36 @@ label.required::after {
   background-color: black;
   color:white
  }
+ progress {
+  position: relative
+}
+progress::after {
+  position: absolute;
+  content: "";
+  display: block;
+  width: 12px;
+  height: 100%;
+  background: red;
+  left: 80%;
+  border-radius: 50%;
+}
+#file-input-label {
+  /* font-size: 1.3em; */
+  padding: 5px 10px;
+  border: 1px solid black;
+  border-radius: 4%;
+  /* margin-top: 10px; */
+ 
+}
+.delete-img-tag {
+  /* background-position: 0 -690px; */
+  position: absolute;
+  /* display: inline-block; */
+  height: 12px;
+  /* margin-top: -2px; */
+  /* margin-left: 2px; */
+  vertical-align: top;
+  width: 14px;
+  cursor: pointer;
+  z-index: 1;
+}

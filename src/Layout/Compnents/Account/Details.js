@@ -7,13 +7,16 @@ const Details = () => {
 
     const [value, setValue] = useState([])
     const [loader, setLoader] = useState(false)
+
+    const user = JSON.parse(localStorage.getItem("user"))
+
     const getDetails = async () => {
         setLoader(true)
         try{
            const response = await callAPI(apiUrls.detail, {}, 'GET')
            setLoader(false)
            if(response.data.isSuccess){
-              setValue(response.data.data)
+              setValue(response.data.data.user)
            }
         } catch (e){
             setLoader(false)
@@ -38,9 +41,9 @@ const Details = () => {
                 <img src={value.image_path+value.image} className='img-fluid'/>
               </div>}
           </div>
-          <div className='d-flex justify-content-between  align-items-start'>
+          { user.role_id != 1 && <div className='d-flex justify-content-between  align-items-start'>
              <div>School Code</div> <div>{value.schoolCode}</div>
-          </div>
+          </div>}
           <div className='d-flex justify-content-between  align-items-start'>
              <div>Name</div> <div>{value.name}</div>
           </div>
@@ -50,9 +53,9 @@ const Details = () => {
           <div className='d-flex justify-content-between  align-items-start'>
              <div>Phone Number</div> <div>{value.phoneNo}</div>
           </div>
-          <div className='d-flex justify-content-between  align-items-start'>
+          { user.role_id != 1 && <div className='d-flex justify-content-between  align-items-start'>
              <div>Contact Person</div> <div>{value.contactPerson}</div>
-          </div>
+          </div>}
           <div className='d-flex justify-content-between  align-items-start'>
              <div>Status</div> <div>{value.status}</div>
           </div>

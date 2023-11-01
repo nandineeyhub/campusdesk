@@ -1,10 +1,11 @@
 import React from 'react'
-
+import { ThemeContext } from '../../theme-context'
 const SearchBar = ({handleFilter, getdata, setCurrentPage, setItemsPerPage}) => {
+  const { theme, toggle } = React.useContext(ThemeContext)
   return (
     <div>
         <div className='d-flex'>
-          <input onChange={(e)=>{handleFilter(e)}} name='search' className='form-control'></input>
+          <input type='search' onChange={(e)=>{handleFilter(e)}} name='search' className={`${theme.backgroundColor == 'black' ? "dark":"" } form-control`} ></input>
           <button onClick={()=>{
             setCurrentPage(1)
             setItemsPerPage(10)

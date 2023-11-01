@@ -116,7 +116,7 @@ const EditUser = () => {
     try {
       const response = await callAPI(apiUrls.getpermission, {}, 'GET')
       if (response.data.isSuccess) {
-        setRole(response.data.data.role)
+        setRole(response.data.data.roles.data)
       } else {
         ErrorMsg(response.data.message)
       }
@@ -161,12 +161,12 @@ const EditUser = () => {
 <div className='row '>
 <div className="col-md-12">
 
-<div className="my_profile_box ">
+{/* <div className="my_profile_box ">
 { <img src={image ? URL.createObjectURL(image) : value.image_path+value.image } className="  img-fluid" alt="" />}
 
   <input type="file" className="my-1" name='image' onChange={uploadImage} />
   <span className="requireds"> {simpleValidator.current.message('image', value.image, 'required')}</span>
-</div>
+</div> */}
 
 </div>
    {/* <div className='col-md-4 my-2'>
@@ -201,7 +201,7 @@ const EditUser = () => {
    
    <div className='col-md-4 my-2'>
             <label for="client_id" className="required">Client</label>
-            <select value={value.client_id} className='form-control' onChange={handleChange} name='client_id' type="text" placeholder=''>
+            <select value={value.client_id}  className='p-2 w-100 border border-muted' onChange={handleChange} name='client_id' type="text" placeholder=''>
               <option value="" selected>--Choose Client--</option>
               {
                 clientlist.map((client) => {
@@ -213,7 +213,7 @@ const EditUser = () => {
           </div>
           <div className='col-md-4 my-2'>
             <label for="role" className="required">Role</label>
-            <select value={value.role_id} className='form-control' onChange={handleChange} name='role_id' type="text" placeholder=''>
+            <select value={value.role_id}  className='p-2 w-100 border border-muted' onChange={handleChange} name='role_id' type="text" placeholder=''>
               <option value="" selected>--Choose Role--</option>
               {
                 role.map((role) => {

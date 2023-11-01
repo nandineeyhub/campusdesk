@@ -97,8 +97,8 @@ useEffect(()=>{ getdata()
 console.log(value.phon)
   return (
     <div className='container-lg w-100 '>
-    <div className='text-secondary py-3 App'>
- <h3>Update Enquiry</h3>
+    <div className='text-secondary py-3 '>
+ <h4>Update Enquiry</h4>
 </div> 
 {loader && <ApiLoader/>}
 <form onSubmit={handleSubmit}>
@@ -134,11 +134,11 @@ console.log(value.phon)
   </div>
   <div className='col-md-4 my-2'>
    <label for="phone" className="required">Step</label>
-   <select value={value.step} onChange={handleChange} className='form-control' name='step' type="text" placeholder=''>
+   <select value={value.step} onChange={handleChange}  className='p-2 w-100 border border-muted' name='step' type="text" placeholder=''>
       <option value="" selected>--Choose Step--</option>
       <option value="Lead" selected={value.step=="Lead"}>Lead</option>
       <option value="HotLead" selected={value.step=="HotLead"}>Hot Lead</option>
-      <option value="Customer" selected={value.step == "Customer"}>Customer</option>
+      <option value="Client" selected={value.step == "Client"}>Customer</option>
    </select>
    <span className="requireds"> {simpleValidator.current.message('step', value.step, 'required')}</span>
    </div>

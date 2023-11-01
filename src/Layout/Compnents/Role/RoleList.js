@@ -52,6 +52,9 @@ const RoleList = () => {
     const handleFilter = (e) => {
       if(e.target.name == "search"){
         setSearch(e.target.value)
+        if(e.target.value == ""){
+          getPermission(e.target.value,status, itemsPerPage, currentPage)
+        }
       } else if(e.target.name == "status"){
         setCurrentPage(1)
         setItemsPerPage(10)
@@ -77,13 +80,13 @@ const RoleList = () => {
       }
     }
 
-    const handleStatus = async (id,status) =>{
+    const handleStatus = async (id, newstatus) =>{
       try{
-        const query = {status:status == "Active" ? "Inactive": "Active", id:id}
+        const query = {status:newstatus == "Active" ? "Inactive": "Active", id:id}
         const response = await callAPI(apiUrls.rolestatus,query,'PUT');
         if(response.data.isSuccess){
           SuccessMsg(response.data.message);
-          getPermission();
+          getPermission(search, status, itemsPerPage, currentPage);
         }
         else{
           ErrorMsg(response.data.message);
@@ -105,13 +108,14 @@ const RoleList = () => {
          const response = await callAPI(apiUrls.getpermission, query ,'GET')
          setLoader(false)
          if(response.data.isSuccess){
-          setValue(response.data.data.role)
+          setValue(response.data.data.roles.data)
           setModules(response.data.data.modules)
-          setTotalPages((response.data.data.totalRole%itemPerPage?itemPerPage:itemsPerPage)?Math.floor(response.data.data.totalRole/(itemPerPage?itemPerPage:itemsPerPage))+1:response.data.data.totalRole%itemPerPage?itemPerPage:itemsPerPage)
+          setTotalPages((response.data.data.totalRole%itemPerPage?itemPerPage:itemsPerPage)?Math.floor(response.data.data.totalRole/(itemPerPage?itemPerPage:itemsPerPage))+1:response.data.data.totalRole/itemPerPage?itemPerPage:itemsPerPage)
          }
       } catch(e){
         setLoader(false)
         ErrorMsg(e.message)
+        // console.log(e)
       }
     }
 
